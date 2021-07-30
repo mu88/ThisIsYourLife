@@ -2,9 +2,9 @@
 
 namespace Entities
 {
-    public class Creator
+    public class Person
     {
-        public Creator(Guid id, string name)
+        public Person(Guid id, string name)
         {
             Id = id;
             Name = name;

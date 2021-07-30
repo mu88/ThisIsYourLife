@@ -10,7 +10,7 @@ namespace Entities
                          string description,
                          double latitude,
                          double longitude,
-                         Creator createdBy)
+                         Person createdBy)
         {
             Id = id;
             Date = date;
@@ -33,6 +33,6 @@ namespace Entities
 
         public double Longitude { get; }
 
-        public Creator CreatedBy { get; }
+        public Person CreatedBy { get; }
     }
 }

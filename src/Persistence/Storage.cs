@@ -15,14 +15,20 @@ namespace Persistence
     public class Storage : DbContext, IStorage
     {
         /// <inheritdoc />
+        public Storage(DbContextOptions<Storage> options)
+            : base(options)
+        {
+        }
+
+        /// <inheritdoc />
         public IQueryable<LifePoint> LifePoints => LifePointsInStorage;
 
         /// <inheritdoc />
-        public IQueryable<Creator> Creators => CreatorsInStorage;
+        public IQueryable<Person> Persons => PersonsInStorage;
 
         public DbSet<LifePoint> LifePointsInStorage { get; set; }
 
-        public DbSet<Creator> CreatorsInStorage { get; set; }
+        public DbSet<Person> PersonsInStorage { get; set; }
 
         /// <inheritdoc />
         public async Task<T> GetAsync<T>(Guid id)
@@ -43,7 +49,7 @@ namespace Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<LifePoint>().ToTable("LifePoint");
-            modelBuilder.Entity<Creator>().ToTable("Creator");
+            modelBuilder.Entity<Person>().ToTable("Person");
 
             base.OnModelCreating(modelBuilder);
         }
