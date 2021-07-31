@@ -48,43 +48,12 @@ namespace Persistence
         /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<LifePoint>().ToTable("LifePoint");
             modelBuilder.Entity<LifePoint>().HasKey(nameof(LifePoint.Id));
             modelBuilder.Entity<Person>().ToTable("Person");
             modelBuilder.Entity<Person>().HasKey(nameof(LifePoint.Id));
-
-            SeedTestData(modelBuilder);
-
-            base.OnModelCreating(modelBuilder);
-        }
-
-        private void SeedTestData(ModelBuilder modelBuilder)
-        {
-            var alice = new Person("Alice");
-            var bob = new Person("Bob");
-            modelBuilder.Entity<Person>().HasData(alice);
-            modelBuilder.Entity<Person>().HasData(bob);
-
-            for (int i = 0; i < 10; i++)
-            {
-                var random = new Random();
-
-                var id = Guid.NewGuid();
-                var date = new DateTime(random.Next(1980, 2020), random.Next(1, 12), random.Next(1, 28));
-                var caption = $"Caption {i}";
-                var description = $"Description {i}";
-                double latitude = random.Next(-90, 90);
-                double longitude = random.Next(-180, 180);
-                var createdBy = random.Next(0, 2) == 0 ? alice : bob;
-
-                modelBuilder.Entity<LifePoint>()
-                    .HasData(new LifePoint(date,
-                                           caption,
-                                           description,
-                                           latitude,
-                                           longitude,
-                                           createdBy));
-            }
         }
     }
 }
