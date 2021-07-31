@@ -4,15 +4,18 @@ namespace Entities
 {
     public class LifePoint
     {
-        public LifePoint(Guid id,
-                         DateTime date,
+        public LifePoint()
+        {
+        }
+
+        public LifePoint(DateTime date,
                          string caption,
                          string description,
                          double latitude,
                          double longitude,
                          Person createdBy)
         {
-            Id = id;
+            Id = Guid.NewGuid();
             Date = date;
             Caption = caption;
             Description = description;

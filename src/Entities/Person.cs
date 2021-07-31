@@ -4,9 +4,13 @@ namespace Entities
 {
     public class Person
     {
-        public Person(Guid id, string name)
+        public Person()
         {
-            Id = id;
+        }
+
+        public Person(string name)
+        {
+            Id = Guid.NewGuid();
             Name = name;
         }
 

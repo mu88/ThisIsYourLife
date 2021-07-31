@@ -25,7 +25,8 @@ namespace WebApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
-            services.AddDbContext<Storage>(options => options.UseInMemoryDatabase("Project28"));
+            services.AddDbContextFactory<Storage>(options => options.UseSqlite("Filename=:memory:"));
+            // services.AddDbContext<Storage>(options => options.UseSqlite("Filename=:memory:"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

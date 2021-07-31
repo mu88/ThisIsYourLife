@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Persistence;
 
 namespace WebApp.Data
 {
@@ -10,6 +12,13 @@ namespace WebApp.Data
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
+
+        public WeatherForecastService(IDbContextFactory<Storage> storageFactory)
+        {
+            using var dbContext = storageFactory.CreateDbContext();
+            dbContext.Database.EnsureCreated();
+            dbContext.Database.OpenConnection();
+        }
 
         public Task<WeatherForecast[]> GetForecastAsync(DateTime startDate)
         {

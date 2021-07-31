@@ -49,7 +49,9 @@ namespace Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<LifePoint>().ToTable("LifePoint");
+            modelBuilder.Entity<LifePoint>().HasKey(nameof(LifePoint.Id));
             modelBuilder.Entity<Person>().ToTable("Person");
+            modelBuilder.Entity<Person>().HasKey(nameof(LifePoint.Id));
 
             SeedTestData(modelBuilder);
 
@@ -58,8 +60,8 @@ namespace Persistence
 
         private void SeedTestData(ModelBuilder modelBuilder)
         {
-            var alice = new Person(Guid.NewGuid(), "Alice");
-            var bob = new Person(Guid.NewGuid(), "Bob");
+            var alice = new Person("Alice");
+            var bob = new Person("Bob");
             modelBuilder.Entity<Person>().HasData(alice);
             modelBuilder.Entity<Person>().HasData(bob);
 
@@ -76,8 +78,7 @@ namespace Persistence
                 var createdBy = random.Next(0, 2) == 0 ? alice : bob;
 
                 modelBuilder.Entity<LifePoint>()
-                    .HasData(new LifePoint(id,
-                                           date,
+                    .HasData(new LifePoint(date,
                                            caption,
                                            description,
                                            latitude,
