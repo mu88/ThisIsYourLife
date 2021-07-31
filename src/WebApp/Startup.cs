@@ -1,3 +1,4 @@
+using BusinessServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,7 @@ namespace WebApp
             services.AddServerSideBlazor();
             services.AddScoped<WeatherForecastService>();
             services.AddDbContext<Storage>(options => options.UseInMemoryDatabase("MyDatabase"));
+            services.AddScoped<IStorage>(provider => provider.GetService<Storage>()!); // cannot be null since it is registered before
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

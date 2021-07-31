@@ -1,37 +1,44 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using BusinessServices;
 using Entities;
-using Persistence;
 
 namespace WebApp.Data
 {
     public class WeatherForecastService
     {
-        private readonly Storage _storage;
-
-        private static readonly string[] Summaries = new[]
+        private static readonly string[] Summaries =
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+            "Freezing",
+            "Bracing",
+            "Chilly",
+            "Cool",
+            "Mild",
+            "Warm",
+            "Balmy",
+            "Hot",
+            "Sweltering",
+            "Scorching"
         };
 
-        public WeatherForecastService(Storage storage)
-        {
-            _storage = storage;
-        }
+        private readonly IStorage _storage;
 
-        public Task<WeatherForecast[]> GetForecastAsync(DateTime startDate)
+        public WeatherForecastService(IStorage storage) => _storage = storage;
+
+        public async Task<WeatherForecast[]> GetForecastAsync(DateTime startDate)
         {
-            _storage.Add(new Person($"Robot{new Random().Next(0, 50)}"));
-            _storage.SaveChanges();
-            
+            await _storage.AddItemAsync(new Person($"Robot{new Random().Next(0, 50)}"));
+            await _storage.SaveAsync();
+            var count = _storage.Persons.Count();
+
             var rng = new Random();
-            return Task.FromResult(Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = startDate.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = Summaries[rng.Next(Summaries.Length)]
-            }).ToArray());
+            return Enumerable.Range(1, 5)
+                .Select(index => new WeatherForecast
+                {
+                    Date = startDate.AddDays(index), TemperatureC = rng.Next(-20, 55), Summary = Summaries[rng.Next(Summaries.Length)]
+                })
+                .ToArray();
         }
     }
 }
