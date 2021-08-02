@@ -8,18 +8,34 @@
 
 @code {
 
-    // Will be initialized on startup within OnAfterRenderAsync
+    // Will be initialized on startup
 #pragma warning disable 8618
     private IJSObjectReference _module;
     private IJSObjectReference _map;
-    private IEnumerable<ExistingLocation> _allLocations;
 #pragma warning restore 8618
+    private List<ExistingLocation> _allLocations = new();
+    private Dictionary<Guid, IJSObjectReference> _allMarkers = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender) { await InitializeMap(); }
+        if (firstRender)
+        {
+            await InitializeMap();
+            await DrawAllLocationsAsync();
+        }
+    }
 
-        await DrawAllLocationsAsync();
+    /// <inheritdoc />
+    protected override Task OnInitializedAsync()
+    {
+        ReloadAllLocations();
+
+        return base.OnInitializedAsync();
+    }
+
+    private void ReloadAllLocations()
+    {
+        _allLocations = _lifePointService.GetAllLocations().ToList();
     }
 
     private async Task InitializeMap()
@@ -30,11 +46,11 @@
 
     private async Task DrawAllLocationsAsync()
     {
-        _allLocations = _lifePointService.GetAllLocations();
-        foreach (var location in _allLocations) await AddMarker(location);
+        foreach (var location in _allLocations) _allMarkers.Add(location.Id, await AddMarkerAsync(location));
     }
 
-    private ValueTask AddMarker(ExistingLocation location) => _module.InvokeVoidAsync("addMarker", _map, location.Longitude, location.Latitude);
+    private async ValueTask<IJSObjectReference> AddMarkerAsync(ExistingLocation location) =>
+        await _module.InvokeAsync<IJSObjectReference>("addMarker", _map, location.Id, location.Longitude, location.Latitude);
 
     /// <inheritdoc />
     public async ValueTask DisposeAsync() => await _module.DisposeAsync();

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using BusinessServices;
 using BusinessServices.Services;
 using Entities;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using Tests.Doubles;
 
@@ -52,6 +54,20 @@ namespace Tests.UnitTests.BusinessServices
             var results = testee.GetAllLocations().ToList();
 
             results.Should().BeEmpty();
+        }
+
+        [Test]
+        public async Task GetLifePoint()
+        {
+            var lifePoints = new[] { TestLifePoint.Create(), TestLifePoint.Create() };
+            var autoMocker = new CustomAutoMocker();
+            autoMocker.Setup<IStorage, Task<LifePoint>>(x => x.GetAsync<LifePoint>(lifePoints.First().Id)).ReturnsAsync(lifePoints.First());
+            var testee = autoMocker.CreateInstance<LifePointService>();
+
+            var result = await testee.GetLifePointAsync(lifePoints.First().Id);
+
+            result.Should().BeEquivalentTo(lifePoints.First(), options => options.Excluding(x => x.CreatedBy));
+            result.CreatedBy.Should().Be(lifePoints.First().CreatedBy.Name);
         }
     }
 }

@@ -10,6 +10,7 @@ namespace BusinessServices
         public AutoMapperProfile()
         {
             CreateMap<LifePoint, ExistingLocation>();
+            CreateMap<LifePoint, ExistingLifePoint>().ForMember(x => x.CreatedBy, y => y.MapFrom(z => z.CreatedBy.Name));
         }
     }
 }

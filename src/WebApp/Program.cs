@@ -53,6 +53,13 @@ namespace WebApp
                                           createdBy));
             }
 
+            storage.Add(new LifePoint(new DateTime(1953, 4, 12),
+                                      "Home of Football",
+                                      "Nur die SGD",
+                                      13.7478431,
+                                      51.0405849,
+                                      alice));
+
             storage.SaveChanges();
         }
     }
