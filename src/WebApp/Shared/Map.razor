@@ -1,0 +1,43 @@
+﻿@using BusinessServices.Services
+@using DTO
+@implements IAsyncDisposable
+@inject IJSRuntime _jsRuntime
+@inject ILifePointService _lifePointService
+
+<div id="mapid"></div>
+
+@code {
+
+    // Will be initialized on startup within OnAfterRenderAsync
+#pragma warning disable 8618
+    private IJSObjectReference _module;
+    private IJSObjectReference _map;
+    private IEnumerable<ExistingLocation> _allLocations;
+#pragma warning restore 8618
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender) { await InitializeMap(); }
+
+        await DrawAllLocationsAsync();
+    }
+
+    private async Task InitializeMap()
+    {
+        _module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./map.js");
+        _map = await _module.InvokeAsync<IJSObjectReference>("initializeMap");
+    }
+
+    private async Task DrawAllLocationsAsync()
+    {
+        _allLocations = _lifePointService.GetAllLocations();
+        foreach (var location in _allLocations)
+            await AddMarker(location);
+    }
+
+    private ValueTask AddMarker(ExistingLocation location) => _module.InvokeVoidAsync("addMarker", _map, location.Longitude, location.Latitude);
+
+    /// <inheritdoc />
+    public async ValueTask DisposeAsync() => await _module.DisposeAsync();
+
+}
