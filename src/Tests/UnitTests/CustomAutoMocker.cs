@@ -1,6 +1,7 @@
 ﻿using Moq.AutoMock;
+using Tests.Doubles;
 
-namespace Tests
+namespace Tests.UnitTests
 {
     public class CustomAutoMocker : AutoMocker
     {

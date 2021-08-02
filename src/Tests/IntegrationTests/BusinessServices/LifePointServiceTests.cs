@@ -1,29 +1,29 @@
 ﻿using System.Linq;
-using BusinessServices;
+using System.Threading.Tasks;
 using BusinessServices.Services;
-using Entities;
 using FluentAssertions;
 using NUnit.Framework;
+using Tests.Doubles;
 
-namespace Tests.BusinessServices
+namespace Tests.IntegrationTests.BusinessServices
 {
     [TestFixture]
     public class LifePointServiceTests
     {
         [Test]
-        [UnitTest]
-        public void GetAllLifePointLocations()
+        public async Task GetAllLocations()
         {
-            var lifePoints = new[] { TestLifePoint.Create(), TestLifePoint.Create() };
-            var autoMocker = new CustomAutoMocker();
-            autoMocker.Setup<IStorage, IQueryable<LifePoint>>(x => x.LifePoints).Returns(lifePoints.AsQueryable);
-            var testee = autoMocker.CreateInstance<LifePointService>();
+            var storage = TestStorage.Create();
+            await storage.AddItemAsync(TestLifePoint.Create());
+            await storage.AddItemAsync(TestLifePoint.Create());
+            await storage.SaveAsync();
+            var testee = new LifePointService(storage, TestMapper.Create());
 
             var results = testee.GetAllLocations().ToList();
 
             results.Should().HaveCount(2);
             results.Should()
-                .BeEquivalentTo(lifePoints,
+                .BeEquivalentTo(storage.LifePoints,
                                 options => options.Including(x => x.Id)
                                     .Including(x => x.Latitude)
                                     .Including(x => x.Longitude));

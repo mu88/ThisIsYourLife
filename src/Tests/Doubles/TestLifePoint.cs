@@ -1,7 +1,7 @@
 ﻿using System;
 using Entities;
 
-namespace Tests
+namespace Tests.Doubles
 {
     public static class TestLifePoint
     {
