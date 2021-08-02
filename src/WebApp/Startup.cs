@@ -1,7 +1,6 @@
-using BusinessServices;
+using Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,8 +25,10 @@ namespace WebApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<WeatherForecastService>();
-            services.AddDbContext<Storage>(options => options.UseInMemoryDatabase("MyDatabase"));
-            services.AddScoped<IStorage>(provider => provider.GetService<Storage>()!); // cannot be null since it is registered before
+
+            services.ConfigurePersistence();
+
+            ConfigureAutoMapper(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,5 +54,7 @@ namespace WebApp
                 endpoints.MapFallbackToPage("/_Host");
             });
         }
+
+        private static void ConfigureAutoMapper(IServiceCollection services) => services.AddAutoMapper(typeof(LifePoint), typeof(Person));
     }
 }
