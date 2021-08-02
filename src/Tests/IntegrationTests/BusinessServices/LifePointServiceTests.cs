@@ -31,6 +31,21 @@ namespace Tests.IntegrationTests.BusinessServices
         }
 
         [Test]
+        public async Task GetLifePoint()
+        {
+            var lifePoint = TestLifePoint.Create();
+            var storage = TestStorage.Create();
+            await storage.AddItemAsync(lifePoint);
+            await storage.SaveAsync();
+            var testee = new LifePointService(storage, TestMapper.Create());
+
+            var result = await testee.GetLifePointAsync(lifePoint.Id);
+
+            result.Should().BeEquivalentTo(lifePoint, options => options.Excluding(x => x.CreatedBy));
+            result.CreatedBy.Should().Be(lifePoint.CreatedBy.Name);
+        }
+
+        [Test]
         public async Task CreateNewLifePoint()
         {
             var storage = TestStorage.Create();
