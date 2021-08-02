@@ -22,5 +22,15 @@ namespace BusinessServices.Services
         public IEnumerable<ExistingLocation> GetAllLocations() => _mapper.Map<IQueryable<LifePoint>, IEnumerable<ExistingLocation>>(_storage.LifePoints);
 
         public async Task<ExistingLifePoint> GetLifePointAsync(Guid id) => _mapper.Map<LifePoint, ExistingLifePoint>(await _storage.GetAsync<LifePoint>(id));
+
+        public async Task<ExistingLifePoint> CreateLifePointAsync(LifePointToCreate lifePointToCreate)
+        {
+            var existingPerson = await _storage.GetAsync<Person>(lifePointToCreate.CreatedBy);
+            var newLifePoint = _mapper.Map<LifePointToCreate, LifePoint>(lifePointToCreate, options => options.Items[nameof(LifePoint.CreatedBy)] = existingPerson);
+            var createdLifePoint = await _storage.AddItemAsync(newLifePoint);
+            await _storage.SaveAsync();
+            
+            return _mapper.Map<LifePoint, ExistingLifePoint>(createdLifePoint);
+        }
     }
 }

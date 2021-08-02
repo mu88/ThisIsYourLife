@@ -69,5 +69,23 @@ namespace Tests.UnitTests.BusinessServices
             result.Should().BeEquivalentTo(lifePoints.First(), options => options.Excluding(x => x.CreatedBy));
             result.CreatedBy.Should().Be(lifePoints.First().CreatedBy.Name);
         }
+
+        [Test]
+        public async Task CreateNewLifePoint()
+        {
+            var person = new Person("Bob");
+            var lifePointToCreate = TestLifePointToCreate.Create(person);
+            var autoMocker = new CustomAutoMocker();
+            autoMocker.Setup<IStorage, Task<Person>>(x => x.GetAsync<Person>(lifePointToCreate.CreatedBy)).ReturnsAsync(person);
+            autoMocker.Setup<IStorage, Task<LifePoint>>(x => x.AddItemAsync(It.IsAny<LifePoint>())).Returns<LifePoint>(x => Task.FromResult(x));
+            var testee = autoMocker.CreateInstance<LifePointService>();
+
+            var result = await testee.CreateLifePointAsync(lifePointToCreate);
+
+            result.Id.Should().NotBeEmpty();
+            result.Should().BeEquivalentTo(lifePointToCreate, options => options.Excluding(x => x.CreatedBy));
+            result.CreatedBy.Should().Be(person.Name);
+            autoMocker.Verify<IStorage>(x => x.SaveAsync(), Times.Once);
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using BusinessServices.Services;
+using Entities;
 using FluentAssertions;
 using NUnit.Framework;
 using Tests.Doubles;
@@ -27,6 +28,19 @@ namespace Tests.IntegrationTests.BusinessServices
                                 options => options.Including(x => x.Id)
                                     .Including(x => x.Latitude)
                                     .Including(x => x.Longitude));
+        }
+
+        [Test]
+        public async Task CreateNewLifePoint()
+        {
+            var storage = TestStorage.Create();
+            var person = await storage.AddItemAsync(new Person("Bob"));
+            var lifePointToCreate = TestLifePointToCreate.Create(person);
+            var testee = new LifePointService(storage, TestMapper.Create());
+
+            var result = await testee.CreateLifePointAsync(lifePointToCreate);
+
+            storage.LifePoints.Should().ContainSingle(x => x.Id == result.Id);
         }
     }
 }

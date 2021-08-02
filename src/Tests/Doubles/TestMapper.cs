@@ -5,6 +5,12 @@ namespace Tests.Doubles
 {
     public static class TestMapper
     {
-        public static IMapper Create() => new MapperConfiguration(config => config.AddProfile(typeof(AutoMapperProfile))).CreateMapper();
+        public static IMapper Create()
+        {
+            var mapperConfiguration = new MapperConfiguration(config => config.AddProfile(typeof(AutoMapperProfile)));
+            mapperConfiguration.AssertConfigurationIsValid();
+            var mapper = mapperConfiguration.CreateMapper();
+            return mapper;
+        }
     }
 }

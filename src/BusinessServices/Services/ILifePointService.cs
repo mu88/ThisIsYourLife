@@ -10,5 +10,7 @@ namespace BusinessServices.Services
         IEnumerable<ExistingLocation> GetAllLocations();
 
         Task<ExistingLifePoint> GetLifePointAsync(Guid id);
+
+        Task<ExistingLifePoint> CreateLifePointAsync(LifePointToCreate lifePointToCreate);
     }
 }
