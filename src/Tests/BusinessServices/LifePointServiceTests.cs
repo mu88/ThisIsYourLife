@@ -11,6 +11,7 @@ namespace Tests.BusinessServices
     public class LifePointServiceTests
     {
         [Test]
+        [UnitTest]
         public void GetAllLifePointLocations()
         {
             var lifePoints = new[] { TestLifePoint.Create(), TestLifePoint.Create() };
