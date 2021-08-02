@@ -1,5 +1,8 @@
 ﻿using System;
 
+// EF Core needs default constructor
+#pragma warning disable 8618
+
 namespace Entities
 {
     public class Person

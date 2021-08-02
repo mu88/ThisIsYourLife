@@ -1,6 +1,7 @@
 using System;
 using Entities;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence;
@@ -25,8 +26,10 @@ namespace WebApp
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
 
-        private static void SeedTestData(Storage storage)
+        private static void SeedTestData(DbContext? storage)
         {
+            if (storage == null) return;
+
             var alice = new Person("Alice");
             var bob = new Person("Bob");
             storage.AddRange(alice, bob);

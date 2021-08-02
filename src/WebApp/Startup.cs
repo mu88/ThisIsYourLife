@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence;
-using WebApp.Data;
 
 namespace WebApp
 {
@@ -24,7 +23,6 @@ namespace WebApp
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddScoped<WeatherForecastService>();
 
             services.AddPersistence();
             services.AddBusinessServices();
