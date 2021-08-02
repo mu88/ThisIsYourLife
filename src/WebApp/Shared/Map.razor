@@ -25,14 +25,13 @@
     private async Task InitializeMap()
     {
         _module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./map.js");
-        _map = await _module.InvokeAsync<IJSObjectReference>("initializeMap");
+        _map = await _module.InvokeAsync<IJSObjectReference>("initializeMap", 51.0405849, 13.7478431, 20);
     }
 
     private async Task DrawAllLocationsAsync()
     {
         _allLocations = _lifePointService.GetAllLocations();
-        foreach (var location in _allLocations)
-            await AddMarker(location);
+        foreach (var location in _allLocations) await AddMarker(location);
     }
 
     private ValueTask AddMarker(ExistingLocation location) => _module.InvokeVoidAsync("addMarker", _map, location.Longitude, location.Latitude);

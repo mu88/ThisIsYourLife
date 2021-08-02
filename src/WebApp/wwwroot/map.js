@@ -1,5 +1,5 @@
-﻿export function initializeMap() {
-    var myMap = L.map('mapid').setView([51.505, -0.09], 13);
+﻿export function initializeMap(startLongitude, startLatitude, startZoom) {
+    var myMap = L.map('mapid').setView([startLongitude, startLatitude], startZoom);
     L.tileLayer('https://a.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors'
     }).addTo(myMap);
