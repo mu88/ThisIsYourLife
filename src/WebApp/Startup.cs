@@ -1,4 +1,4 @@
-using Entities;
+using BusinessServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -26,7 +26,8 @@ namespace WebApp
             services.AddServerSideBlazor();
             services.AddScoped<WeatherForecastService>();
 
-            services.ConfigurePersistence();
+            services.AddPersistence();
+            services.AddBusinessServices();
 
             ConfigureAutoMapper(services);
         }
@@ -55,6 +56,6 @@ namespace WebApp
             });
         }
 
-        private static void ConfigureAutoMapper(IServiceCollection services) => services.AddAutoMapper(typeof(LifePoint), typeof(Person));
+        private static void ConfigureAutoMapper(IServiceCollection services) => services.AddAutoMapper(config => config.AddProfile(typeof(AutoMapperProfile)));
     }
 }

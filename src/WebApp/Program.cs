@@ -1,13 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Entities;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Persistence;
 
 namespace WebApp
@@ -22,21 +17,19 @@ namespace WebApp
                 var storage = serviceScope.ServiceProvider.GetService<Storage>();
                 SeedTestData(storage);
             }
+
             host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
-        
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+
         private static void SeedTestData(Storage storage)
         {
             var alice = new Person("Alice");
             var bob = new Person("Bob");
-            storage.AddRange(alice,bob);
+            storage.AddRange(alice, bob);
 
             for (var i = 0; i < 10; i++)
             {
