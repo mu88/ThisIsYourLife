@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BusinessServices;
 using BusinessServices.Services;
+using DTO.LifePoint;
 using Entities;
 using FluentAssertions;
 using Moq;
@@ -61,7 +62,7 @@ namespace Tests.UnitTests.BusinessServices
         {
             var lifePoints = new[] { TestLifePoint.Create(), TestLifePoint.Create() };
             var autoMocker = new CustomAutoMocker();
-            autoMocker.Setup<IStorage, Task<LifePoint>>(x => x.GetAsync<LifePoint>(lifePoints.First().Id)).ReturnsAsync(lifePoints.First());
+            autoMocker.Setup<IStorage, Task<LifePoint?>>(x => x.FindAsync<LifePoint>(lifePoints.First().Id)).ReturnsAsync(lifePoints.First());
             var testee = autoMocker.CreateInstance<LifePointService>();
 
             var result = await testee.GetLifePointAsync(lifePoints.First().Id);
@@ -71,13 +72,26 @@ namespace Tests.UnitTests.BusinessServices
         }
 
         [Test]
+        public async Task GetLifePoint_ThrowsException_IfLifePointDoesNotExist()
+        {
+            var lifePoints = new[] { TestLifePoint.Create(), TestLifePoint.Create() };
+            var autoMocker = new CustomAutoMocker();
+            autoMocker.Setup<IStorage, Task<LifePoint?>>(x => x.FindAsync<LifePoint>(lifePoints.First().Id)).ReturnsAsync((LifePoint?)null);
+            var testee = autoMocker.CreateInstance<LifePointService>();
+
+            Func<Task<ExistingLifePoint>> testAction = async () => await testee.GetLifePointAsync(lifePoints.First().Id);
+
+            await testAction.Should().ThrowAsync<NullReferenceException>();
+        }
+
+        [Test]
         public async Task CreateNewLifePoint()
         {
             var person = new Person("Bob");
             var lifePointToCreate = TestLifePointToCreate.Create(person);
             var autoMocker = new CustomAutoMocker();
-            autoMocker.Setup<IStorage, Task<Person>>(x => x.GetAsync<Person>(lifePointToCreate.CreatedBy)).ReturnsAsync(person);
-            autoMocker.Setup<IStorage, Task<LifePoint>>(x => x.AddItemAsync(It.IsAny<LifePoint>())).Returns<LifePoint>(x => Task.FromResult(x));
+            autoMocker.Setup<IStorage, Task<Person?>>(x => x.FindAsync<Person>(lifePointToCreate.CreatedBy)).ReturnsAsync(person);
+            autoMocker.Setup<IStorage, Task<LifePoint>>(x => x.AddItemAsync(It.IsAny<LifePoint>())).Returns<LifePoint>(Task.FromResult);
             var testee = autoMocker.CreateInstance<LifePointService>();
 
             var result = await testee.CreateLifePointAsync(lifePointToCreate);

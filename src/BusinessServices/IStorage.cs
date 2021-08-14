@@ -11,7 +11,7 @@ namespace BusinessServices
 
         public IQueryable<Person> Persons { get; }
 
-        public Task<T> GetAsync<T>(Guid id)
+        public Task<T?> FindAsync<T>(Guid id)
             where T : class;
 
         public Task<T> AddItemAsync<T>(T itemToAdd)

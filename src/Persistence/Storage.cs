@@ -31,7 +31,7 @@ namespace Persistence
         public DbSet<Person> PersonsInStorage { get; set; }
 
         /// <inheritdoc />
-        public async Task<T> GetAsync<T>(Guid id)
+        public async Task<T?> FindAsync<T>(Guid id)
             where T : class => await Set<T>().FindAsync(id);
 
         /// <inheritdoc />

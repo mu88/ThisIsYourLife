@@ -54,6 +54,12 @@
         await _module.InvokeAsync<IJSObjectReference>("addMarker", _map, location.Id, location.Longitude, location.Latitude);
 
     /// <inheritdoc />
-    public async ValueTask DisposeAsync() => await _module.DisposeAsync();
+    public async ValueTask DisposeAsync()
+    {
+    // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+    // Due to unknown reasons, this method will be called before _module could be loaded.
+    // Maybe it is related to the preview nature of .NET 6
+        if (_module is not null) { await _module.DisposeAsync(); }
+    }
 
 }
