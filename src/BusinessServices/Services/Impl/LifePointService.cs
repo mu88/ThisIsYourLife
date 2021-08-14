@@ -8,7 +8,7 @@ using Entities;
 
 namespace BusinessServices.Services
 {
-    public class LifePointService : ILifePointService
+    internal class LifePointService : ILifePointService
     {
         private readonly IStorage _storage;
         private readonly IMapper _mapper;
@@ -29,7 +29,7 @@ namespace BusinessServices.Services
             var newLifePoint = _mapper.Map<LifePointToCreate, LifePoint>(lifePointToCreate, options => options.Items[nameof(LifePoint.CreatedBy)] = existingPerson);
             var createdLifePoint = await _storage.AddItemAsync(newLifePoint);
             await _storage.SaveAsync();
-            
+
             return _mapper.Map<LifePoint, ExistingLifePoint>(createdLifePoint);
         }
     }
