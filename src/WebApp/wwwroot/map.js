@@ -8,6 +8,6 @@
 
 export function addMarker(myMap, id, longitude, latitude) {
     let marker = L.marker([longitude, latitude]).addTo(myMap);
-    marker.bindPopup("Hello World!<br><LifePointDetail Id='" + id + "'></LifePointDetail>");
+    marker.bindPopup("Hello World!<br>Id='" + id + "'");
     return marker;
 }
