@@ -1,5 +1,5 @@
 ﻿using System;
-using DTO;
+using DTO.LifePoint;
 using Entities;
 
 namespace Tests.Doubles

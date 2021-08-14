@@ -1,21 +1,9 @@
 ﻿using System;
 
-namespace DTO
+namespace DTO.LifePoint
 {
     public class LifePointToCreate
     {
-        public DateTime Date { get; }
-
-        public string Caption { get; }
-
-        public string Description { get; }
-
-        public double Latitude { get; }
-
-        public double Longitude { get; }
-
-        public Guid CreatedBy { get; }
-
         public LifePointToCreate(DateTime date,
                                  string caption,
                                  string description,
@@ -30,5 +18,17 @@ namespace DTO
             Longitude = longitude;
             CreatedBy = createdBy;
         }
+
+        public DateTime Date { get; }
+
+        public string Caption { get; }
+
+        public string Description { get; }
+
+        public double Latitude { get; }
+
+        public double Longitude { get; }
+
+        public Guid CreatedBy { get; }
     }
 }

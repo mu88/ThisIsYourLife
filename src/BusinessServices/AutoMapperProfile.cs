@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
-using DTO;
+using DTO.LifePoint;
+using DTO.Location;
+using DTO.Person;
 using Entities;
 
 namespace BusinessServices
@@ -8,6 +10,18 @@ namespace BusinessServices
     {
         /// <inheritdoc />
         public AutoMapperProfile()
+        {
+            CreateMapsForLifePoint();
+            CreateMapsForPerson();
+        }
+
+        private void CreateMapsForPerson()
+        {
+            CreateMap<Person, ExistingPerson>();
+            CreateMap<PersonToCreate, Person>().ForMember(x => x.Id, options => options.Ignore());
+        }
+
+        private void CreateMapsForLifePoint()
         {
             CreateMap<LifePoint, ExistingLocation>();
             CreateMap<LifePoint, ExistingLifePoint>().ForMember(x => x.CreatedBy, y => y.MapFrom(z => z.CreatedBy.Name));

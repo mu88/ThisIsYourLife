@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using DTO;
+using DTO.LifePoint;
+using DTO.Location;
 using Entities;
 
 namespace BusinessServices.Services

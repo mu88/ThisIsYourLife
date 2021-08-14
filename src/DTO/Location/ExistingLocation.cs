@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DTO
+namespace DTO.Location
 {
     public class ExistingLocation
     {

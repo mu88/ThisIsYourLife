@@ -12,7 +12,7 @@ namespace Tests.Doubles
         {
             var storage = new Storage(new DbContextOptionsBuilder<Storage>().UseSqlite(CreateInMemoryDatabase()).Options);
             storage.Database.EnsureCreated();
-            
+
             return storage;
         }
 

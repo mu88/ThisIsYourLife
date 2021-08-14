@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DTO
+namespace DTO.LifePoint
 {
     public class ExistingLifePoint
     {
