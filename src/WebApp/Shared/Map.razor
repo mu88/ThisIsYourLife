@@ -46,8 +46,7 @@
 
     private async Task DrawAllLocationsAsync()
     {
-        foreach (var location in _allLocations)
-            _allMarkers.Add(location.Id, await AddMarkerAsync(location));
+        foreach (var location in _allLocations) _allMarkers.Add(location.Id, await AddMarkerAsync(location));
     }
 
     private async ValueTask<IJSObjectReference> AddMarkerAsync(ExistingLocation location) =>
@@ -56,6 +55,8 @@
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
+    // TODO mu88: Check if disposing is necessary with .NET 6 as it causes errors an app shutdown
+
     // ReSharper disable once ConditionIsAlwaysTrueOrFalse
     // Due to unknown reasons, this method will be called before _module could be loaded.
     // Maybe it is related to the preview nature of .NET 6

@@ -38,7 +38,7 @@ namespace WebApp
             {
                 var random = new Random();
 
-                var date = new DateTime(random.Next(1980, 2020), random.Next(1, 12), random.Next(1, 28));
+                var date = new DateOnly(random.Next(1980, 2020), random.Next(1, 12), random.Next(1, 28));
                 var caption = $"Caption {i}";
                 var description = $"Description {i}";
                 double latitude = random.Next(-50, 50);
@@ -53,7 +53,7 @@ namespace WebApp
                                           createdBy));
             }
 
-            storage.Add(new LifePoint(new DateTime(1953, 4, 12),
+            storage.Add(new LifePoint(new DateOnly(1953, 4, 12),
                                       "Home of Football",
                                       "Nur die SGD",
                                       13.7478431,

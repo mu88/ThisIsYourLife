@@ -28,8 +28,9 @@ namespace BusinessServices.Services
 
         public async Task<ExistingLifePoint> CreateLifePointAsync(LifePointToCreate lifePointToCreate)
         {
-            var existingPerson = await _storage.FindAsync<Person>(lifePointToCreate.CreatedBy);
-            var newLifePoint = _mapper.Map<LifePointToCreate, LifePoint>(lifePointToCreate, options => options.Items[nameof(LifePoint.CreatedBy)] = existingPerson);
+            var existingPerson = await _storage.FindAsync<Person>(lifePointToCreate.CreatedBy) ??
+                                 throw new NullReferenceException($"Could not find any existing Person with ID {lifePointToCreate.CreatedBy}");
+            var newLifePoint = _mapper.Map<LifePointToCreate, LifePoint>(lifePointToCreate, options => options.Items[nameof(LifePoint.CreatedBy)] = existingPerson.Name);
             var createdLifePoint = await _storage.AddItemAsync(newLifePoint);
             await _storage.SaveAsync();
 

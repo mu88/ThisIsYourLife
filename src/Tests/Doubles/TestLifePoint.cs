@@ -9,7 +9,7 @@ namespace Tests.Doubles
         {
             createdBy ??= new Person("Oscar");
             var random = new Random();
-            return new LifePoint(DateTime.Now,
+            return new LifePoint(DateOnly.FromDateTime(DateTime.Now),
                                  $"Caption {random.Next()}",
                                  $"Description {random.Next()}",
                                  random.Next(-90, 90),

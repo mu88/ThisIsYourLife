@@ -14,7 +14,7 @@ namespace Entities
         {
         }
 
-        public LifePoint(DateTime date,
+        public LifePoint(DateOnly date,
                          string caption,
                          string description,
                          double latitude,
@@ -32,7 +32,7 @@ namespace Entities
 
         public Guid Id { get; private set; }
 
-        public DateTime Date { get; private set; }
+        public DateOnly Date { get; private set; }
 
         public string Caption { get; private set; }
 

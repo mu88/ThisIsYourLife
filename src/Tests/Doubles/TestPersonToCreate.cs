@@ -4,6 +4,6 @@ namespace Tests.Doubles
 {
     public static class TestPersonToCreate
     {
-        public static PersonToCreate Create(string name) => new() { Name = name };
+        public static PersonToCreate Create(string name) => new(name);
     }
 }

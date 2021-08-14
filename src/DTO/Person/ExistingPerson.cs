@@ -2,10 +2,5 @@
 
 namespace DTO.Person
 {
-    public class ExistingPerson
-    {
-        public Guid Id { get; set; }
-
-        public string Name { get; set; }
-    }
+    public record ExistingPerson(Guid Id, string Name);
 }
