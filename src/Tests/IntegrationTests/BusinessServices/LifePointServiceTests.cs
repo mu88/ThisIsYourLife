@@ -31,7 +31,6 @@ namespace Tests.IntegrationTests.BusinessServices
         }
 
         [Test]
-        [Ignore("Fails due to an incompatibility between C# Records and AutoMapper")]
         public async Task GetLifePoint()
         {
             var lifePoint = TestLifePoint.Create();
@@ -47,7 +46,6 @@ namespace Tests.IntegrationTests.BusinessServices
         }
 
         [Test]
-        [Ignore("Fails due to an incompatibility between C# Records and AutoMapper")]
         public async Task CreateNewLifePoint()
         {
             var storage = TestStorage.Create();

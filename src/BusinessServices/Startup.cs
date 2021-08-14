@@ -8,6 +8,7 @@ namespace BusinessServices
         public static void AddBusinessServices(this IServiceCollection services)
         {
             services.AddScoped<ILifePointService, LifePointService>();
+            services.AddScoped<IPersonService, PersonService>();
         }
     }
 }

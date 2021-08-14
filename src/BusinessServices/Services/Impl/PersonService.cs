@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using DTO.Person;
 using Entities;
@@ -25,5 +27,8 @@ namespace BusinessServices.Services
 
             return _mapper.Map<ExistingPerson>(createdPerson);
         }
+
+        /// <inheritdoc />
+        public IEnumerable<ExistingPerson> GetAllPersons() => _mapper.Map<IQueryable<Person>, IEnumerable<ExistingPerson>>(_storage.Persons);
     }
 }
