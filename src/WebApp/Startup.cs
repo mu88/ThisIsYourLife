@@ -1,10 +1,12 @@
 using BusinessServices;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence;
+using WebApp.Shared;
 
 namespace WebApp
 {
@@ -22,7 +24,7 @@ namespace WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddServerSideBlazor();
+            services.AddServerSideBlazor(options => { options.RootComponents.RegisterAsCustomElement<Counter>("my-blazor-counter"); });
 
             services.AddPersistence();
             services.AddBusinessServices();
