@@ -8,7 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BusinessServices\BusinessServices.csproj" />
     <ProjectReference Include="..\DTO\DTO.csproj" />
-    <ProjectReference Include="..\Persistence\Persistence.csproj" />
+    <ProjectReference Include="..\Persistence\Persistence.csproj"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -16,6 +16,13 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0-rc.1.21452.10"/>
     <PackageReference Include="Microsoft.AspNetCore.Components.CustomElements" Version="0.1.0-alpha.21466.1"/>
+  </ItemGroup>
+
+  <!--  TODO mu88: is this line really necessary? -->
+  <ItemGroup>
+    <Content Include="Shared\Map.razor.js">
+      <DependentUpon>Map.razor</DependentUpon>
+    </Content>
   </ItemGroup>
 
 </Project>
