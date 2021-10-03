@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using DTO.LifePoint;
 using DTO.Location;
+using DTO.Person;
 
 namespace BusinessServices.Services
 {
@@ -17,5 +18,7 @@ namespace BusinessServices.Services
         Task DeleteLifePointAsync(Guid id);
 
         IEnumerable<int> GetDistinctYears();
+
+        IEnumerable<ExistingPerson> GetDistinctCreators();
     }
 }

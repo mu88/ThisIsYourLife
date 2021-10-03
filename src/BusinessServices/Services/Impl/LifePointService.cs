@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DTO.LifePoint;
 using DTO.Location;
+using DTO.Person;
 using Entities;
 
 namespace BusinessServices.Services
@@ -50,6 +51,12 @@ namespace BusinessServices.Services
         }
 
         public IEnumerable<int> GetDistinctYears() => _storage.LifePoints.Select(x => x.Date.Year).Distinct().OrderBy(x => x);
+
+        public IEnumerable<ExistingPerson> GetDistinctCreators()
+        {
+            var distinctCreators = _storage.LifePoints.Select(x => x.CreatedBy).Distinct().OrderBy(x => x.Name);
+            return _mapper.Map<IQueryable<Person>, IEnumerable<ExistingPerson>>(distinctCreators);
+        }
 
         private async Task<LifePoint> GetLifePointInternalAsync(Guid id) =>
             await _storage.FindAsync<LifePoint>(id) ??

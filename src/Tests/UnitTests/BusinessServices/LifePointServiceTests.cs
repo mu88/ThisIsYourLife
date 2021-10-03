@@ -179,5 +179,20 @@ namespace Tests.UnitTests.BusinessServices
 
             results.Should().Equal(1952, 1953);
         }
+
+        [Test]
+        public void GetDistinctCreatorNames()
+        {
+            var alice = new Person("Alice");
+            var bob = new Person("Bob");
+            var lifePoints = new[] { TestLifePoint.Create(bob), TestLifePoint.Create(alice), TestLifePoint.Create(alice) };
+            var autoMocker = new CustomAutoMocker();
+            autoMocker.Setup<IStorage, IQueryable<LifePoint>>(x => x.LifePoints).Returns(lifePoints.AsQueryable);
+            var testee = autoMocker.CreateInstance<LifePointService>();
+
+            var results = testee.GetDistinctCreators();
+
+            results.Select(x => x.Name).Should().Equal("Alice", "Bob");
+        }
     }
 }
