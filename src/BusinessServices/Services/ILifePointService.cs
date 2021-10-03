@@ -13,5 +13,7 @@ namespace BusinessServices.Services
         Task<ExistingLifePoint> GetLifePointAsync(Guid id);
 
         Task<ExistingLifePoint> CreateLifePointAsync(LifePointToCreate lifePointToCreate);
+
+        Task DeleteLifePointAsync(Guid id);
     }
 }

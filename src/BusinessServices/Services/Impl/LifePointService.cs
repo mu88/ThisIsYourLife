@@ -22,9 +22,7 @@ namespace BusinessServices.Services
 
         public IEnumerable<ExistingLocation> GetAllLocations() => _mapper.Map<IQueryable<LifePoint>, IEnumerable<ExistingLocation>>(_storage.LifePoints);
 
-        public async Task<ExistingLifePoint> GetLifePointAsync(Guid id) =>
-            _mapper.Map<LifePoint, ExistingLifePoint>(await _storage.FindAsync<LifePoint>(id) ??
-                                                      throw new NullReferenceException($"Could not find any existing LifePoint with ID {id}"));
+        public async Task<ExistingLifePoint> GetLifePointAsync(Guid id) => _mapper.Map<LifePoint, ExistingLifePoint>(await GetLifePointInternalAsync(id));
 
         public async Task<ExistingLifePoint> CreateLifePointAsync(LifePointToCreate lifePointToCreate)
         {
@@ -41,8 +39,18 @@ namespace BusinessServices.Services
 
             var createdLifePoint = await _storage.AddItemAsync(newLifePoint);
             await _storage.SaveAsync();
-            
+
             return _mapper.Map<LifePoint, ExistingLifePoint>(createdLifePoint);
         }
+
+        public async Task DeleteLifePointAsync(Guid id)
+        {
+            _storage.RemoveItem(await GetLifePointInternalAsync(id));
+            await _storage.SaveAsync();
+        }
+
+        private async Task<LifePoint> GetLifePointInternalAsync(Guid id) =>
+            await _storage.FindAsync<LifePoint>(id) ??
+            throw new NullReferenceException($"Could not find any existing LifePoint with ID {id}");
     }
 }

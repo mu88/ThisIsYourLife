@@ -57,5 +57,19 @@ namespace Tests.IntegrationTests.BusinessServices
 
             storage.LifePoints.Should().ContainSingle(x => x.Id == result.Id);
         }
+
+        [Test]
+        public async Task DeleteLifePoint()
+        {
+            var lifePoint = TestLifePoint.Create();
+            var storage = TestStorage.Create();
+            await storage.AddItemAsync(lifePoint);
+            await storage.SaveAsync();
+            var testee = new LifePointService(storage, TestMapper.Create());
+
+            await testee.DeleteLifePointAsync(lifePoint.Id);
+
+            storage.LifePoints.Should().NotContain(lifePoint);
+        }
     }
 }
