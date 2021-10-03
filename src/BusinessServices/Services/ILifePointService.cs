@@ -15,5 +15,7 @@ namespace BusinessServices.Services
         Task<ExistingLifePoint> CreateLifePointAsync(LifePointToCreate lifePointToCreate);
 
         Task DeleteLifePointAsync(Guid id);
+
+        IEnumerable<int> GetDistinctYears();
     }
 }

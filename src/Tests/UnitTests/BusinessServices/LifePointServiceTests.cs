@@ -161,5 +161,23 @@ namespace Tests.UnitTests.BusinessServices
 
             await testAction.Should().ThrowAsync<NullReferenceException>();
         }
+
+        [Test]
+        public void GetDistinctYears()
+        {
+            var lifePoints = new[]
+            {
+                TestLifePoint.Create(date: new DateOnly(1953, 4, 12)),
+                TestLifePoint.Create(date: new DateOnly(1952, 4, 12)),
+                TestLifePoint.Create(date: new DateOnly(1952, 4, 12))
+            };
+            var autoMocker = new CustomAutoMocker();
+            autoMocker.Setup<IStorage, IQueryable<LifePoint>>(x => x.LifePoints).Returns(lifePoints.AsQueryable);
+            var testee = autoMocker.CreateInstance<LifePointService>();
+
+            var results = testee.GetDistinctYears();
+
+            results.Should().Equal(1952, 1953);
+        }
     }
 }

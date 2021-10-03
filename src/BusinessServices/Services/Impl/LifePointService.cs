@@ -49,6 +49,8 @@ namespace BusinessServices.Services
             await _storage.SaveAsync();
         }
 
+        public IEnumerable<int> GetDistinctYears() => _storage.LifePoints.Select(x => x.Date.Year).Distinct().OrderBy(x => x);
+
         private async Task<LifePoint> GetLifePointInternalAsync(Guid id) =>
             await _storage.FindAsync<LifePoint>(id) ??
             throw new NullReferenceException($"Could not find any existing LifePoint with ID {id}");
