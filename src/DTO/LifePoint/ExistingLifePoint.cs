@@ -8,5 +8,6 @@ namespace DTO.LifePoint
                                     string Description,
                                     double Latitude,
                                     double Longitude,
-                                    string CreatedBy);
+                                    string CreatedBy,
+                                    Guid? ImageId);
 }

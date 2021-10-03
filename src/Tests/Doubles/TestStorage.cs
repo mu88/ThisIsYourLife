@@ -2,6 +2,7 @@
 using BusinessServices;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using Persistence;
 
 namespace Tests.Doubles
@@ -10,7 +11,7 @@ namespace Tests.Doubles
     {
         public static IStorage Create()
         {
-            var storage = new Storage(new DbContextOptionsBuilder<Storage>().UseSqlite(CreateInMemoryDatabase()).Options);
+            var storage = new Storage(new DbContextOptionsBuilder<Storage>().UseSqlite(CreateInMemoryDatabase()).Options, new Mock<IFileSystem>().Object);
             storage.Database.EnsureCreated();
 
             return storage;

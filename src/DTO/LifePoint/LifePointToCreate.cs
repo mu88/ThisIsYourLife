@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace DTO.LifePoint
 {
@@ -7,5 +8,6 @@ namespace DTO.LifePoint
                                     string Description,
                                     double Latitude,
                                     double Longitude,
-                                    Guid CreatedBy);
+                                    Guid CreatedBy,
+                                    Stream? ImageStream = null);
 }

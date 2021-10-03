@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Entities;
@@ -21,5 +22,7 @@ namespace BusinessServices
             where T : class;
 
         public Task SaveAsync();
+
+        public Task<Guid> StoreImageAsync(Stream imageStream);
     }
 }

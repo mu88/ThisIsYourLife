@@ -19,7 +19,8 @@ namespace Entities
                          string description,
                          double latitude,
                          double longitude,
-                         Person createdBy)
+                         Person createdBy,
+                         Guid? imageId = null)
         {
             Id = Guid.NewGuid();
             Date = date;
@@ -28,6 +29,7 @@ namespace Entities
             Latitude = latitude;
             Longitude = longitude;
             CreatedBy = createdBy;
+            ImageId = imageId;
         }
 
         public Guid Id { get; private set; }
@@ -43,5 +45,7 @@ namespace Entities
         public double Longitude { get; private set; }
 
         public Person CreatedBy { get; private set; }
+
+        public Guid? ImageId { get; private set; }
     }
 }

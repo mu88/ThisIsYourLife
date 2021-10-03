@@ -10,6 +10,7 @@ namespace Persistence
         {
             services.AddDbContext<Storage>(options => options.UseInMemoryDatabase("MyDatabase"));
             services.AddScoped<IStorage>(provider => provider.GetService<Storage>()!); // cannot be null since it is registered before
+            services.AddSingleton<IFileSystem, FileSystem>();
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using BusinessServices;
 using Entities;
@@ -12,12 +14,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
+    // TODO mu88: Make this internal as soon as seeding of test data is not longer necessary
     public class Storage : DbContext, IStorage
     {
+        private readonly IFileSystem _fileSystem;
+
         /// <inheritdoc />
-        public Storage(DbContextOptions<Storage> options)
+        public Storage(DbContextOptions<Storage> options, IFileSystem fileSystem)
             : base(options)
         {
+            _fileSystem = fileSystem;
         }
 
         /// <inheritdoc />
@@ -44,6 +50,23 @@ namespace Persistence
 
         /// <inheritdoc />
         public async Task SaveAsync() => await base.SaveChangesAsync();
+
+        /// <inheritdoc />
+        public async Task<Guid> StoreImageAsync(Stream imageStream)
+        {
+            var imageId = Guid.NewGuid();
+            var filePathForImage = GetFilePathForImage(imageId);
+            await _fileSystem.CreateFileAsync(filePathForImage, imageStream);
+
+            return imageId;
+        }
+
+        private static string GetFilePathForImage(Guid imageId)
+        {
+            // TODO mu88: Rethink file path retrieval - should this be configurable?
+            var entryLocation = Assembly.GetEntryAssembly()!.Location;
+            return Path.Combine(entryLocation, "images", imageId.ToString());
+        }
 
         /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder modelBuilder)

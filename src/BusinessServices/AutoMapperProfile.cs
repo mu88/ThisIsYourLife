@@ -29,6 +29,8 @@ namespace BusinessServices
             CreateMap<LifePointToCreate, LifePoint>()
                 .ForCtorParam("createdBy", options => options.MapFrom((_, context) => context.Items[nameof(LifePoint.CreatedBy)]))
                 .ForMember(x => x.CreatedBy, options => options.MapFrom((_, _, _, context) => context.Items[nameof(LifePoint.CreatedBy)]))
+                .ForCtorParam("imageId", options => options.MapFrom((_, context) => context.Items[nameof(LifePoint.ImageId)]))
+                .ForMember(x => x.ImageId, options => options.MapFrom((_, _, _, context) => context.Items[nameof(LifePoint.ImageId)]))
                 .ForMember(x => x.Id, options => options.Ignore());
         }
     }
