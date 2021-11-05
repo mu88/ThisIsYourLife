@@ -51,7 +51,8 @@
     // TODO mu88: Delete existing markers from map
         _allMarkers.Clear();
 
-        foreach (var location in _allLocations) _allMarkers.Add(location.Id, await AddMarkerAsync(location));
+        foreach (var location in _allLocations)
+            _allMarkers.Add(location.Id, await AddMarkerAsync(location));
     }
 
     private async ValueTask<IJSObjectReference> AddMarkerAsync(ExistingLocation location) =>

@@ -61,13 +61,6 @@ namespace Persistence
             return imageId;
         }
 
-        private static string GetFilePathForImage(Guid imageId)
-        {
-            // TODO mu88: Rethink file path retrieval - should this be configurable?
-            var entryLocation = Assembly.GetEntryAssembly()!.Location;
-            return Path.Combine(entryLocation, "images", imageId.ToString());
-        }
-
         /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -75,8 +68,16 @@ namespace Persistence
 
             modelBuilder.Entity<LifePoint>().ToTable("LifePoint");
             modelBuilder.Entity<LifePoint>().HasKey(nameof(LifePoint.Id));
+            modelBuilder.Entity<LifePoint>().Navigation(point => point.CreatedBy).AutoInclude();
             modelBuilder.Entity<Person>().ToTable("Person");
             modelBuilder.Entity<Person>().HasKey(nameof(LifePoint.Id));
+        }
+
+        private static string GetFilePathForImage(Guid imageId)
+        {
+            // TODO mu88: Rethink file path retrieval - should this be configurable?
+            var entryLocation = Assembly.GetEntryAssembly()!.Location;
+            return Path.Combine(entryLocation, "images", imageId.ToString());
         }
     }
 }

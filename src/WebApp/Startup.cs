@@ -24,7 +24,7 @@ namespace WebApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
-            services.AddServerSideBlazor(options => { options.RootComponents.RegisterAsCustomElement<Counter>("my-blazor-counter"); });
+            services.AddServerSideBlazor(options => { options.RootComponents.RegisterAsCustomElement<LifePointDetail>("life-point-detail"); });
 
             services.AddPersistence();
             services.AddBusinessServices();

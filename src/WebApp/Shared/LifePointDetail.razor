@@ -2,11 +2,11 @@
 @using DTO.LifePoint
 @inject ILifePointService _lifePointService
 
-<h1>LifePointDetail</h1>
-
 @if (_lifePoint is not null)
 {
-    <h1>@_lifePoint.Caption</h1>
+    <h2>@_lifePoint.Caption</h2>
+    <p>On @_lifePoint.Date with @_lifePoint.CreatedBy</p>
+    <p>@_lifePoint.Description</p>
 }
 
 @code {
@@ -14,12 +14,14 @@
     private ExistingLifePoint? _lifePoint;
 
     [Parameter]
-    public Guid Id { get; set; }
+    public string? Id { get; set; }
 
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
     {
-        _lifePoint = await _lifePointService.GetLifePointAsync(Id);
+        if (string.IsNullOrWhiteSpace(Id)) { return; }
+
+        _lifePoint = await _lifePointService.GetLifePointAsync(Guid.Parse(Id));
 
         await base.OnInitializedAsync();
     }

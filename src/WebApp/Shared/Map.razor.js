@@ -14,7 +14,7 @@ export function initializeMap(startLongitude, startLatitude, startZoom, dotNetOb
 
 export function addMarker(myMap, id, longitude, latitude) {
     let marker = L.marker([longitude, latitude]).addTo(myMap);
-    marker.bindPopup("<my-blazor-counter></my-blazor-counter>");
+    marker.bindPopup("<life-point-detail id='" + id + "'></life-point-detail>", { minWidth: 500 });
     return marker;
 }
 
