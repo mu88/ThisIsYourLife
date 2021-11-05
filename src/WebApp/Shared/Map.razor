@@ -1,7 +1,5 @@
 ﻿@using BusinessServices.Services
-@using DTO.LifePoint
 @using DTO.Location
-@using System.Text.Json
 @implements IAsyncDisposable
 @inject IJSRuntime _jsRuntime
 @inject ILifePointService _lifePointService
@@ -14,7 +12,6 @@
     // Will be initialized on startup
 #pragma warning disable 8618
     private IJSObjectReference _module;
-    private IJSObjectReference _map;
 #pragma warning restore 8618
     private IReadOnlyList<ExistingLocation> _allLocations = new List<ExistingLocation>();
     private Dictionary<Guid, IJSObjectReference> _allMarkers = new();
@@ -43,7 +40,7 @@
     private async Task InitializeMap(DotNetObjectReference<Map> dotNetObjectReference)
     {
         _module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js");
-        _map = await _module.InvokeAsync<IJSObjectReference>("initializeMap", 51.0405849, 13.7478431, 20, dotNetObjectReference);
+        await _module.InvokeVoidAsync("initializeMap", 51.0405849, 13.7478431, 20, dotNetObjectReference);
     }
 
     private async Task RedrawAllLocationsAsync()
@@ -56,17 +53,7 @@
     }
 
     private async ValueTask<IJSObjectReference> AddMarkerAsync(ExistingLocation location) =>
-        await _module.InvokeAsync<IJSObjectReference>("addMarker", _map, location.Id, location.Latitude, location.Longitude);
-
-    [JSInvokable]
-    public async Task CreateNewLifePointAsync(JsonElement lng, JsonElement lat)
-    {
-        var longitude = lng.GetDouble();
-        var latitude = lat.GetDouble();
-        var lifePointToCreate = new LifePointToCreate(DateOnly.FromDateTime(DateTime.Now), "Test", "Test", latitude, longitude, _personService.GetAllPersons().First().Id);
-
-        await _lifePointService.CreateLifePointAsync(lifePointToCreate);
-    }
+        await _module.InvokeAsync<IJSObjectReference>("addMarker", location.Id, location.Latitude, location.Longitude);
 
     [JSInvokable]
     public async Task ReloadAndDrawAllLocationsAsync()

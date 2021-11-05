@@ -25,6 +25,7 @@ namespace WebApp
         {
             services.AddRazorPages();
             services.AddServerSideBlazor(options => { options.RootComponents.RegisterAsCustomElement<LifePointDetail>("life-point-detail"); });
+            services.AddServerSideBlazor(options => { options.RootComponents.RegisterAsCustomElement<NewLifePoint>("new-life-point"); });
 
             services.AddPersistence();
             services.AddBusinessServices();

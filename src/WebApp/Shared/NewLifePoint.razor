@@ -1,0 +1,33 @@
+﻿@using BusinessServices.Services
+@using DTO.LifePoint
+@inject ILifePointService _lifePointService
+@inject IPersonService _personService
+
+<EditForm Model="@_newLifePoint" OnValidSubmit="@CreateNewLifePointAsync">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+
+    <InputText id="caption" @bind-Value="_newLifePoint.Caption"/>
+    <InputText id="description" @bind-Value="_newLifePoint.Description"/>
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+@code {
+
+    private readonly NewLifePointModel _newLifePoint = new();
+
+    [Parameter]
+    public double Latitude { get; set; }
+
+    [Parameter]
+    public double Longitude { get; set; }
+
+    private async Task CreateNewLifePointAsync()
+    {
+        var lifePointToCreate = new LifePointToCreate(DateOnly.FromDateTime(DateTime.Now), _newLifePoint.Caption, _newLifePoint.Description, Latitude, Longitude, _personService.GetAllPersons().First().Id);
+
+        await _lifePointService.CreateLifePointAsync(lifePointToCreate);
+    }
+
+}
