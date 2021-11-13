@@ -34,11 +34,10 @@
         var lifePointToCreate = new LifePointToCreate(DateOnly.FromDateTime(DateTime.Now), _newLifePoint.Caption, _newLifePoint.Description, Latitude, Longitude, _personService.GetAllPersons().First().Id);
 
         await _lifePointService.CreateLifePointAsync(lifePointToCreate);
-
-        await ClosePopupAsync();
+        await RemovePopupAsync();
     }
 
-    private async Task ClosePopupAsync() => await (await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js"))
-                                                      .InvokeVoidAsync("closeNewLifePointPopup", Id);
+    private async Task RemovePopupAsync() => await (await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js"))
+                                                       .InvokeVoidAsync("removeNewLifePointPopup", Id);
 
 }

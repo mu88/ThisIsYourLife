@@ -1,15 +1,20 @@
 ﻿@using BusinessServices.Services
 @using DTO.LifePoint
 @inject ILifePointService _lifePointService
+@inject IJSRuntime _jsRuntime
 
 @if (_lifePoint is not null)
 {
     <h2>@_lifePoint.Caption</h2>
     <p>On @_lifePoint.Date with @_lifePoint.CreatedBy</p>
     <p>@_lifePoint.Description</p>
+
+    <button @onclick="OnDeleteClicked">Delete</button>
 }
 
 @code {
+
+    // TODO mu88: improve error/null handling of _lifePoint and Id
 
     private ExistingLifePoint? _lifePoint;
 
@@ -25,5 +30,16 @@
 
         await base.OnInitializedAsync();
     }
+
+    private async void OnDeleteClicked()
+    {
+        if (string.IsNullOrWhiteSpace(Id)) { return; }
+
+        await _lifePointService.DeleteLifePointAsync(Guid.Parse(Id));
+        await RemoveMarkerAsync();
+    }
+
+    private async Task RemoveMarkerAsync() => await (await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js"))
+                                                        .InvokeVoidAsync("removeExistingLifePointMarker", Id);
 
 }

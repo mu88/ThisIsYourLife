@@ -4,6 +4,7 @@ let _dotNetObjectReference;
 let myMap;
 let newLifePointIdCounter = 0;
 let newLifePointsMap = new Map();
+let existingLifePointsMap = new Map();
 
 export function initializeMap(startLongitude, startLatitude, startZoom, dotNetObjectReference) {
     _dotNetObjectReference = dotNetObjectReference;
@@ -15,15 +16,26 @@ export function initializeMap(startLongitude, startLatitude, startZoom, dotNetOb
     myMap.on('dblclick', onMapDoubleClick);
 }
 
-export function addMarker(id, latitude, longitude) {
+export function addExistingLifePointMarker(id, latitude, longitude) {
     let marker = L.marker([latitude, longitude]).addTo(myMap);
     marker.bindPopup("<life-point-detail id='" + id + "'></life-point-detail>", { minWidth: 500 });
-    return marker;
+    existingLifePointsMap.set(id, marker);
 }
 
-export function closeNewLifePointPopup(id) {
-    newLifePointsMap.get(id).remove();
+export function removeNewLifePointPopup(id) {
+    let popupOfNewLifePoint = newLifePointsMap.get(id);
+    if (popupOfNewLifePoint) {
+        popupOfNewLifePoint.remove();
+    }
     newLifePointsMap.delete(id);
+}
+
+export function removeExistingLifePointMarker(id) {
+    let markerOfExistingLifePoint = existingLifePointsMap.get(id);
+    if (markerOfExistingLifePoint) {
+        markerOfExistingLifePoint.remove();
+    }
+    existingLifePointsMap.delete(id);
 }
 
 function onMapDoubleClick(e) {

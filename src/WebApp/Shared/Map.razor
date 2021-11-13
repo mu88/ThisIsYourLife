@@ -14,7 +14,6 @@
     private IJSObjectReference _mapModule;
 #pragma warning restore 8618
     private IReadOnlyList<ExistingLocation> _allLocations = new List<ExistingLocation>();
-    private Dictionary<Guid, IJSObjectReference> _allMarkers = new();
     private DotNetObjectReference<Map>? _objRef;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -23,7 +22,7 @@
         {
             _objRef = DotNetObjectReference.Create(this);
             await InitializeMap(_objRef);
-            await RedrawAllLocationsAsync();
+            await AddAllMarkers();
         }
     }
 
@@ -35,32 +34,39 @@
         return base.OnInitializedAsync();
     }
 
-    private void ReloadAllLocations() => _allLocations = _lifePointService.GetAllLocations().ToList();
-
     private async Task InitializeMap(DotNetObjectReference<Map> dotNetObjectReference)
     {
         _mapModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js");
         await _mapModule.InvokeVoidAsync("initializeMap", 51.0405849, 13.7478431, 20, dotNetObjectReference);
     }
 
-    private async Task RedrawAllLocationsAsync()
-    {
-    // TODO mu88: Delete existing markers from map
-        _allMarkers.Clear();
-
-        foreach (var location in _allLocations)
-            _allMarkers.Add(location.Id, await AddMarkerAsync(location));
-    }
-
-    private async ValueTask<IJSObjectReference> AddMarkerAsync(ExistingLocation location) =>
-        await _mapModule.InvokeAsync<IJSObjectReference>("addMarker", location.Id, location.Latitude, location.Longitude);
+    private void ReloadAllLocations() => _allLocations = _lifePointService.GetAllLocations().ToList();
 
     [JSInvokable]
     public async Task ReloadAndDrawAllLocationsAsync()
     {
+        await RemoveAllMarkers();
         ReloadAllLocations();
-        await RedrawAllLocationsAsync();
+        await AddAllMarkers();
     }
+
+    private async Task AddAllMarkers()
+    {
+        foreach (var location in _allLocations)
+            await AddMarkerAsync(location);
+    }
+
+    private async Task AddMarkerAsync(ExistingLocation location) =>
+        await _mapModule.InvokeVoidAsync("addExistingLifePointMarker", location.Id, location.Latitude, location.Longitude);
+
+    private async Task RemoveAllMarkers()
+    {
+        foreach (var location in _allLocations)
+            await RemoveMarkerAsync(location);
+    }
+
+    private async Task RemoveMarkerAsync(ExistingLocation location) =>
+        await _mapModule.InvokeVoidAsync("removeExistingLifePointMarker", location.Id);
 
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
