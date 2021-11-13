@@ -11,7 +11,7 @@
 
     // Will be initialized on startup
 #pragma warning disable 8618
-    private IJSObjectReference _module;
+    private IJSObjectReference _mapModule;
 #pragma warning restore 8618
     private IReadOnlyList<ExistingLocation> _allLocations = new List<ExistingLocation>();
     private Dictionary<Guid, IJSObjectReference> _allMarkers = new();
@@ -39,8 +39,8 @@
 
     private async Task InitializeMap(DotNetObjectReference<Map> dotNetObjectReference)
     {
-        _module = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js");
-        await _module.InvokeVoidAsync("initializeMap", 51.0405849, 13.7478431, 20, dotNetObjectReference);
+        _mapModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js");
+        await _mapModule.InvokeVoidAsync("initializeMap", 51.0405849, 13.7478431, 20, dotNetObjectReference);
     }
 
     private async Task RedrawAllLocationsAsync()
@@ -53,7 +53,7 @@
     }
 
     private async ValueTask<IJSObjectReference> AddMarkerAsync(ExistingLocation location) =>
-        await _module.InvokeAsync<IJSObjectReference>("addMarker", location.Id, location.Latitude, location.Longitude);
+        await _mapModule.InvokeAsync<IJSObjectReference>("addMarker", location.Id, location.Latitude, location.Longitude);
 
     [JSInvokable]
     public async Task ReloadAndDrawAllLocationsAsync()
@@ -70,7 +70,7 @@
     // ReSharper disable once ConditionIsAlwaysTrueOrFalse
     // Due to unknown reasons, this method will be called before _module could be loaded.
     // Maybe it is related to the preview nature of .NET 6
-        if (_module is not null) { await _module.DisposeAsync(); }
+        if (_mapModule is not null) { await _mapModule.DisposeAsync(); }
         _objRef?.Dispose();
     }
 

@@ -2,12 +2,15 @@
 @using DTO.LifePoint
 @inject ILifePointService _lifePointService
 @inject IPersonService _personService
+@inject IJSRuntime _jsRuntime
 
 <EditForm Model="@_newLifePoint" OnValidSubmit="@CreateNewLifePointAsync">
     <DataAnnotationsValidator/>
     <ValidationSummary/>
 
+    <label for="caption">Caption</label>
     <InputText id="caption" @bind-Value="_newLifePoint.Caption"/>
+    <label for="description">Description</label>
     <InputText id="description" @bind-Value="_newLifePoint.Description"/>
 
     <button type="submit">Submit</button>
@@ -23,11 +26,19 @@
     [Parameter]
     public double Longitude { get; set; }
 
+    [Parameter]
+    public int Id { get; set; }
+
     private async Task CreateNewLifePointAsync()
     {
         var lifePointToCreate = new LifePointToCreate(DateOnly.FromDateTime(DateTime.Now), _newLifePoint.Caption, _newLifePoint.Description, Latitude, Longitude, _personService.GetAllPersons().First().Id);
 
         await _lifePointService.CreateLifePointAsync(lifePointToCreate);
+
+        await ClosePopupAsync();
     }
+
+    private async Task ClosePopupAsync() => await (await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js"))
+                                                      .InvokeVoidAsync("closeNewLifePointPopup", Id);
 
 }
