@@ -1,25 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BusinessServices\BusinessServices.csproj"/>
-    <ProjectReference Include="..\Entities\Entities.csproj"/>
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\BusinessServices\BusinessServices.csproj"/>
+        <ProjectReference Include="..\Entities\Entities.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-rc.1.21452.10"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0-rc.1.21452.10"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.0-rc.1.21452.10"/>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.0"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-      <_Parameter1>Tests</_Parameter1>
-    </AssemblyAttribute>
-  </ItemGroup>
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>Tests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
 
 </Project>
