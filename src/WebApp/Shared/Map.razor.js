@@ -22,7 +22,7 @@ export function addMarker(id, latitude, longitude) {
 function onMapDoubleClick(e) {
     let latitude = e.latlng.lat;
     let longitude = e.latlng.lng;
-    let popup = L.popup({ minWidth: 500 })
+    let popup = L.popup({ minWidth: 500, closeButton: true, autoClose: false, closeOnEscapeKey: false, closeOnClick: false })
         .setLatLng([latitude, longitude])
         .setContent("<new-life-point latitude='" + latitude + "' longitude='" + longitude + "'></new-life-point>")
         .on("remove", function () {
