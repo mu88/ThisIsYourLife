@@ -21,43 +21,25 @@
         if (firstRender)
         {
             _objRef = DotNetObjectReference.Create(this);
-            await InitializeMap(_objRef);
-            await AddAllMarkers();
+            await InitializeMapAsync(_objRef);
+            await AddMarkersForExistingLocations();
         }
     }
 
-    /// <inheritdoc />
-    protected override Task OnInitializedAsync()
-    {
-        ReloadAllLocations();
-
-        return base.OnInitializedAsync();
-    }
-
-    private async Task InitializeMap(DotNetObjectReference<Map> dotNetObjectReference)
+    private async Task InitializeMapAsync(DotNetObjectReference<Map> dotNetObjectReference)
     {
         _mapModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js");
         await _mapModule.InvokeVoidAsync("initializeMap", 51.0405849, 13.7478431, 20, dotNetObjectReference);
     }
 
-    private void ReloadAllLocations() => _allLocations = _lifePointService.GetAllLocations().ToList();
-
-    [JSInvokable]
-    public async Task ReloadAndDrawAllLocationsAsync()
+    private async Task AddMarkersForExistingLocations()
     {
-        await RemoveAllMarkers();
-        ReloadAllLocations();
-        await AddAllMarkers();
-    }
-
-    private async Task AddAllMarkers()
-    {
-        foreach (var location in _allLocations)
+        foreach (var location in _lifePointService.GetAllLocations())
             await AddMarkerAsync(location);
     }
 
     private async Task AddMarkerAsync(ExistingLocation location) =>
-        await _mapModule.InvokeVoidAsync("addExistingLifePointMarker", location.Id, location.Latitude, location.Longitude);
+        await _mapModule.InvokeVoidAsync("addMarkerForExistingLifePoint", location.Id, location.Latitude, location.Longitude);
 
     private async Task RemoveAllMarkers()
     {
@@ -66,7 +48,7 @@
     }
 
     private async Task RemoveMarkerAsync(ExistingLocation location) =>
-        await _mapModule.InvokeVoidAsync("removeExistingLifePointMarker", location.Id);
+        await _mapModule.InvokeVoidAsync("removeMarkerForExistingLifePoint", location.Id);
 
     /// <inheritdoc />
     public async ValueTask DisposeAsync()

@@ -40,6 +40,6 @@
     }
 
     private async Task RemoveMarkerAsync() => await (await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js"))
-                                                        .InvokeVoidAsync("removeExistingLifePointMarker", Id);
+                                                        .InvokeVoidAsync("removeMarkerForExistingLifePoint", Id);
 
 }
