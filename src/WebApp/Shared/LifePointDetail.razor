@@ -17,6 +17,7 @@
     // TODO mu88: improve error/null handling of _lifePoint and Id
 
     private ExistingLifePoint? _lifePoint;
+    private IJSObjectReference _lifePointDetailModule; // TODO mu88: Dispose module
 
     [Parameter]
     public string? Id { get; set; }
@@ -27,6 +28,8 @@
         if (string.IsNullOrWhiteSpace(Id)) { return; }
 
         _lifePoint = await _lifePointService.GetLifePointAsync(Guid.Parse(Id));
+
+        await LoadLifePointDetailModuleAsync();
 
         await base.OnInitializedAsync();
     }
@@ -39,7 +42,8 @@
         await RemoveMarkerAsync();
     }
 
-    private async Task RemoveMarkerAsync() => await (await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js"))
-                                                        .InvokeVoidAsync("removeMarkerForExistingLifePoint", Id);
+    private async Task RemoveMarkerAsync() => await _lifePointDetailModule.InvokeVoidAsync("removeMarkerOfLifePoint");
+
+    private async Task LoadLifePointDetailModuleAsync() => _lifePointDetailModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
 
 }

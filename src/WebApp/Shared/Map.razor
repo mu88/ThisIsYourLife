@@ -12,6 +12,8 @@
     // Will be initialized on startup
 #pragma warning disable 8618
     private IJSObjectReference _mapModule;
+    private IJSObjectReference _newLifePointModule;
+    private IJSObjectReference _lifePointDetailModule;
 #pragma warning restore 8618
     private IReadOnlyList<ExistingLocation> _allLocations = new List<ExistingLocation>();
     private DotNetObjectReference<Map>? _objRef;
@@ -26,29 +28,38 @@
         }
     }
 
+    [JSInvokable]
+    public async Task OpenPopupForNewLifePoint(double latitude, double longitude)
+    {
+        var popup = await CreatePopupAsync(latitude, longitude);
+        await OpenPopupOnMapAsync(popup);
+    }
+
+    [JSInvokable]
+    public async Task AddMarkerAsync(Guid id, double latitude, double longitude)
+    {
+        var marker = await _lifePointDetailModule.InvokeAsync<IJSObjectReference>("createMarkerForExistingLifePoint", id, latitude, longitude);
+        await _mapModule.InvokeVoidAsync("addMarkerToMap", marker);
+    }
+
+    private async Task<IJSObjectReference> CreatePopupAsync(double latitude, double longitude) => await _newLifePointModule.InvokeAsync<IJSObjectReference>("createPopupForNewLifePoint", _objRef, latitude, longitude);
+
+    private async Task OpenPopupOnMapAsync(IJSObjectReference popupReference) => await _mapModule.InvokeVoidAsync("openPopupOnMap", popupReference);
+
     private async Task InitializeMapAsync(DotNetObjectReference<Map> dotNetObjectReference)
     {
         _mapModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js");
         await _mapModule.InvokeVoidAsync("initializeMap", 51.0405849, 13.7478431, 20, dotNetObjectReference);
+
+        _newLifePointModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/NewLifePoint.razor.js");
+        _lifePointDetailModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
     }
 
     private async Task AddMarkersForExistingLocations()
     {
-        foreach (var location in _lifePointService.GetAllLocations())
-            await AddMarkerAsync(location);
+        foreach (var (latitude, longitude, id) in _lifePointService.GetAllLocations())
+            await AddMarkerAsync(id, latitude, longitude);
     }
-
-    private async Task AddMarkerAsync(ExistingLocation location) =>
-        await _mapModule.InvokeVoidAsync("addMarkerForExistingLifePoint", location.Id, location.Latitude, location.Longitude);
-
-    private async Task RemoveAllMarkers()
-    {
-        foreach (var location in _allLocations)
-            await RemoveMarkerAsync(location);
-    }
-
-    private async Task RemoveMarkerAsync(ExistingLocation location) =>
-        await _mapModule.InvokeVoidAsync("removeMarkerForExistingLifePoint", location.Id);
 
     /// <inheritdoc />
     public async ValueTask DisposeAsync()

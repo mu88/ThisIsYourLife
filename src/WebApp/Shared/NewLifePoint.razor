@@ -19,16 +19,13 @@
 @code {
 
     private readonly NewLifePointModel _newLifePoint = new();
-    private IJSObjectReference _mapModule; // TODO mu88: Dispose module
+    private IJSObjectReference _newLifePointModule; // TODO mu88: Dispose module
 
     [Parameter]
     public double Latitude { get; set; }
 
     [Parameter]
     public double Longitude { get; set; }
-
-    [Parameter]
-    public int Id { get; set; }
 
     private async Task CreateNewLifePointAsync()
     {
@@ -39,18 +36,18 @@
         await AddMarkerAsync(createdLifePoint);
     }
 
-    private async Task RemovePopupAsync() => await _mapModule.InvokeVoidAsync("removePopupForNewLifePoint", Id);
+    private async Task RemovePopupAsync() => await _newLifePointModule.InvokeVoidAsync("removePopupForNewLifePoint");
 
-    private async Task AddMarkerAsync(ExistingLifePoint existingLifePoint) => await _mapModule.InvokeVoidAsync("addMarkerForExistingLifePoint", existingLifePoint.Id, existingLifePoint.Latitude, existingLifePoint.Longitude);
+    private async Task AddMarkerAsync(ExistingLifePoint existingLifePoint) => await _newLifePointModule.InvokeVoidAsync("addMarkerForCreatedLifePoint", existingLifePoint.Id, existingLifePoint.Latitude, existingLifePoint.Longitude);
 
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
     {
-        await LoadMapModuleAsync();
+        await LoadNewLifePointModuleAsync();
 
         await base.OnInitializedAsync();
     }
 
-    private async Task LoadMapModuleAsync() => _mapModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js");
+    private async Task LoadNewLifePointModuleAsync() => _newLifePointModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/NewLifePoint.razor.js");
 
 }
