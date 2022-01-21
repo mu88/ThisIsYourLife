@@ -11,14 +11,8 @@ export function initializeMap(startLongitude, startLatitude, startZoom, dotNetMa
     }).addTo(_leafletMap);
 
     _leafletMap.on('dblclick', onMapDoubleClick);
-}
-
-export function openPopupOnMap(popup) {
-    popup.openOn(_leafletMap);
-}
-
-export function addMarkerToMap(marker) {
-    marker.addTo(_leafletMap);
+    
+    return _leafletMap;
 }
 
 function onMapDoubleClick(e) {

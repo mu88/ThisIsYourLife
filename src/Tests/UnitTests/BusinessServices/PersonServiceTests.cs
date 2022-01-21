@@ -7,24 +7,23 @@ using Moq;
 using NUnit.Framework;
 using Tests.Doubles;
 
-namespace Tests.UnitTests.BusinessServices
+namespace Tests.UnitTests.BusinessServices;
+
+[TestFixture]
+public class PersonServiceTests
 {
-    [TestFixture]
-    public class PersonServiceTests
+    [Test]
+    public async Task CreateNewPerson()
     {
-        [Test]
-        public async Task CreateNewPerson()
-        {
-            var personToCreate = TestPersonToCreate.Create("Bob");
-            var autoMocker = new CustomAutoMocker();
-            autoMocker.Setup<IStorage, Task<Person>>(x => x.AddItemAsync(It.IsAny<Person>())).Returns<Person>(Task.FromResult);
-            var testee = autoMocker.CreateInstance<PersonService>();
+        var personToCreate = TestPersonToCreate.Create("Bob");
+        var autoMocker = new CustomAutoMocker();
+        autoMocker.Setup<IStorage, Task<Person>>(x => x.AddItemAsync(It.IsAny<Person>())).Returns<Person>(Task.FromResult);
+        var testee = autoMocker.CreateInstance<PersonService>();
 
-            var result = await testee.CreatePersonAsync(personToCreate);
+        var result = await testee.CreatePersonAsync(personToCreate);
 
-            result.Id.Should().NotBeEmpty();
-            result.Should().BeEquivalentTo(personToCreate);
-            autoMocker.Verify<IStorage>(x => x.SaveAsync(), Times.Once);
-        }
+        result.Id.Should().NotBeEmpty();
+        result.Should().BeEquivalentTo(personToCreate);
+        autoMocker.Verify<IStorage>(x => x.SaveAsync(), Times.Once);
     }
 }

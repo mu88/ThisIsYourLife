@@ -1,11 +1,10 @@
 ﻿using Moq.AutoMock;
 using Tests.Doubles;
 
-namespace Tests.UnitTests
+namespace Tests.UnitTests;
+
+public class CustomAutoMocker : AutoMocker
 {
-    public class CustomAutoMocker : AutoMocker
-    {
-        /// <inheritdoc />
-        public CustomAutoMocker() => Use(TestMapper.Create());
-    }
+    /// <inheritdoc />
+    public CustomAutoMocker() => Use(TestMapper.Create());
 }

@@ -1,10 +1,9 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace Persistence
+namespace Persistence;
+
+public interface IFileSystem
 {
-    public interface IFileSystem
-    {
-        public Task CreateFileAsync(string filePath, Stream content);
-    }
+    public Task CreateFileAsync(string filePath, Stream content);
 }

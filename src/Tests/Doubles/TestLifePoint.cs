@@ -1,21 +1,20 @@
 ﻿using System;
 using Entities;
 
-namespace Tests.Doubles
+namespace Tests.Doubles;
+
+public static class TestLifePoint
 {
-    public static class TestLifePoint
+    public static LifePoint Create(Person? createdBy = null, DateOnly? date = null)
     {
-        public static LifePoint Create(Person? createdBy = null, DateOnly? date = null)
-        {
-            createdBy ??= new Person("Oscar");
-            date ??= DateOnly.FromDateTime(DateTime.Now);
-            var random = new Random();
-            return new LifePoint(date.Value,
-                                 $"Caption {random.Next()}",
-                                 $"Description {random.Next()}",
-                                 random.Next(-90, 90),
-                                 random.Next(-180, 180),
-                                 createdBy);
-        }
+        createdBy ??= new Person("Oscar");
+        date ??= DateOnly.FromDateTime(DateTime.Now);
+        var random = new Random();
+        return new LifePoint(date.Value,
+                             $"Caption {random.Next()}",
+                             $"Description {random.Next()}",
+                             random.Next(-90, 90),
+                             random.Next(-180, 180),
+                             createdBy);
     }
 }

@@ -5,20 +5,19 @@ using DTO.LifePoint;
 using DTO.Location;
 using DTO.Person;
 
-namespace BusinessServices.Services
+namespace BusinessServices.Services;
+
+public interface ILifePointService
 {
-    public interface ILifePointService
-    {
-        IEnumerable<ExistingLocation> GetAllLocations();
+    IEnumerable<ExistingLocation> GetAllLocations();
 
-        Task<ExistingLifePoint> GetLifePointAsync(Guid id);
+    Task<ExistingLifePoint> GetLifePointAsync(Guid id);
 
-        Task<ExistingLifePoint> CreateLifePointAsync(LifePointToCreate lifePointToCreate);
+    Task<ExistingLifePoint> CreateLifePointAsync(LifePointToCreate lifePointToCreate);
 
-        Task DeleteLifePointAsync(Guid id);
+    Task DeleteLifePointAsync(Guid id);
 
-        IEnumerable<int> GetDistinctYears();
+    IEnumerable<int> GetDistinctYears();
 
-        IEnumerable<ExistingPerson> GetDistinctCreators();
-    }
+    IEnumerable<ExistingPerson> GetDistinctCreators();
 }

@@ -4,25 +4,24 @@ using System.Linq;
 using System.Threading.Tasks;
 using Entities;
 
-namespace BusinessServices
+namespace BusinessServices;
+
+public interface IStorage
 {
-    public interface IStorage
-    {
-        public IQueryable<LifePoint> LifePoints { get; }
+    public IQueryable<LifePoint> LifePoints { get; }
 
-        public IQueryable<Person> Persons { get; }
+    public IQueryable<Person> Persons { get; }
 
-        public Task<T?> FindAsync<T>(Guid id)
-            where T : class;
+    public Task<T?> FindAsync<T>(Guid id)
+        where T : class;
 
-        public Task<T> AddItemAsync<T>(T itemToAdd)
-            where T : class;
+    public Task<T> AddItemAsync<T>(T itemToAdd)
+        where T : class;
 
-        public void RemoveItem<T>(T itemToDelete)
-            where T : class;
+    public void RemoveItem<T>(T itemToDelete)
+        where T : class;
 
-        public Task SaveAsync();
+    public Task SaveAsync();
 
-        public Task<Guid> StoreImageAsync(Stream imageStream);
-    }
+    public Task<Guid> StoreImageAsync(Stream imageStream);
 }

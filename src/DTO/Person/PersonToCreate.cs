@@ -1,4 +1,3 @@
-﻿namespace DTO.Person
-{
-    public record PersonToCreate(string Name);
-}
+﻿namespace DTO.Person;
+
+public record PersonToCreate(string Name);

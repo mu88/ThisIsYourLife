@@ -1,14 +1,13 @@
 ﻿using BusinessServices.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BusinessServices
+namespace BusinessServices;
+
+public static class Startup
 {
-    public static class Startup
+    public static void AddBusinessServices(this IServiceCollection services)
     {
-        public static void AddBusinessServices(this IServiceCollection services)
-        {
-            services.AddScoped<ILifePointService, LifePointService>();
-            services.AddScoped<IPersonService, PersonService>();
-        }
+        services.AddScoped<ILifePointService, LifePointService>();
+        services.AddScoped<IPersonService, PersonService>();
     }
 }

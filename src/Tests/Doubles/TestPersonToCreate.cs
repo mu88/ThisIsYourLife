@@ -1,9 +1,8 @@
 ﻿using DTO.Person;
 
-namespace Tests.Doubles
+namespace Tests.Doubles;
+
+public static class TestPersonToCreate
 {
-    public static class TestPersonToCreate
-    {
-        public static PersonToCreate Create(string name) => new(name);
-    }
+    public static PersonToCreate Create(string name) => new(name);
 }

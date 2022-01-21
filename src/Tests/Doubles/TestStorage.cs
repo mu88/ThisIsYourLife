@@ -5,24 +5,23 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using Persistence;
 
-namespace Tests.Doubles
+namespace Tests.Doubles;
+
+public static class TestStorage
 {
-    public static class TestStorage
+    public static IStorage Create()
     {
-        public static IStorage Create()
-        {
-            var storage = new Storage(new DbContextOptionsBuilder<Storage>().UseSqlite(CreateInMemoryDatabase()).Options, new Mock<IFileSystem>().Object);
-            storage.Database.EnsureCreated();
+        var storage = new Storage(new DbContextOptionsBuilder<Storage>().UseSqlite(CreateInMemoryDatabase()).Options, new Mock<IFileSystem>().Object);
+        storage.Database.EnsureCreated();
 
-            return storage;
-        }
+        return storage;
+    }
 
-        private static DbConnection CreateInMemoryDatabase()
-        {
-            var connection = new SqliteConnection("Filename=:memory:");
-            connection.Open();
+    private static DbConnection CreateInMemoryDatabase()
+    {
+        var connection = new SqliteConnection("Filename=:memory:");
+        connection.Open();
 
-            return connection;
-        }
+        return connection;
     }
 }
