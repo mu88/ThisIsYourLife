@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 using BusinessServices;
 using BusinessServices.Services;
 using DTO.LifePoint;
+using DTO.Person;
 using Entities;
 using FluentAssertions;
+using FluentAssertions.Extensions;
 using Moq;
 using NUnit.Framework;
 using Tests.Doubles;
@@ -32,6 +34,34 @@ public class LifePointServiceTests
                             options => options.Including(x => x.Id)
                                 .Including(x => x.Latitude)
                                 .Including(x => x.Longitude));
+    }
+    
+    [Test]
+    public void GetAllLifePointLocations_FilteredBy_Year()
+    {
+        var lifePoints = new[] { TestLifePoint.Create(date:new DateOnly(1953,4,12)), TestLifePoint.Create(date:new DateOnly(1954,4,12)) };
+        var autoMocker = new CustomAutoMocker();
+        autoMocker.Setup<IStorage, IQueryable<LifePoint>>(x => x.LifePoints).Returns(lifePoints.AsQueryable);
+        var testee = autoMocker.CreateInstance<LifePointService>();
+
+        var results = testee.GetAllLocations(1953).ToList();
+
+        results.Should().HaveCount(1);
+    }
+    
+    [Test]
+    public void GetAllLifePointLocations_FilteredBy_Creator()
+    {
+        var person1 = TestPerson.Create("Dixie");
+        var person2 = TestPerson.Create("Ulf");
+        var lifePoints = new[] { TestLifePoint.Create(person1), TestLifePoint.Create(person2) };
+        var autoMocker = new CustomAutoMocker();
+        autoMocker.Setup<IStorage, IQueryable<LifePoint>>(x => x.LifePoints).Returns(lifePoints.AsQueryable);
+        var testee = autoMocker.CreateInstance<LifePointService>();
+
+        var results = testee.GetAllLocations(new ExistingPerson(person1.Id, person1.Name)).ToList();
+
+        results.Should().HaveCount(1);
     }
 
     [Test]

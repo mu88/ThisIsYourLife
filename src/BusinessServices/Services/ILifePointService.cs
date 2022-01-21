@@ -20,4 +20,8 @@ public interface ILifePointService
     IEnumerable<int> GetDistinctYears();
 
     IEnumerable<ExistingPerson> GetDistinctCreators();
+
+    IEnumerable<ExistingLocation> GetAllLocations(uint year);
+
+    IEnumerable<ExistingLocation> GetAllLocations(ExistingPerson creator);
 }
