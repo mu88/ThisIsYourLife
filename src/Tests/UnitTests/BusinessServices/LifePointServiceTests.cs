@@ -4,11 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using BusinessServices;
 using BusinessServices.Services;
-using DTO.LifePoint;
 using DTO.Person;
 using Entities;
 using FluentAssertions;
-using FluentAssertions.Extensions;
 using Moq;
 using NUnit.Framework;
 using Tests.Doubles;
@@ -110,7 +108,7 @@ public class LifePointServiceTests
         autoMocker.Setup<IStorage, Task<LifePoint?>>(x => x.FindAsync<LifePoint>(lifePoints.First().Id)).ReturnsAsync((LifePoint?)null);
         var testee = autoMocker.CreateInstance<LifePointService>();
 
-        Func<Task<ExistingLifePoint>> testAction = async () => await testee.GetLifePointAsync(lifePoints.First().Id);
+        var testAction = () => testee.GetLifePointAsync(lifePoints.First().Id);
 
         await testAction.Should().ThrowAsync<NullReferenceException>();
     }
@@ -160,7 +158,7 @@ public class LifePointServiceTests
         autoMocker.Setup<IStorage, Task<Person?>>(x => x.FindAsync<Person>(lifePointToCreate.CreatedBy)).ReturnsAsync((Person?)null);
         var testee = autoMocker.CreateInstance<LifePointService>();
 
-        Func<Task<ExistingLifePoint>> testAction = async () => await testee.CreateLifePointAsync(lifePointToCreate);
+        var testAction = () => testee.CreateLifePointAsync(lifePointToCreate);
 
         await testAction.Should().ThrowAsync<NullReferenceException>();
     }
@@ -187,7 +185,7 @@ public class LifePointServiceTests
         autoMocker.Setup<IStorage, Task<LifePoint?>>(x => x.FindAsync<LifePoint>(lifePoints.First().Id)).ReturnsAsync((LifePoint?)null);
         var testee = autoMocker.CreateInstance<LifePointService>();
 
-        Func<Task> testAction = async () => await testee.DeleteLifePointAsync(lifePoints.First().Id);
+        var testAction = () => testee.DeleteLifePointAsync(lifePoints.First().Id);
 
         await testAction.Should().ThrowAsync<NullReferenceException>();
     }
