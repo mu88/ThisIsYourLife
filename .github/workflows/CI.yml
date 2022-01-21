@@ -1,4 +1,4 @@
-name: .NET
+name: CI
 
 on:
   push:
@@ -18,8 +18,8 @@ jobs:
       with:
         dotnet-version: '6.0'
     - name: Restore dependencies
-      run: dotnet restore src/Project28.sln
+      run: dotnet restore Project28.sln
     - name: Build
-      run: dotnet build --no-restore src/Project28.sln
+      run: dotnet build --no-restore Project28.sln
     - name: Test
-      run: dotnet test --no-build --verbosity normal src/Project28.sln
+      run: dotnet test --no-build --verbosity normal Project28.sln
