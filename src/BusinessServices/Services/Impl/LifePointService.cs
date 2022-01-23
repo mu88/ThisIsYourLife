@@ -26,8 +26,8 @@ internal class LifePointService : ILifePointService
     public IEnumerable<ExistingLocation> GetAllLocations(uint year) =>
         _mapper.Map<IQueryable<LifePoint>, IEnumerable<ExistingLocation>>(_storage.LifePoints.Where(point => point.Date.Year == year));
 
-    public IEnumerable<ExistingLocation> GetAllLocations(ExistingPerson creator) =>
-        _mapper.Map<IQueryable<LifePoint>, IEnumerable<ExistingLocation>>(_storage.LifePoints.Where(point => point.CreatedBy.Id == creator.Id));
+    public IEnumerable<ExistingLocation> GetAllLocations(Guid creatorId) =>
+        _mapper.Map<IQueryable<LifePoint>, IEnumerable<ExistingLocation>>(_storage.LifePoints.Where(point => point.CreatedBy.Id == creatorId));
 
     public async Task<ExistingLifePoint> GetLifePointAsync(Guid id) => _mapper.Map<LifePoint, ExistingLifePoint>(await GetLifePointInternalAsync(id));
 

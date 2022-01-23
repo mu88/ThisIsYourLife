@@ -23,5 +23,5 @@ public interface ILifePointService
 
     IEnumerable<ExistingLocation> GetAllLocations(uint year);
 
-    IEnumerable<ExistingLocation> GetAllLocations(ExistingPerson creator);
+    IEnumerable<ExistingLocation> GetAllLocations(Guid creatorId);
 }
