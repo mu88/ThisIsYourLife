@@ -23,6 +23,7 @@
     private readonly NewLifePointModel _newLifePoint = new();
     private IJSObjectReference _newLifePointModule; // TODO mu88: Dispose module
     private IBrowserFile? _file;
+        private const long MaxAllowedFileSizeInBytes = 5 * 1024 * 1024; // 5 MB
 
     [Parameter]
     public double Latitude { get; set; }
@@ -32,7 +33,7 @@
 
     private async Task CreateNewLifePointAsync()
     {
-        var imageToCreate = _file != null ? new ImageToCreate(_file.Name, _file.OpenReadStream()) : null;
+        var imageToCreate = _file != null ? new ImageToCreate(_file.Name, _file.OpenReadStream(MaxAllowedFileSizeInBytes)) : null;
         var lifePointToCreate = new LifePointToCreate(DateOnly.FromDateTime(DateTime.Now), _newLifePoint.Caption, _newLifePoint.Description, Latitude, Longitude, _personService.GetAllPersons().First().Id, imageToCreate);
 
         var createdLifePoint = await _lifePointService.CreateLifePointAsync(lifePointToCreate);
