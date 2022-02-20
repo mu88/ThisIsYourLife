@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using BusinessServices;
+using DTO.LifePoint;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,12 +19,16 @@ namespace Persistence;
 public class Storage : DbContext, IStorage
 {
     private readonly IFileSystem _fileSystem;
+    private readonly string _imageDirectory;
 
     /// <inheritdoc />
     public Storage(DbContextOptions<Storage> options, IFileSystem fileSystem)
         : base(options)
     {
         _fileSystem = fileSystem;
+
+        // TODO mu88: Rethink file path retrieval - should this be configurable?
+        _imageDirectory = Path.Combine(Directory.GetParent(Assembly.GetEntryAssembly()!.Location)!.FullName, "images");
     }
 
     /// <inheritdoc />
@@ -52,11 +57,11 @@ public class Storage : DbContext, IStorage
     public async Task SaveAsync() => await base.SaveChangesAsync();
 
     /// <inheritdoc />
-    public async Task<Guid> StoreImageAsync(Stream imageStream)
+    public async Task<Guid> StoreImageAsync(ImageToCreate newImage)
     {
         var imageId = Guid.NewGuid();
-        var filePathForImage = GetFilePathForImage(imageId);
-        await _fileSystem.CreateFileAsync(filePathForImage, imageStream);
+        var filePathForImage = GetFilePathForImage(imageId, newImage.FileName);
+        await _fileSystem.CreateFileAsync(filePathForImage, newImage.Stream);
 
         return imageId;
     }
@@ -73,10 +78,9 @@ public class Storage : DbContext, IStorage
         modelBuilder.Entity<Person>().HasKey(nameof(LifePoint.Id));
     }
 
-    private static string GetFilePathForImage(Guid imageId)
+    private string GetFilePathForImage(Guid imageId, string fileName)
     {
-        // TODO mu88: Rethink file path retrieval - should this be configurable?
-        var entryLocation = Assembly.GetEntryAssembly()!.Location;
-        return Path.Combine(entryLocation, "images", imageId.ToString());
+        var finalFileName = imageId.ToString() + Path.GetExtension(fileName);
+        return Path.Combine(_imageDirectory, finalFileName);
     }
 }

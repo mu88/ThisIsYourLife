@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BusinessServices;
 using BusinessServices.Services;
+using DTO.LifePoint;
 using Entities;
 using FluentAssertions;
 using Moq;
@@ -125,7 +126,7 @@ public class LifePointServiceTests
         var result = await testee.CreateLifePointAsync(lifePointToCreate);
 
         result.Id.Should().NotBeEmpty();
-        result.Should().BeEquivalentTo(lifePointToCreate, options => options.Excluding(x => x.CreatedBy).Excluding(x => x.ImageStream));
+        result.Should().BeEquivalentTo(lifePointToCreate, options => options.Excluding(x => x.CreatedBy).Excluding(x => x.ImageToCreate));
         result.CreatedBy.Should().Be(person.Name);
         autoMocker.Verify<IStorage>(x => x.SaveAsync(), Times.Once);
     }
@@ -134,13 +135,13 @@ public class LifePointServiceTests
     public async Task CreateNewLifePoint_WithImage()
     {
         var person = new Person("Bob");
-        var image = new MemoryStream(new byte[10]);
+        var newImage = new ImageToCreate("bla.png", new MemoryStream(new byte[10]));
         var idOfCreatedImage = Guid.NewGuid();
-        var lifePointToCreate = TestLifePointToCreate.Create(person, image);
+        var lifePointToCreate = TestLifePointToCreate.Create(person, newImage);
         var autoMocker = new CustomAutoMocker();
         autoMocker.Setup<IStorage, Task<Person?>>(x => x.FindAsync<Person>(lifePointToCreate.CreatedBy)).ReturnsAsync(person);
         autoMocker.Setup<IStorage, Task<LifePoint>>(x => x.AddItemAsync(It.IsAny<LifePoint>())).Returns<LifePoint>(Task.FromResult);
-        autoMocker.Setup<IStorage, Task<Guid>>(x => x.StoreImageAsync(image)).ReturnsAsync(idOfCreatedImage);
+        autoMocker.Setup<IStorage, Task<Guid>>(x => x.StoreImageAsync(newImage)).ReturnsAsync(idOfCreatedImage);
         var testee = autoMocker.CreateInstance<LifePointService>();
 
         var result = await testee.CreateLifePointAsync(lifePointToCreate);

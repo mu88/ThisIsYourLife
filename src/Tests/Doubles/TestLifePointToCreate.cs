@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using DTO.LifePoint;
 using Entities;
 
@@ -7,7 +6,7 @@ namespace Tests.Doubles;
 
 public static class TestLifePointToCreate
 {
-    public static LifePointToCreate Create(Person? person = null, Stream? imageStream = null)
+    public static LifePointToCreate Create(Person? person = null, ImageToCreate? newImage = null)
     {
         var date = DateOnly.FromDateTime(DateTime.Now);
         var caption = "caption";
@@ -21,7 +20,7 @@ public static class TestLifePointToCreate
                                                       latitude,
                                                       longitude,
                                                       createdBy,
-                                                      imageStream);
+                                                      newImage);
         return lifePointToCreate;
     }
 }
