@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DTO.LifePoint;
@@ -24,4 +25,6 @@ public interface IStorage
     public Task SaveAsync();
 
     public Task<Guid> StoreImageAsync(ImageToCreate newImage);
+
+    Stream GetImage(Guid imageId);
 }

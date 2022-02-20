@@ -54,6 +54,7 @@ public class Startup
         {
             endpoints.MapBlazorHub();
             endpoints.MapFallbackToPage("/_Host");
+            endpoints.MapControllers();
         });
     }
 

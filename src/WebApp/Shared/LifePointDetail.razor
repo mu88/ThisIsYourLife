@@ -2,12 +2,18 @@
 @using DTO.LifePoint
 @inject ILifePointService _lifePointService
 @inject IJSRuntime _jsRuntime
+@inject NavigationManager _navigator
 
 @if (_lifePoint is not null)
 {
     <h2>@_lifePoint.Caption</h2>
     <p>On @_lifePoint.Date with @_lifePoint.CreatedBy</p>
     <p>@_lifePoint.Description</p>
+
+    @if (_imageUri != null)
+    {
+        <img src="@_imageUri" alt="The image"/>
+    }
 
     <button @onclick="OnDeleteClicked">Delete</button>
 }
@@ -18,6 +24,7 @@
 
     private ExistingLifePoint? _lifePoint;
     private IJSObjectReference _lifePointDetailModule; // TODO mu88: Dispose module
+    private Uri? _imageUri;
 
     [Parameter]
     public string? Id { get; set; }
@@ -28,11 +35,14 @@
         if (string.IsNullOrWhiteSpace(Id)) { return; }
 
         _lifePoint = await _lifePointService.GetLifePointAsync(Guid.Parse(Id));
+        if (_lifePoint.ImageId != null) { _imageUri = ConstructImageUri(_lifePoint.ImageId.Value); }
 
         await LoadLifePointDetailModuleAsync();
 
         await base.OnInitializedAsync();
     }
+
+    private Uri ConstructImageUri(Guid imageId) => new(new Uri(_navigator.BaseUri), $"api/images/{imageId.ToString()}");
 
     private async void OnDeleteClicked()
     {

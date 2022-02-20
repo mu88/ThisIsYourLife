@@ -135,7 +135,7 @@ public class LifePointServiceTests
     public async Task CreateNewLifePoint_WithImage()
     {
         var person = new Person("Bob");
-        var newImage = new ImageToCreate("bla.png", new MemoryStream(new byte[10]));
+        var newImage = new ImageToCreate(new MemoryStream(new byte[10]));
         var idOfCreatedImage = Guid.NewGuid();
         var lifePointToCreate = TestLifePointToCreate.Create(person, newImage);
         var autoMocker = new CustomAutoMocker();

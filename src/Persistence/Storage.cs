@@ -60,11 +60,14 @@ public class Storage : DbContext, IStorage
     public async Task<Guid> StoreImageAsync(ImageToCreate newImage)
     {
         var imageId = Guid.NewGuid();
-        var filePathForImage = GetFilePathForImage(imageId, newImage.FileName);
+        var filePathForImage = GetFilePathForImage(imageId);
         await _fileSystem.CreateFileAsync(filePathForImage, newImage.Stream);
 
         return imageId;
     }
+
+    /// <inheritdoc />
+    public Stream GetImage(Guid imageId) => File.OpenRead(Path.Combine(_imageDirectory, imageId.ToString())); // TODO mu88: Make images smaller 
 
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -78,9 +81,5 @@ public class Storage : DbContext, IStorage
         modelBuilder.Entity<Person>().HasKey(nameof(LifePoint.Id));
     }
 
-    private string GetFilePathForImage(Guid imageId, string fileName)
-    {
-        var finalFileName = imageId.ToString() + Path.GetExtension(fileName);
-        return Path.Combine(_imageDirectory, finalFileName);
-    }
+    private string GetFilePathForImage(Guid imageId) => Path.Combine(_imageDirectory, imageId.ToString());
 }
