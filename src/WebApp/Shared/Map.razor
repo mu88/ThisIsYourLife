@@ -48,8 +48,7 @@
 
     private async Task AddMarkersForExistingLocations()
     {
-        foreach (var (latitude, longitude, id) in _lifePointService.GetAllLocations())
-            await AddMarkerAsync(id, latitude, longitude);
+        foreach (var (latitude, longitude, id) in _lifePointService.GetAllLocations()) await AddMarkerAsync(id, latitude, longitude);
     }
 
     /// <inheritdoc />
