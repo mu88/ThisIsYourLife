@@ -141,13 +141,14 @@ public class LifePointServiceTests
         var autoMocker = new CustomAutoMocker();
         autoMocker.Setup<IStorage, Task<Person?>>(x => x.FindAsync<Person>(lifePointToCreate.CreatedBy)).ReturnsAsync(person);
         autoMocker.Setup<IStorage, Task<LifePoint>>(x => x.AddItemAsync(It.IsAny<LifePoint>())).Returns<LifePoint>(Task.FromResult);
-        autoMocker.Setup<IStorage, Task<Guid>>(x => x.StoreImageAsync(newImage)).ReturnsAsync(idOfCreatedImage);
+        autoMocker.Setup<IStorage, Task<Guid>>(x => x.StoreImageAsync(person, newImage)).ReturnsAsync(idOfCreatedImage);
         var testee = autoMocker.CreateInstance<LifePointService>();
 
         var result = await testee.CreateLifePointAsync(lifePointToCreate);
 
         result.ImageId.Should().Be(idOfCreatedImage);
         autoMocker.Verify<IStorage>(x => x.SaveAsync(), Times.Once);
+        autoMocker.Verify<IStorage>(x => x.StoreImageAsync(person, lifePointToCreate.ImageToCreate!), Times.Once);
     }
 
     [Test]

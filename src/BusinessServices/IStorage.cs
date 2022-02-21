@@ -24,7 +24,7 @@ public interface IStorage
 
     public Task SaveAsync();
 
-    public Task<Guid> StoreImageAsync(ImageToCreate newImage);
+    public Task<Guid> StoreImageAsync(Person owner, ImageToCreate newImage);
 
     Stream GetImage(Guid imageId);
 

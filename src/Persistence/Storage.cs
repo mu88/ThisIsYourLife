@@ -57,12 +57,12 @@ public class Storage : DbContext, IStorage
     public async Task SaveAsync() => await base.SaveChangesAsync();
 
     /// <inheritdoc />
-    public async Task<Guid> StoreImageAsync(ImageToCreate newImage)
+    public async Task<Guid> StoreImageAsync(Person owner, ImageToCreate newImage)
     {
         // TODO mu88: Make images smaller
 
         var imageId = Guid.NewGuid();
-        var filePathForImage = GetFilePathForImage(imageId);
+        var filePathForImage = GetFilePathForImage(owner, imageId);
         await _fileSystem.CreateFileAsync(filePathForImage, newImage.Stream);
 
         return imageId;
@@ -86,5 +86,5 @@ public class Storage : DbContext, IStorage
         modelBuilder.Entity<Person>().HasKey(nameof(LifePoint.Id));
     }
 
-    private string GetFilePathForImage(Guid imageId) => Path.Combine(_imageDirectory, imageId.ToString());
+    private string GetFilePathForImage(Person owner, Guid imageId) => Path.Combine(_imageDirectory, owner.Id.ToString(), imageId.ToString());
 }

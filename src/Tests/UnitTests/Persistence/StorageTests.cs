@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 using Persistence;
+using Tests.Doubles;
 
 namespace Tests.UnitTests.Persistence;
 
@@ -16,15 +17,16 @@ public class StorageTests
     [Test]
     public async Task StoreImage()
     {
+        var person = TestPerson.Create("Bob");
         var imageStream = new MemoryStream(new byte[10]);
         var newImage = new ImageToCreate(imageStream);
         var fileSystemMock = new Mock<IFileSystem>();
         var testee = new Storage(new DbContextOptionsBuilder<Storage>().Options, fileSystemMock.Object);
 
-        var result = await testee.StoreImageAsync(newImage);
+        var result = await testee.StoreImageAsync(person, newImage);
 
         result.Should().NotBeEmpty();
-        fileSystemMock.Verify(x => x.CreateFileAsync(It.IsAny<string>(), imageStream), Times.Once);
+        fileSystemMock.Verify(x => x.CreateFileAsync(It.Is<string>(s => s.Contains(person.Id.ToString())), imageStream), Times.Once);
     }
 
     [Test]
