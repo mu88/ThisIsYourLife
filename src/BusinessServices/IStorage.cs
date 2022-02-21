@@ -27,4 +27,6 @@ public interface IStorage
     public Task<Guid> StoreImageAsync(ImageToCreate newImage);
 
     Stream GetImage(Guid imageId);
+
+    void DeleteImage(Guid imageId);
 }

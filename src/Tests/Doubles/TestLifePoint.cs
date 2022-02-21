@@ -5,7 +5,7 @@ namespace Tests.Doubles;
 
 public static class TestLifePoint
 {
-    public static LifePoint Create(Person? createdBy = null, DateOnly? date = null)
+    public static LifePoint Create(Person? createdBy = null, DateOnly? date = null, Guid? imageId = null)
     {
         createdBy ??= new Person("Oscar");
         date ??= DateOnly.FromDateTime(DateTime.Now);
@@ -15,6 +15,7 @@ public static class TestLifePoint
                              $"Description {random.Next()}",
                              random.Next(-90, 90),
                              random.Next(-180, 180),
-                             createdBy);
+                             createdBy,
+                             imageId);
     }
 }

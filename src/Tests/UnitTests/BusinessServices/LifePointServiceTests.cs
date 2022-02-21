@@ -178,6 +178,21 @@ public class LifePointServiceTests
     }
 
     [Test]
+    public async Task DeleteLifePoint_IfImageExists()
+    {
+        var lifePoints = new[] { TestLifePoint.Create(imageId: Guid.NewGuid()), TestLifePoint.Create() };
+        var autoMocker = new CustomAutoMocker();
+        autoMocker.Setup<IStorage, Task<LifePoint?>>(x => x.FindAsync<LifePoint>(lifePoints.First().Id)).ReturnsAsync(lifePoints.First());
+        var testee = autoMocker.CreateInstance<LifePointService>();
+
+        await testee.DeleteLifePointAsync(lifePoints.First().Id);
+
+        autoMocker.Verify<IStorage>(x => x.RemoveItem(lifePoints.First()), Times.Once);
+        autoMocker.Verify<IStorage>(x => x.DeleteImage(lifePoints.First().ImageId!.Value), Times.Once);
+        autoMocker.Verify<IStorage>(x => x.SaveAsync(), Times.Once);
+    }
+
+    [Test]
     public async Task DeleteLifePoint_ThrowsException_IfLifePointDoesNotExist()
     {
         var lifePoints = new[] { TestLifePoint.Create(), TestLifePoint.Create() };

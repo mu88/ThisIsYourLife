@@ -52,8 +52,9 @@ internal class LifePointService : ILifePointService
 
     public async Task DeleteLifePointAsync(Guid id)
     {
-        // TODO mu88: Delete image of LifePoint
-        _storage.RemoveItem(await GetLifePointInternalAsync(id));
+        var lifePoint = await GetLifePointInternalAsync(id);
+        _storage.RemoveItem(lifePoint);
+        if (lifePoint.ImageId != null) _storage.DeleteImage(lifePoint.ImageId.Value);
         await _storage.SaveAsync();
     }
 

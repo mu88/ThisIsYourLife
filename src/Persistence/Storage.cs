@@ -70,6 +70,9 @@ public class Storage : DbContext, IStorage
     public Stream GetImage(Guid imageId) => File.OpenRead(Path.Combine(_imageDirectory, imageId.ToString())); // TODO mu88: Make images smaller 
 
     /// <inheritdoc />
+    public void DeleteImage(Guid imageId) => _fileSystem.DeleteFile(Path.Combine(_imageDirectory, imageId.ToString()));
+
+    /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

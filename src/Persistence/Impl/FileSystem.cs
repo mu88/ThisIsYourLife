@@ -16,4 +16,7 @@ internal class FileSystem : IFileSystem
         await using FileStream fileStream = new(filePath, FileMode.Create);
         await content.CopyToAsync(fileStream);
     }
+
+    /// <inheritdoc />
+    public void DeleteFile(string filePath) => File.Delete(filePath);
 }
