@@ -38,4 +38,16 @@ public class StorageTests
 
         fileSystemMock.Verify(system => system.DeleteFile(It.Is<string>(s => s.Contains(imageId.ToString()))), Times.Once);
     }
+
+    [Test]
+    public void OpenImage()
+    {
+        var imageId = Guid.NewGuid();
+        var fileSystemMock = new Mock<IFileSystem>();
+        var testee = new Storage(new DbContextOptionsBuilder<Storage>().Options, fileSystemMock.Object);
+
+        testee.GetImage(imageId);
+
+        fileSystemMock.Verify(system => system.OpenRead(It.Is<string>(s => s.Contains(imageId.ToString()))), Times.Once);
+    }
 }

@@ -19,4 +19,7 @@ internal class FileSystem : IFileSystem
 
     /// <inheritdoc />
     public void DeleteFile(string filePath) => File.Delete(filePath);
+
+    /// <inheritdoc />
+    public Stream OpenRead(string filePath) => File.OpenRead(filePath);
 }

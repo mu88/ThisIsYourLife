@@ -8,4 +8,6 @@ public interface IFileSystem
     public Task CreateFileAsync(string filePath, Stream content);
 
     void DeleteFile(string filePath);
+
+    Stream OpenRead(string filePath);
 }

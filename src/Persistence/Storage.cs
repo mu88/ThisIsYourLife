@@ -59,6 +59,8 @@ public class Storage : DbContext, IStorage
     /// <inheritdoc />
     public async Task<Guid> StoreImageAsync(ImageToCreate newImage)
     {
+        // TODO mu88: Make images smaller
+
         var imageId = Guid.NewGuid();
         var filePathForImage = GetFilePathForImage(imageId);
         await _fileSystem.CreateFileAsync(filePathForImage, newImage.Stream);
@@ -67,7 +69,7 @@ public class Storage : DbContext, IStorage
     }
 
     /// <inheritdoc />
-    public Stream GetImage(Guid imageId) => File.OpenRead(Path.Combine(_imageDirectory, imageId.ToString())); // TODO mu88: Make images smaller 
+    public Stream GetImage(Guid imageId) => _fileSystem.OpenRead(Path.Combine(_imageDirectory, imageId.ToString()));
 
     /// <inheritdoc />
     public void DeleteImage(Guid imageId) => _fileSystem.DeleteFile(Path.Combine(_imageDirectory, imageId.ToString()));
