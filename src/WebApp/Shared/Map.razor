@@ -1,9 +1,33 @@
 ﻿@using BusinessServices.Services
 @using DTO.Location
+@using DTO.Person
 @implements IAsyncDisposable
 @inject IJSRuntime _jsRuntime
 @inject ILifePointService _lifePointService
 @inject IPersonService _personService
+
+<div>
+    @if (_distinctCreators.Any())
+    {
+        <label for="distinctCreator">Created by: </label>
+        <select id="distinctCreator" @onchange="SelectedCreatorChanged">
+            @foreach (var (id, name) in _distinctCreators)
+            {
+                <option value="@id">@name</option>
+            }
+        </select>
+    }
+    @if (_distinctYears.Any())
+    {
+        <label for="distinctYear">Created in: </label>
+        <select id="distinctYear" @onchange="SelectedYearChanged">
+            @foreach (var distinctYear in _distinctYears)
+            {
+                <option value="@distinctYear">@distinctYear</option>
+            }
+        </select>
+    }
+</div>
 
 <div id="mapid"></div>
 
@@ -18,6 +42,8 @@
 #pragma warning restore 8618
     private IReadOnlyList<ExistingLocation> _allLocations = new List<ExistingLocation>();
     private DotNetObjectReference<Map>? _objRef;
+    private IEnumerable<ExistingPerson> _distinctCreators = new List<ExistingPerson>();
+    private IEnumerable<int> _distinctYears = new List<int>();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -27,6 +53,15 @@
             await InitializeMapAsync(_objRef);
             await AddMarkersForExistingLocations();
         }
+    }
+
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _distinctCreators = _lifePointService.GetDistinctCreators();
+        _distinctYears = _lifePointService.GetDistinctYears();
     }
 
     [JSInvokable]
@@ -61,6 +96,16 @@
     // Maybe it is related to the preview nature of .NET 6
         if (_mapModule is not null) { await _mapModule.DisposeAsync(); }
         _objRef?.Dispose();
+    }
+
+    private void SelectedCreatorChanged(ChangeEventArgs args)
+    {
+    // TODO mu88: Redraw
+    }
+
+    private void SelectedYearChanged(ChangeEventArgs args)
+    {
+    // TODO mu88: Redraw
     }
 
 }
