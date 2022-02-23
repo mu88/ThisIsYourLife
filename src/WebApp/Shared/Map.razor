@@ -51,7 +51,7 @@
         {
             _objRef = DotNetObjectReference.Create(this);
             await InitializeMapAsync(_objRef);
-            await AddMarkersForExistingLocations();
+            await AddMarkersForExistingLocationsAsync();
         }
     }
 
@@ -65,7 +65,7 @@
     }
 
     [JSInvokable]
-    public async Task OpenPopupForNewLifePoint(double latitude, double longitude) =>
+    public async Task OpenPopupForNewLifePointAsync(double latitude, double longitude) =>
         await _newLifePointModule.InvokeVoidAsync("createPopupForNewLifePoint", _objRef, _leafletMap, latitude, longitude);
 
     [JSInvokable]
@@ -81,7 +81,7 @@
         _lifePointDetailModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
     }
 
-    private async Task AddMarkersForExistingLocations()
+    private async Task AddMarkersForExistingLocationsAsync()
     {
         foreach (var (latitude, longitude, id) in _lifePointService.GetAllLocations()) await AddMarkerAsync(id, latitude, longitude);
     }
