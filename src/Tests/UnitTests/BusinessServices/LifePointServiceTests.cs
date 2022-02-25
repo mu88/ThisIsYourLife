@@ -97,7 +97,7 @@ public class LifePointServiceTests
         var result = await testee.GetLifePointAsync(lifePoints.First().Id);
 
         result.Should().BeEquivalentTo(lifePoints.First(), options => options.Excluding(x => x.CreatedBy));
-        result.CreatedBy.Should().Be(lifePoints.First().CreatedBy.Name);
+        result.CreatedBy.Name.Should().Be(lifePoints.First().CreatedBy.Name);
     }
 
     [Test]
@@ -127,7 +127,7 @@ public class LifePointServiceTests
 
         result.Id.Should().NotBeEmpty();
         result.Should().BeEquivalentTo(lifePointToCreate, options => options.Excluding(x => x.CreatedBy).Excluding(x => x.ImageToCreate));
-        result.CreatedBy.Should().Be(person.Name);
+        result.CreatedBy.Name.Should().Be(person.Name);
         autoMocker.Verify<IStorage>(x => x.SaveAsync(), Times.Once);
     }
 

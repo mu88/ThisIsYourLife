@@ -7,7 +7,7 @@
 @if (_lifePoint is not null)
 {
     <h2>@_lifePoint.Caption</h2>
-    <p>On @_lifePoint.Date with @_lifePoint.CreatedBy</p>
+    <p>On @_lifePoint.Date with @_lifePoint.CreatedBy.Name</p>
     <p>@_lifePoint.Description</p>
 
     @if (_imageUri != null)
@@ -42,7 +42,7 @@
         await base.OnInitializedAsync();
     }
 
-    private Uri ConstructImageUri(Guid imageId) => new(new Uri(_navigator.BaseUri), $"api/images/{imageId.ToString()}");
+    private Uri ConstructImageUri(Guid imageId) => new(new Uri(_navigator.BaseUri), $"api/images/{_lifePoint!.CreatedBy.Id}/{imageId.ToString()}");
 
     private async void OnDeleteClicked()
     {

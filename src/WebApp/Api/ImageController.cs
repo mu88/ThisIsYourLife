@@ -12,6 +12,6 @@ public class ImageController : Controller
     /// <inheritdoc />
     public ImageController(IStorage storage) => _storage = storage;
 
-    [HttpGet("{id}")]
-    public IActionResult Get(Guid id) => File(_storage.GetImage(id), "image/jpeg");
+    [HttpGet("{ownerId}/{imageId}")]
+    public IActionResult Get(Guid ownerId, Guid imageId) => File(_storage.GetImage(ownerId, imageId), "image/jpeg");
 }

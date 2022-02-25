@@ -1,4 +1,5 @@
 ﻿using System;
+using DTO.Person;
 
 namespace DTO.LifePoint;
 
@@ -8,5 +9,5 @@ public record ExistingLifePoint(Guid Id,
                                 string Description,
                                 double Latitude,
                                 double Longitude,
-                                string CreatedBy,
+                                ExistingPerson CreatedBy,
                                 Guid? ImageId);

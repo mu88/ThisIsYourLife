@@ -42,7 +42,7 @@ public class LifePointServiceTests
         var result = await testee.GetLifePointAsync(lifePoint.Id);
 
         result.Should().BeEquivalentTo(lifePoint, options => options.Excluding(x => x.CreatedBy));
-        result.CreatedBy.Should().Be(lifePoint.CreatedBy.Name);
+        result.CreatedBy.Name.Should().Be(lifePoint.CreatedBy.Name);
     }
 
     [Test]

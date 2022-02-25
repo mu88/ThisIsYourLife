@@ -44,12 +44,13 @@ public class StorageTests
     [Test]
     public void OpenImage()
     {
+        var ownerId = Guid.NewGuid();
         var imageId = Guid.NewGuid();
         var fileSystemMock = new Mock<IFileSystem>();
         var testee = new Storage(new DbContextOptionsBuilder<Storage>().Options, fileSystemMock.Object);
 
-        testee.GetImage(imageId);
+        testee.GetImage(ownerId, imageId);
 
-        fileSystemMock.Verify(system => system.OpenRead(It.Is<string>(s => s.Contains(imageId.ToString()))), Times.Once);
+        fileSystemMock.Verify(system => system.OpenRead(It.Is<string>(s => s.Contains(ownerId.ToString()) && s.Contains(imageId.ToString()))), Times.Once);
     }
 }

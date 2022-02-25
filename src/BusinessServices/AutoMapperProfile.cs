@@ -24,8 +24,7 @@ public class AutoMapperProfile : Profile
     private void CreateMapsForLifePoint()
     {
         CreateMap<LifePoint, ExistingLocation>();
-        CreateMap<LifePoint, ExistingLifePoint>()
-            .ForCtorParam(nameof(ExistingLifePoint.CreatedBy), options => options.MapFrom(lifepoint => lifepoint.CreatedBy.Name));
+        CreateMap<LifePoint, ExistingLifePoint>();
         CreateMap<LifePointToCreate, LifePoint>()
             .ForCtorParam("createdBy", options => options.MapFrom((_, context) => context.Items[nameof(LifePoint.CreatedBy)]))
             .ForMember(x => x.CreatedBy, options => options.MapFrom((_, _, _, context) => context.Items[nameof(LifePoint.CreatedBy)]))
