@@ -5,7 +5,12 @@
 @inject IJSRuntime _jsRuntime
 @inject ILifePointService _lifePointService
 @inject IPersonService _personService
+@inject IUserService _userService
 
+@if (!_userService.UserAlreadySet)
+{
+    <UserDialog OnClose="OnUserDialogClose"/>
+}
 <div>
     @if (false)
     {
@@ -110,5 +115,7 @@
     {
     // TODO mu88: Redraw
     }
+
+    private void OnUserDialogClose() => StateHasChanged();
 
 }

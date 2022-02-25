@@ -1,4 +1,5 @@
 using BusinessServices;
+using BusinessServices.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Hosting;
@@ -31,6 +32,8 @@ public class Startup
         services.AddBusinessServices();
 
         ConfigureAutoMapper(services);
+
+        services.AddOptions<UserConfig>().Bind(Configuration);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

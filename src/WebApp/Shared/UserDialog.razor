@@ -1,0 +1,40 @@
+﻿@using BusinessServices.Services
+@inject IUserService _userService
+
+<div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);"
+     aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Welcome!</h4>
+            </div>
+            <div class="modal-body">
+                <p>Please enter your username</p>
+            </div>
+            <EditForm Model="@_userModel" OnValidSubmit="@HandleValidSubmitAsync">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+
+                <InputText id="name" @bind-Value="_userModel.Name"/>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">OK</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code
+{
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private UserModel _userModel = new();
+
+    private Task HandleValidSubmitAsync()
+    {
+        _userService.SetUser(_userModel.Name);
+        return OnClose.InvokeAsync();
+    }
+}
