@@ -19,5 +19,5 @@ function onMapDoubleClick(e) {
     // TODO mu88: Handle 'Abort/Close'
     let latitude = e.latlng.lat;
     let longitude = e.latlng.lng;
-    _dotNetMapReference.invokeMethodAsync('OpenPopupForNewLifePoint', latitude, longitude);
+    _dotNetMapReference.invokeMethodAsync('OpenPopupForNewLifePointAsync', latitude, longitude);
 }
