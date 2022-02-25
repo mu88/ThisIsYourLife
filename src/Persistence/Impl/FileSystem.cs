@@ -22,4 +22,7 @@ internal class FileSystem : IFileSystem
 
     /// <inheritdoc />
     public Stream OpenRead(string filePath) => File.OpenRead(filePath);
+
+    /// <inheritdoc />
+    public void WriteAllText(string path, string contents) => File.WriteAllText(path, contents);
 }

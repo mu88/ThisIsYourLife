@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BusinessServices.Services;
+namespace Persistence;
 
 public interface IUserService
 {

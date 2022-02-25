@@ -10,4 +10,6 @@ public interface IFileSystem
     void DeleteFile(string filePath);
 
     Stream OpenRead(string filePath);
+
+    void WriteAllText(string path, string contents);
 }

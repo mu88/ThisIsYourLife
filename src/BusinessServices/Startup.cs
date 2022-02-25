@@ -9,6 +9,5 @@ public static class Startup
     {
         services.AddScoped<ILifePointService, LifePointService>();
         services.AddScoped<IPersonService, PersonService>();
-        services.AddSingleton<IUserService, UserService>();
     }
 }

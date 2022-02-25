@@ -3,13 +3,18 @@ using System.IO;
 using System.Text.Json;
 using Microsoft.Extensions.Options;
 
-namespace BusinessServices.Services;
+namespace Persistence;
 
 internal class UserService : IUserService
 {
+    private readonly IFileSystem _fileSystem;
     private readonly UserConfig _configuration;
 
-    public UserService(IOptions<UserConfig> configuration) => _configuration = configuration.Value;
+    public UserService(IOptions<UserConfig> configuration, IFileSystem fileSystem)
+    {
+        _fileSystem = fileSystem;
+        _configuration = configuration.Value;
+    }
 
     public Guid? Id => _configuration.Id;
 
@@ -26,7 +31,7 @@ internal class UserService : IUserService
     private void PersistConfigInFile()
     {
         var appSettingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "user.json");
-        File.WriteAllText(appSettingsPath, JsonSerializer.Serialize(_configuration));
+        _fileSystem.WriteAllText(appSettingsPath, JsonSerializer.Serialize(_configuration));
     }
 
     private void SetNameAndId(string name)
