@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using BusinessServices;
 using BusinessServices.Services;
 using Entities;
@@ -25,5 +26,31 @@ public class PersonServiceTests
         result.Id.Should().NotBeEmpty();
         result.Should().BeEquivalentTo(personToCreate);
         autoMocker.Verify<IStorage>(x => x.SaveAsync(), Times.Once);
+    }
+
+    [Test]
+    public void PersonDoesNotExist()
+    {
+        var id = Guid.NewGuid();
+        var autoMocker = new CustomAutoMocker();
+        autoMocker.Setup<IStorage, Person?>(storage => storage.Find<Person>(id)).Returns((Person?)null);
+        var testee = autoMocker.CreateInstance<PersonService>();
+
+        var result = testee.PersonExists(id);
+
+        result.Should().BeFalse();
+    }
+
+    [Test]
+    public void PersonExists()
+    {
+        var person = TestPerson.Create("Dixie");
+        var autoMocker = new CustomAutoMocker();
+        autoMocker.Setup<IStorage, Person?>(storage => storage.Find<Person>(person.Id)).Returns(person);
+        var testee = autoMocker.CreateInstance<PersonService>();
+
+        var result = testee.PersonExists(person.Id);
+
+        result.Should().BeTrue();
     }
 }

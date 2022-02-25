@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Persistence;
 
@@ -8,5 +9,5 @@ public interface IUserService
 
     Guid? Id { get; }
 
-    void SetUser(string name);
+    Task SetUserAsync(string name);
 }

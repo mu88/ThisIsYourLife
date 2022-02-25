@@ -46,6 +46,11 @@ public class Storage : DbContext, IStorage
         where T : class => await Set<T>().FindAsync(id);
 
     /// <inheritdoc />
+    public T? Find<T>(Guid id)
+        where T : class =>
+        Set<T>().Find(id);
+
+    /// <inheritdoc />
     public async Task<T> AddItemAsync<T>(T itemToAdd)
         where T : class => (await Set<T>().AddAsync(itemToAdd)).Entity;
 
@@ -69,7 +74,7 @@ public class Storage : DbContext, IStorage
     }
 
     /// <inheritdoc />
-    public Stream GetImage(Guid imageId) => _fileSystem.OpenRead(Path.Combine(_imageDirectory, imageId.ToString()));
+    public Stream GetImage(Guid ownerId, Guid imageId) => _fileSystem.OpenRead(GetFilePathForImage(ownerId, imageId));
 
     /// <inheritdoc />
     public void DeleteImage(Guid imageId) => _fileSystem.DeleteFile(Path.Combine(_imageDirectory, imageId.ToString()));
@@ -86,5 +91,7 @@ public class Storage : DbContext, IStorage
         modelBuilder.Entity<Person>().HasKey(nameof(LifePoint.Id));
     }
 
-    private string GetFilePathForImage(Person owner, Guid imageId) => Path.Combine(_imageDirectory, owner.Id.ToString(), imageId.ToString());
+    private string GetFilePathForImage(Person owner, Guid imageId) => GetFilePathForImage(owner.Id, imageId);
+
+    private string GetFilePathForImage(Guid ownerId, Guid imageId) => Path.Combine(_imageDirectory, ownerId.ToString(), imageId.ToString());
 }

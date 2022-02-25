@@ -32,9 +32,9 @@
 
     private UserModel _userModel = new();
 
-    private Task HandleValidSubmitAsync()
+    private async Task HandleValidSubmitAsync()
     {
-        _userService.SetUser(_userModel.Name);
-        return OnClose.InvokeAsync();
+        await _userService.SetUserAsync(_userModel.Name);
+        await OnClose.InvokeAsync();
     }
 }

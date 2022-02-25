@@ -16,6 +16,9 @@ public interface IStorage
     public Task<T?> FindAsync<T>(Guid id)
         where T : class;
 
+    public T? Find<T>(Guid id)
+        where T : class;
+
     public Task<T> AddItemAsync<T>(T itemToAdd)
         where T : class;
 
@@ -26,7 +29,7 @@ public interface IStorage
 
     public Task<Guid> StoreImageAsync(Person owner, ImageToCreate newImage);
 
-    Stream GetImage(Guid imageId);
+    Stream GetImage(Guid ownerId, Guid imageId);
 
     void DeleteImage(Guid imageId);
 }
