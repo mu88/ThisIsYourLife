@@ -14,8 +14,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Persistence;
 
-// TODO mu88: Make this internal as soon as seeding of test data is not longer necessary
-public class Storage : DbContext, IStorage
+internal class Storage : DbContext, IStorage
 {
     private static string _imageDirectory = Path.Combine(UserDirectory, "images");
     private static string _dbDirectory = Path.Combine(UserDirectory, "db");

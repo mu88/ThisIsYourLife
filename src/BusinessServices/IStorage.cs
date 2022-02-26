@@ -32,4 +32,6 @@ public interface IStorage
     Stream GetImage(Guid ownerId, Guid imageId);
 
     void DeleteImage(Guid imageId);
+
+    void EnsureStorageExists();
 }
