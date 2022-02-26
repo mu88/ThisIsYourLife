@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -16,23 +16,6 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0"/>
     <PackageReference Include="Microsoft.AspNetCore.Components.CustomElements" Version="0.1.0-alpha.21466.1"/>
-  </ItemGroup>
-
-  <!--  TODO mu88: are these lines really necessary? -->
-  <ItemGroup>
-    <Content Include="Shared\Map.razor.js">
-      <DependentUpon>Map.razor</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Shared\NewLifePoint.razor.js">
-      <DependentUpon>NewLifePoint.razor</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Shared\LifePointDetail.razor.js">
-      <DependentUpon>LifePointDetail.razor</DependentUpon>
-    </Content>
   </ItemGroup>
 
 </Project>
