@@ -1,10 +1,10 @@
-name: CI
+name: Release
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - '*' # Push events to matching everything, e. g. "v1" or "2021.2.2.1"
 
 jobs:
   build:
@@ -30,12 +30,25 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Build Docker image for Raspberry Pi
+    - name: Build and push Docker image for Raspberry Pi
       id: docker_build
       uses: docker/build-push-action@v2
       with:
-        push: false
-        tags: mu88/thisisyourlife:latest
+        push: true
+        tags: |
+          mu88/thisisyourlife:latest
+          mu88/thisisyourlife:${{ github.ref_name }}
         file: src/WebApp/Dockerfile
     - name: Build single-file EXE
       run: dotnet publish src/WebApp/WebApp.csproj -r win-x64 -p:PublishSingleFile=true --self-contained true
+    - name: Create ZIP for release
+      uses: thedoctor0/zip-release@master
+      with:
+        type: 'zip'
+        filename: ThisIsYourLife.${{ github.ref_name }}.zip
+        directory: 'src/WebApp/bin/Debug/net6.0/win-x64/publish'
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: src/WebApp/bin/Debug/net6.0/win-x64/publish/ThisIsYourLife*.zip
+        tag_name: ${{ github.ref_name }}
