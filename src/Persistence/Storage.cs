@@ -17,7 +17,7 @@ namespace Persistence;
 internal class Storage : DbContext, IStorage
 {
     private static string _imageDirectory = Path.Combine(UserDirectory, "images");
-    private static string _dbDirectory = Path.Combine(UserDirectory, "db");
+
     private readonly IFileSystem _fileSystem;
 
     /// <inheritdoc />
@@ -35,7 +35,9 @@ internal class Storage : DbContext, IStorage
 
     public DbSet<Person> PersonsInStorage { get; set; }
 
-    internal static string DatabasePath => Path.Combine(_dbDirectory, "ThisIsYourLife.db");
+    internal static string DatabaseDirectory { get; } = Path.Combine(UserDirectory, "db");
+
+    internal static string DatabasePath => Path.Combine(DatabaseDirectory, "ThisIsYourLife.db");
 
     internal static string UserDirectory => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data");
 
@@ -79,9 +81,9 @@ internal class Storage : DbContext, IStorage
 
     public void EnsureStorageExists()
     {
-        if (!Directory.Exists(_dbDirectory)) { Directory.CreateDirectory(_dbDirectory); }
+        if (!_fileSystem.DirectoryExists(DatabaseDirectory)) { _fileSystem.CreateDirectory(DatabaseDirectory); }
 
-        if (!File.Exists(DatabasePath))
+        if (!_fileSystem.FileExists(DatabasePath))
         {
             Database.EnsureCreated();
             Database.Migrate();

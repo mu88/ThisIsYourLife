@@ -12,4 +12,10 @@ public interface IFileSystem
     Stream OpenRead(string filePath);
 
     void WriteAllText(string path, string contents);
+
+    bool DirectoryExists(string path);
+
+    void CreateDirectory(string path);
+
+    bool FileExists(string path);
 }
