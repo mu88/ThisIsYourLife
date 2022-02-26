@@ -23,7 +23,7 @@
     // TODO mu88: improve error/null handling of _lifePoint and Id
 
     private ExistingLifePoint? _lifePoint;
-    private IJSObjectReference _lifePointDetailModule; // TODO mu88: Dispose module
+    private IJSObjectReference _lifePointDetailModule = null!; // is initialized on component construction
     private Uri? _imageUri;
 
     [Parameter]

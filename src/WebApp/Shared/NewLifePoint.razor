@@ -1,6 +1,7 @@
 ﻿@using BusinessServices.Services
 @using DTO.LifePoint
 @using Persistence
+@using WebApp.Models
 @inject ILifePointService _lifePointService
 @inject IPersonService _personService
 @inject IJSRuntime _jsRuntime
@@ -25,7 +26,7 @@
 @code {
 
     private readonly NewLifePointModel _newLifePoint = new();
-    private IJSObjectReference _newLifePointModule; // TODO mu88: Dispose module
+    private IJSObjectReference _newLifePointModule = null!; // is initialized on component construction 
     private IBrowserFile? _file;
         private const long MaxAllowedFileSizeInBytes = 5 * 1024 * 1024; // 5 MB
 
