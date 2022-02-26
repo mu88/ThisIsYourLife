@@ -62,9 +62,9 @@ public class StorageTests
         autoMocker.Setup<IFileSystem, bool>(system => system.FileExists(Storage.DatabasePath)).Returns(true); // That's really only a hack to avoid further EF Core code
         var testee = autoMocker.CreateInstance<Storage>();
 
-        var testAction = () => testee.EnsureStorageExists();
+        var testAction = () => testee.EnsureStorageExistsAsync();
 
-        testAction.Should().NotThrow();
+        testAction.Should().NotThrowAsync();
         autoMocker.Verify<IFileSystem>(system => system.CreateDirectory(Storage.DatabaseDirectory), Times.Once);
     }
 
@@ -76,9 +76,9 @@ public class StorageTests
         autoMocker.Setup<IFileSystem, bool>(system => system.FileExists(Storage.DatabasePath)).Returns(true);
         var testee = autoMocker.CreateInstance<Storage>();
 
-        var testAction = () => testee.EnsureStorageExists();
+        var testAction = () => testee.EnsureStorageExistsAsync();
 
-        testAction.Should().NotThrow();
+        testAction.Should().NotThrowAsync();
         autoMocker.Verify<IFileSystem>(system => system.CreateDirectory(Storage.DatabaseDirectory), Times.Never);
     }
 

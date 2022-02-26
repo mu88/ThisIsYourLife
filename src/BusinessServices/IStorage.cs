@@ -33,5 +33,5 @@ public interface IStorage
 
     void DeleteImage(Guid imageId);
 
-    void EnsureStorageExists();
+    Task EnsureStorageExistsAsync();
 }

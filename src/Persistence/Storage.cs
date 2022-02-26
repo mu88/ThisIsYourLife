@@ -79,14 +79,23 @@ internal class Storage : DbContext, IStorage
     /// <inheritdoc />
     public void DeleteImage(Guid imageId) => _fileSystem.DeleteFile(Path.Combine(_imageDirectory, imageId.ToString()));
 
-    public void EnsureStorageExists()
+    public async Task EnsureStorageExistsAsync()
     {
         if (!_fileSystem.DirectoryExists(DatabaseDirectory)) { _fileSystem.CreateDirectory(DatabaseDirectory); }
 
         if (!_fileSystem.FileExists(DatabasePath))
         {
-            Database.EnsureCreated();
-            Database.Migrate();
+            await Database.EnsureCreatedAsync();
+            await Database.MigrateAsync();
+
+            var person = (await AddAsync(new Person("Ultras Dynamo"))).Entity;
+            await AddAsync(new LifePoint(new DateOnly(1953, 4, 12),
+                                         "Nur die SGD!",
+                                         "Wahre Liebe kennt keine Liga",
+                                         51.0405849,
+                                         13.7478431,
+                                         person));
+            await SaveChangesAsync();
         }
     }
 

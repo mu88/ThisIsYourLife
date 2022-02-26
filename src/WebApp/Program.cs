@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using BusinessServices;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,13 +12,13 @@ namespace WebApp;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var host = CreateHostBuilder(args).Build();
 
-        CreateDbIfNotExists(host);
+        await CreateDbIfNotExistsAsync(host);
 
-        host.Run();
+        await host.RunAsync();
     }
 
     public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -25,12 +26,12 @@ public class Program
             .ConfigureAppConfiguration(builder => builder.AddJsonFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "user.json"), true))
             .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
 
-    private static void CreateDbIfNotExists(IHost host)
+    private static async Task CreateDbIfNotExistsAsync(IHost host)
     {
         using var scope = host.Services.CreateScope();
         var services = scope.ServiceProvider;
 
-        try { services.GetRequiredService<IStorage>().EnsureStorageExists(); }
+        try { await services.GetRequiredService<IStorage>().EnsureStorageExistsAsync(); }
         catch (Exception ex)
         {
             var logger = services.GetRequiredService<ILogger<Program>>();
