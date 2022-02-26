@@ -44,7 +44,7 @@ public class LifePoint
 
     public double Longitude { get; private set; }
 
-    public Person CreatedBy { get; private set; }
+    public virtual Person CreatedBy { get; private set; }
 
     public Guid? ImageId { get; private set; }
 }

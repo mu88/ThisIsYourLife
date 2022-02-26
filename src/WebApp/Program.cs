@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Persistence;
 
 namespace WebApp;
@@ -18,16 +19,35 @@ public class Program
         using (var serviceScope = host.Services.CreateScope())
         {
             var storage = serviceScope.ServiceProvider.GetService<Storage>();
-            SeedTestData(storage);
+            // SeedTestData(storage);
         }
+
+        CreateDbIfNotExists(host);
 
         host.Run();
     }
 
     public static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
-            .ConfigureAppConfiguration(builder => builder.AddJsonFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "user.json"), true))
+            .ConfigureAppConfiguration(builder => builder.AddJsonFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "user.json"), true))
             .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+
+    private static void CreateDbIfNotExists(IHost host)
+    {
+        using var scope = host.Services.CreateScope();
+        var services = scope.ServiceProvider;
+
+        try
+        {
+            var storage = services.GetRequiredService<Storage>();
+            storage.EnsureStorageExists();
+        }
+        catch (Exception ex)
+        {
+            var logger = services.GetRequiredService<ILogger<Program>>();
+            logger.LogError(ex, "An error occurred creating the DB");
+        }
+    }
 
     private static void SeedTestData(DbContext? storage)
     {

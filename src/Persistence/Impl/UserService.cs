@@ -38,7 +38,7 @@ internal class UserService : IUserService
 
     private void PersistConfigInFile()
     {
-        var appSettingsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "user.json");
+        var appSettingsPath = Path.Combine(Storage.UserDirectory, "user.json");
         _fileSystem.WriteAllText(appSettingsPath, JsonSerializer.Serialize(_configuration));
     }
 

@@ -8,8 +8,8 @@ public static class Startup
 {
     public static void AddPersistence(this IServiceCollection services)
     {
-        services.AddDbContext<Storage>(options => options.UseInMemoryDatabase("MyDatabase"));
-        services.AddScoped<IStorage>(provider => provider.GetService<Storage>()!); // cannot be null since it is registered before
+        services.AddDbContext<Storage>(options => options.UseLazyLoadingProxies().UseSqlite($"Data Source=\"{Storage.DatabasePath}\""));
+        services.AddScoped<IStorage>(provider => provider.GetRequiredService<Storage>());
         services.AddSingleton<IFileSystem, FileSystem>();
         services.AddScoped<IUserService, UserService>();
     }

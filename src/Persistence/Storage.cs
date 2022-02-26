@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using BusinessServices;
 using DTO.LifePoint;
@@ -18,18 +17,14 @@ namespace Persistence;
 // TODO mu88: Make this internal as soon as seeding of test data is not longer necessary
 public class Storage : DbContext, IStorage
 {
+    private static string _imageDirectory = Path.Combine(UserDirectory, "images");
+    private static string _dbDirectory = Path.Combine(UserDirectory, "db");
     private readonly IFileSystem _fileSystem;
-    private readonly string _imageDirectory;
 
     /// <inheritdoc />
     public Storage(DbContextOptions<Storage> options, IFileSystem fileSystem)
-        : base(options)
-    {
+        : base(options) =>
         _fileSystem = fileSystem;
-
-        // TODO mu88: Rethink file path retrieval - should this be configurable?
-        _imageDirectory = Path.Combine(Directory.GetParent(Assembly.GetEntryAssembly()!.Location)!.FullName, "images");
-    }
 
     /// <inheritdoc />
     public IQueryable<LifePoint> LifePoints => LifePointsInStorage;
@@ -40,6 +35,10 @@ public class Storage : DbContext, IStorage
     public DbSet<LifePoint> LifePointsInStorage { get; set; }
 
     public DbSet<Person> PersonsInStorage { get; set; }
+
+    internal static string DatabasePath => Path.Combine(_dbDirectory, "ThisIsYourLife.db");
+
+    internal static string UserDirectory => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data");
 
     /// <inheritdoc />
     public async Task<T?> FindAsync<T>(Guid id)
@@ -79,15 +78,26 @@ public class Storage : DbContext, IStorage
     /// <inheritdoc />
     public void DeleteImage(Guid imageId) => _fileSystem.DeleteFile(Path.Combine(_imageDirectory, imageId.ToString()));
 
+    public void EnsureStorageExists()
+    {
+        if (!Directory.Exists(_dbDirectory)) { Directory.CreateDirectory(_dbDirectory); }
+
+        if (!File.Exists(DatabasePath))
+        {
+            Database.EnsureCreated();
+            Database.Migrate();
+        }
+    }
+
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<LifePoint>().ToTable("LifePoint");
+        modelBuilder.Entity<LifePoint>().ToTable(nameof(LifePoint));
         modelBuilder.Entity<LifePoint>().HasKey(nameof(LifePoint.Id));
         modelBuilder.Entity<LifePoint>().Navigation(point => point.CreatedBy).AutoInclude();
-        modelBuilder.Entity<Person>().ToTable("Person");
+        modelBuilder.Entity<Person>().ToTable(nameof(Person));
         modelBuilder.Entity<Person>().HasKey(nameof(LifePoint.Id));
     }
 
