@@ -12,6 +12,8 @@
 
     <label for="caption">Caption</label>
     <InputText id="caption" @bind-Value="_newLifePoint.Caption"/>
+    <label for="date">Date</label>
+    <InputDate id="date" @bind-Value="_newLifePoint.Date"/>
     <label for="description">Description</label>
     <InputText id="description" @bind-Value="_newLifePoint.Description"/>
     <label for="image">Image</label>
@@ -37,7 +39,7 @@
     {
         var imageToCreate = _file != null ? new ImageToCreate(_file.OpenReadStream(MaxAllowedFileSizeInBytes)) : null;
         var lifePointToCreate = new LifePointToCreate(
-            DateOnly.FromDateTime(DateTime.Now),
+            _newLifePoint.Date,
             _newLifePoint.Caption,
             _newLifePoint.Description,
             Latitude,
