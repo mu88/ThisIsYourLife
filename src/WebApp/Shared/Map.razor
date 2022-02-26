@@ -2,7 +2,6 @@
 @using DTO.Location
 @using DTO.Person
 @using Persistence
-@implements IAsyncDisposable
 @inject IJSRuntime _jsRuntime
 @inject ILifePointService _lifePointService
 @inject IPersonService _personService
@@ -93,18 +92,6 @@
     private async Task AddMarkersForExistingLocationsAsync()
     {
         foreach (var (latitude, longitude, id) in _lifePointService.GetAllLocations()) await AddMarkerAsync(id, latitude, longitude);
-    }
-
-    /// <inheritdoc />
-    public async ValueTask DisposeAsync()
-    {
-    // TODO mu88: Check if disposing is necessary with .NET 6 as it causes errors an app shutdown
-
-    // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-    // Due to unknown reasons, this method will be called before _module could be loaded.
-    // Maybe it is related to the preview nature of .NET 6
-        if (_mapModule is not null) { await _mapModule.DisposeAsync(); }
-        _objRef?.Dispose();
     }
 
     private void SelectedCreatorChanged(ChangeEventArgs args)
