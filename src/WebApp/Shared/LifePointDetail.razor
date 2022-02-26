@@ -4,30 +4,25 @@
 @inject IJSRuntime _jsRuntime
 @inject NavigationManager _navigator
 
-@if (_lifePoint is not null)
+<h2>@_lifePoint.Caption</h2>
+<p>On @_lifePoint.Date with @_lifePoint.CreatedBy.Name</p>
+<p>@_lifePoint.Description</p>
+
+@if (_imageUri != null)
 {
-    <h2>@_lifePoint.Caption</h2>
-    <p>On @_lifePoint.Date with @_lifePoint.CreatedBy.Name</p>
-    <p>@_lifePoint.Description</p>
-
-    @if (_imageUri != null)
-    {
-        <img src="@_imageUri" alt="The image"/>
-    }
-
-    <button @onclick="OnDeleteClicked">Delete</button>
+    <img src="@_imageUri" alt="The image"/>
 }
+
+<button @onclick="OnDeleteClicked">Delete</button>
 
 @code {
 
-    // TODO mu88: improve error/null handling of _lifePoint and Id
-
-    private ExistingLifePoint? _lifePoint;
+    private ExistingLifePoint _lifePoint = null!; // is initialized on component construction
     private IJSObjectReference _lifePointDetailModule = null!; // is initialized on component construction
     private Uri? _imageUri;
 
     [Parameter]
-    public string? Id { get; set; }
+    public string Id { get; set; } = null!; // is initialized on component construction
 
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
@@ -42,7 +37,7 @@
         await base.OnInitializedAsync();
     }
 
-    private Uri ConstructImageUri(Guid imageId) => new(new Uri(_navigator.BaseUri), $"api/images/{_lifePoint!.CreatedBy.Id}/{imageId.ToString()}");
+    private Uri ConstructImageUri(Guid imageId) => new(new Uri(_navigator.BaseUri), $"api/images/{_lifePoint.CreatedBy.Id}/{imageId.ToString()}");
 
     private async void OnDeleteClicked()
     {

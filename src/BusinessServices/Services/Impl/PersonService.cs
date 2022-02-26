@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using DTO.Person;
@@ -28,9 +26,6 @@ public class PersonService
 
         return _mapper.Map<ExistingPerson>(createdPerson);
     }
-
-    /// <inheritdoc />
-    public IEnumerable<ExistingPerson> GetAllPersons() => _mapper.Map<IQueryable<Person>, IEnumerable<ExistingPerson>>(_storage.Persons);
 
     /// <inheritdoc />
     public bool PersonExists(Guid id) => _storage.Find<Person>(id) != null;
