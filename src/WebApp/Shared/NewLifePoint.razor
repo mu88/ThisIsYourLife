@@ -7,27 +7,36 @@
 @inject IJSRuntime _jsRuntime
 @inject IUserService _userService
 
-<EditForm Model="@_newLifePoint" OnValidSubmit="@CreateNewLifePointAsync">
-    <DataAnnotationsValidator/>
-    <ValidationSummary/>
+@if (_showModalSpinner)
+{
+    <div class="spinner-border"></div>
+    <div>Saving...</div>
+}
+else
+{
+    <EditForm Model="@_newLifePoint" OnValidSubmit="@CreateNewLifePointAsync">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
 
-    <label for="caption">Caption</label>
-    <InputText id="caption" @bind-Value="_newLifePoint.Caption"/>
-    <label for="date">Date</label>
-    <InputDate id="date" @bind-Value="_newLifePoint.Date"/>
-    <label for="description">Description</label>
-    <InputText id="description" @bind-Value="_newLifePoint.Description"/>
-    <label for="image">Image</label>
-    <InputFile id="image" OnChange="@LoadImage" accept=".jpg,.jpeg,.png"/>
+        <label for="caption">Caption</label>
+        <InputText id="caption" @bind-Value="_newLifePoint.Caption"/>
+        <label for="date">Date</label>
+        <InputDate id="date" @bind-Value="_newLifePoint.Date"/>
+        <label for="description">Description</label>
+        <InputText id="description" @bind-Value="_newLifePoint.Description"/>
+        <label for="image">Image</label>
+        <InputFile id="image" OnChange="@LoadImage" accept=".jpg,.jpeg,.png"/>
 
-    <button type="submit">Submit</button>
-</EditForm>
+        <button type="submit">Submit</button>
+    </EditForm>
+}
 
 @code {
 
     private readonly NewLifePointModel _newLifePoint = new();
     private IJSObjectReference _newLifePointModule = null!; // is initialized on component construction 
     private IBrowserFile? _file;
+    private bool _showModalSpinner;
         private const long MaxAllowedFileSizeInBytes = 15 * 1024 * 1024; // 15 MB
 
     [Parameter]
@@ -38,6 +47,8 @@
 
     private async Task CreateNewLifePointAsync()
     {
+        EnableSpinner();
+
         var imageToCreate = _file != null ? new ImageToCreate(_file.OpenReadStream(MaxAllowedFileSizeInBytes)) : null;
         var lifePointToCreate = new LifePointToCreate(
             _newLifePoint.Date,
@@ -50,8 +61,22 @@
 
         var createdLifePoint = await _lifePointService.CreateLifePointAsync(lifePointToCreate);
 
+        DisableSpinner();
+
         await RemovePopupAsync();
         await AddMarkerAsync(createdLifePoint);
+    }
+
+    private void EnableSpinner()
+    {
+        _showModalSpinner = true;
+        StateHasChanged();
+    }
+
+    private void DisableSpinner()
+    {
+        _showModalSpinner = false;
+        StateHasChanged();
     }
 
     private async Task RemovePopupAsync() => await _newLifePointModule.InvokeVoidAsync("removePopupForNewLifePoint");
