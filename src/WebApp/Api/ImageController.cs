@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Mime;
 using BusinessServices;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,5 +14,5 @@ public class ImageController : Controller
     public ImageController(IStorage storage) => _storage = storage;
 
     [HttpGet("{ownerId}/{imageId}")]
-    public IActionResult Get(Guid ownerId, Guid imageId) => File(_storage.GetImage(ownerId, imageId), "image/jpeg");
+    public IActionResult Get(Guid ownerId, Guid imageId) => File(_storage.GetImage(ownerId, imageId), MediaTypeNames.Image.Jpeg);
 }

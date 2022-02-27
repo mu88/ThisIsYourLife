@@ -6,6 +6,8 @@ using BusinessServices;
 using DTO.LifePoint;
 using Entities;
 using Microsoft.EntityFrameworkCore;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 // ReSharper disable All - There are so many R# issues due to the usage of EF Core.
 
@@ -64,11 +66,9 @@ internal class Storage : DbContext, IStorage
     /// <inheritdoc />
     public async Task<Guid> StoreImageAsync(Person owner, ImageToCreate newImage)
     {
-        // TODO mu88: Make images smaller
-
         var imageId = Guid.NewGuid();
         var filePathForImage = GetFilePathForImage(owner, imageId);
-        await _fileSystem.CreateFileAsync(filePathForImage, newImage.Stream);
+        await ProcessAndStoreImageAsync(newImage, filePathForImage);
 
         return imageId;
     }
@@ -111,7 +111,26 @@ internal class Storage : DbContext, IStorage
         modelBuilder.Entity<Person>().HasKey(nameof(LifePoint.Id));
     }
 
+    private static void ResizeImage(Image image) => image.Mutate(context => context.Resize(new ResizeOptions() { Mode = ResizeMode.Max, Size = new Size(700) }));
+
+    private async Task ProcessAndStoreImageAsync(ImageToCreate newImage, string filePathForImage)
+    {
+        EnsureImagePathExists(filePathForImage);
+
+        using (var image = await Image.LoadAsync(newImage.Stream))
+        {
+            ResizeImage(image);
+            await image.SaveAsJpegAsync(filePathForImage);
+        }
+    }
+
+    private void EnsureImagePathExists(string filePathForImage)
+    {
+        var parentDirectory = Directory.GetParent(filePathForImage) ?? throw new NullReferenceException($"Could not resolve parent directory from {filePathForImage}");
+        if (!parentDirectory.Exists) { Directory.CreateDirectory(parentDirectory.ToString()); }
+    }
+
     private string GetFilePathForImage(Person owner, Guid imageId) => GetFilePathForImage(owner.Id, imageId);
 
-    private string GetFilePathForImage(Guid ownerId, Guid imageId) => Path.Combine(_imageDirectory, ownerId.ToString(), imageId.ToString());
+    private string GetFilePathForImage(Guid ownerId, Guid imageId) => Path.Combine(_imageDirectory, ownerId.ToString(), $"{imageId.ToString()}.jpg");
 }

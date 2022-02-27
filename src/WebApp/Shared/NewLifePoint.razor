@@ -28,7 +28,7 @@
     private readonly NewLifePointModel _newLifePoint = new();
     private IJSObjectReference _newLifePointModule = null!; // is initialized on component construction 
     private IBrowserFile? _file;
-        private const long MaxAllowedFileSizeInBytes = 5 * 1024 * 1024; // 5 MB
+        private const long MaxAllowedFileSizeInBytes = 15 * 1024 * 1024; // 15 MB
 
     [Parameter]
     public double Latitude { get; set; }
