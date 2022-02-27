@@ -21,10 +21,17 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\BusinessServices\BusinessServices.csproj" />
-        <ProjectReference Include="..\Entities\Entities.csproj" />
-        <ProjectReference Include="..\Persistence\Persistence.csproj" />
-        <ProjectReference Include="..\WebApp\WebApp.csproj" />
+        <ProjectReference Include="..\BusinessServices\BusinessServices.csproj"/>
+        <ProjectReference Include="..\Entities\Entities.csproj"/>
+        <ProjectReference Include="..\Persistence\Persistence.csproj"/>
+        <ProjectReference Include="..\WebApp\WebApp.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="Doubles\Dynamo.jpg"/>
+        <Content Include="Doubles\Dynamo.jpg">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>

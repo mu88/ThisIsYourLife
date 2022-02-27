@@ -12,5 +12,6 @@ public static class Startup
         services.AddScoped<IStorage>(provider => provider.GetRequiredService<Storage>());
         services.AddSingleton<IFileSystem, FileSystem>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IImageService, ImageService>();
     }
 }

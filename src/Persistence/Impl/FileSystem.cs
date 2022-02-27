@@ -1,21 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace Persistence;
 
 internal class FileSystem : IFileSystem
 {
-    /// <inheritdoc />
-    public async Task CreateFileAsync(string filePath, Stream content)
-    {
-        var parentDirectory = Directory.GetParent(filePath);
-        if (parentDirectory is not { Exists: true })
-            Directory.CreateDirectory(Path.GetDirectoryName(filePath) ?? throw new InvalidOperationException($"Could not parse '{filePath}'"));
-
-        await using FileStream fileStream = new(filePath, FileMode.Create);
-        await content.CopyToAsync(fileStream);
-    }
+    public Stream CreateFile(string filePath) => File.Create(filePath);
 
     /// <inheritdoc />
     public void DeleteFile(string filePath) => File.Delete(filePath);
@@ -28,6 +17,9 @@ internal class FileSystem : IFileSystem
 
     /// <inheritdoc />
     public bool DirectoryExists(string path) => Directory.Exists(path);
+
+    /// <inheritdoc />
+    public bool DirectoryExists(DirectoryInfo directoryInfo) => directoryInfo.Exists;
 
     /// <inheritdoc />
     public void CreateDirectory(string path) => Directory.CreateDirectory(path);

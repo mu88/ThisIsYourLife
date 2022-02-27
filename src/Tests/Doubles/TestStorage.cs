@@ -9,9 +9,11 @@ namespace Tests.Doubles;
 
 public static class TestStorage
 {
-    public static IStorage Create()
+    public static IStorage Create(IFileSystem? fileSystem = null, IImageService? imageService = null)
     {
-        var storage = new Storage(new DbContextOptionsBuilder<Storage>().UseSqlite(CreateInMemoryDatabase()).Options, new Mock<IFileSystem>().Object);
+        var storage = new Storage(new DbContextOptionsBuilder<Storage>().UseSqlite(CreateInMemoryDatabase()).Options,
+                                  fileSystem ?? new Mock<IFileSystem>().Object,
+                                  imageService ?? new Mock<IImageService>().Object);
         storage.Database.EnsureCreated();
 
         return storage;

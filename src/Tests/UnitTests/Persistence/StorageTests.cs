@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 using Persistence;
+using Tests.Doubles;
 
 namespace Tests.UnitTests.Persistence;
 
@@ -20,7 +21,7 @@ public class StorageTests
 
         testee.DeleteImage(ownerId, imageId);
 
-        autoMocker.Verify<IFileSystem>(system => system.DeleteFile(It.Is<string>(s => s.Contains(ownerId.ToString()) && s.Contains(imageId.ToString()))), Times.Once);
+        autoMocker.Verify<IImageService>(system => system.DeleteImage(ownerId, imageId), Times.Once);
     }
 
     [Test]
@@ -33,7 +34,20 @@ public class StorageTests
 
         testee.GetImage(ownerId, imageId);
 
-        autoMocker.Verify<IFileSystem>(system => system.OpenRead(It.Is<string>(s => s.Contains(ownerId.ToString()) && s.Contains(imageId.ToString()))), Times.Once);
+        autoMocker.Verify<IImageService>(system => system.GetImage(ownerId, imageId), Times.Once);
+    }
+
+    [Test]
+    public void StoreImage()
+    {
+        var person = TestPerson.Create("Dixie");
+        var imageToCreate = TestImageToCreate.Create();
+        var autoMocker = CreateAutoMocker();
+        var testee = autoMocker.CreateInstance<Storage>();
+
+        testee.StoreImageAsync(person, imageToCreate);
+
+        autoMocker.Verify<IImageService>(system => system.ProcessAndStoreImageAsync(person, imageToCreate), Times.Once);
     }
 
     [Test]

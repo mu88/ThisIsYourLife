@@ -6,8 +6,6 @@ using BusinessServices;
 using DTO.LifePoint;
 using Entities;
 using Microsoft.EntityFrameworkCore;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
 
 // ReSharper disable All - There are so many R# issues due to the usage of EF Core.
 
@@ -18,14 +16,16 @@ namespace Persistence;
 
 internal class Storage : DbContext, IStorage
 {
-    private static string _imageDirectory = Path.Combine(UserDirectory, "images");
-
     private readonly IFileSystem _fileSystem;
+    private readonly IImageService _imageService;
 
     /// <inheritdoc />
-    public Storage(DbContextOptions<Storage> options, IFileSystem fileSystem)
-        : base(options) =>
+    public Storage(DbContextOptions<Storage> options, IFileSystem fileSystem, IImageService imageService)
+        : base(options)
+    {
         _fileSystem = fileSystem;
+        _imageService = imageService;
+    }
 
     /// <inheritdoc />
     public IQueryable<LifePoint> LifePoints => LifePointsInStorage;
@@ -64,20 +64,13 @@ internal class Storage : DbContext, IStorage
     public async Task SaveAsync() => await base.SaveChangesAsync();
 
     /// <inheritdoc />
-    public async Task<Guid> StoreImageAsync(Person owner, ImageToCreate newImage)
-    {
-        var imageId = Guid.NewGuid();
-        var filePathForImage = GetFilePathForImage(owner, imageId);
-        await ProcessAndStoreImageAsync(newImage, filePathForImage);
-
-        return imageId;
-    }
+    public async Task<Guid> StoreImageAsync(Person owner, ImageToCreate newImage) => await _imageService.ProcessAndStoreImageAsync(owner, newImage);
 
     /// <inheritdoc />
-    public Stream GetImage(Guid ownerId, Guid imageId) => _fileSystem.OpenRead(GetFilePathForImage(ownerId, imageId));
+    public Stream GetImage(Guid ownerId, Guid imageId) => _imageService.GetImage(ownerId, imageId);
 
     /// <inheritdoc />
-    public void DeleteImage(Guid ownerId, Guid imageId) => _fileSystem.DeleteFile(GetFilePathForImage(ownerId, imageId));
+    public void DeleteImage(Guid ownerId, Guid imageId) => _imageService.DeleteImage(ownerId, imageId);
 
     public async Task EnsureStorageExistsAsync()
     {
@@ -110,27 +103,4 @@ internal class Storage : DbContext, IStorage
         modelBuilder.Entity<Person>().ToTable(nameof(Person));
         modelBuilder.Entity<Person>().HasKey(nameof(LifePoint.Id));
     }
-
-    private static void ResizeImage(Image image) => image.Mutate(context => context.Resize(new ResizeOptions() { Mode = ResizeMode.Max, Size = new Size(700) }));
-
-    private async Task ProcessAndStoreImageAsync(ImageToCreate newImage, string filePathForImage)
-    {
-        EnsureImagePathExists(filePathForImage);
-
-        using (var image = await Image.LoadAsync(newImage.Stream))
-        {
-            ResizeImage(image);
-            await image.SaveAsJpegAsync(filePathForImage);
-        }
-    }
-
-    private void EnsureImagePathExists(string filePathForImage)
-    {
-        var parentDirectory = Directory.GetParent(filePathForImage) ?? throw new NullReferenceException($"Could not resolve parent directory from {filePathForImage}");
-        if (!parentDirectory.Exists) { Directory.CreateDirectory(parentDirectory.ToString()); }
-    }
-
-    private string GetFilePathForImage(Person owner, Guid imageId) => GetFilePathForImage(owner.Id, imageId);
-
-    private string GetFilePathForImage(Guid ownerId, Guid imageId) => Path.Combine(_imageDirectory, ownerId.ToString(), $"{imageId.ToString()}.jpg");
 }

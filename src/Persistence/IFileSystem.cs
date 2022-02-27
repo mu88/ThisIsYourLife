@@ -1,12 +1,9 @@
 ﻿using System.IO;
-using System.Threading.Tasks;
 
 namespace Persistence;
 
 public interface IFileSystem
 {
-    public Task CreateFileAsync(string filePath, Stream content);
-
     void DeleteFile(string filePath);
 
     Stream OpenRead(string filePath);
@@ -15,7 +12,11 @@ public interface IFileSystem
 
     bool DirectoryExists(string path);
 
+    bool DirectoryExists(DirectoryInfo directoryInfo);
+
     void CreateDirectory(string path);
 
     bool FileExists(string path);
+
+    Stream CreateFile(string filePath);
 }
