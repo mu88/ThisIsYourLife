@@ -54,7 +54,7 @@ internal class LifePointService : ILifePointService
     {
         var lifePoint = await GetLifePointInternalAsync(id);
         _storage.RemoveItem(lifePoint);
-        if (lifePoint.ImageId != null) _storage.DeleteImage(lifePoint.ImageId.Value);
+        if (lifePoint.ImageId != null) _storage.DeleteImage(lifePoint.CreatedBy.Id, lifePoint.ImageId.Value);
         await _storage.SaveAsync();
     }
 

@@ -13,13 +13,14 @@ public class StorageTests
     [Test]
     public void DeleteImage()
     {
+        var ownerId = Guid.NewGuid();
         var imageId = Guid.NewGuid();
         var autoMocker = CreateAutoMocker();
         var testee = autoMocker.CreateInstance<Storage>();
 
-        testee.DeleteImage(imageId);
+        testee.DeleteImage(ownerId, imageId);
 
-        autoMocker.Verify<IFileSystem>(system => system.DeleteFile(It.Is<string>(s => s.Contains(imageId.ToString()))), Times.Once);
+        autoMocker.Verify<IFileSystem>(system => system.DeleteFile(It.Is<string>(s => s.Contains(ownerId.ToString()) && s.Contains(imageId.ToString()))), Times.Once);
     }
 
     [Test]

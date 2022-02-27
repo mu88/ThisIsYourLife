@@ -189,7 +189,7 @@ public class LifePointServiceTests
         await testee.DeleteLifePointAsync(lifePoints.First().Id);
 
         autoMocker.Verify<IStorage>(x => x.RemoveItem(lifePoints.First()), Times.Once);
-        autoMocker.Verify<IStorage>(x => x.DeleteImage(lifePoints.First().ImageId!.Value), Times.Once);
+        autoMocker.Verify<IStorage>(x => x.DeleteImage(lifePoints.First().CreatedBy.Id, lifePoints.First().ImageId!.Value), Times.Once);
         autoMocker.Verify<IStorage>(x => x.SaveAsync(), Times.Once);
     }
 

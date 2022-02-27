@@ -77,7 +77,7 @@ internal class Storage : DbContext, IStorage
     public Stream GetImage(Guid ownerId, Guid imageId) => _fileSystem.OpenRead(GetFilePathForImage(ownerId, imageId));
 
     /// <inheritdoc />
-    public void DeleteImage(Guid imageId) => _fileSystem.DeleteFile(Path.Combine(_imageDirectory, imageId.ToString()));
+    public void DeleteImage(Guid ownerId, Guid imageId) => _fileSystem.DeleteFile(GetFilePathForImage(ownerId, imageId));
 
     public async Task EnsureStorageExistsAsync()
     {

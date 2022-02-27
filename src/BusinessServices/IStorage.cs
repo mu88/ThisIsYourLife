@@ -31,7 +31,7 @@ public interface IStorage
 
     Stream GetImage(Guid ownerId, Guid imageId);
 
-    void DeleteImage(Guid imageId);
+    void DeleteImage(Guid ownerId, Guid imageId);
 
     Task EnsureStorageExistsAsync();
 }
