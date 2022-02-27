@@ -14,5 +14,5 @@ public class ImageController : Controller
     public ImageController(IStorage storage) => _storage = storage;
 
     [HttpGet("{ownerId}/{imageId}")]
-    public IActionResult Get(Guid ownerId, Guid imageId) => File(_storage.GetImage(ownerId, imageId), MediaTypeNames.Image.Jpeg);
+    public IActionResult GetImage(Guid ownerId, Guid imageId) => File(_storage.GetImage(ownerId, imageId), MediaTypeNames.Image.Jpeg);
 }
