@@ -1,9 +1,11 @@
-﻿using BusinessServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using BusinessServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Persistence;
 
+[ExcludeFromCodeCoverage]
 public static class Startup
 {
     public static void AddPersistence(this IServiceCollection services)

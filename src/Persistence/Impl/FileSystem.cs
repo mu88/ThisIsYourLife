@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace Persistence;
 
+[ExcludeFromCodeCoverage]
 internal class FileSystem : IFileSystem
 {
     public Stream CreateFile(string filePath) => File.Create(filePath);

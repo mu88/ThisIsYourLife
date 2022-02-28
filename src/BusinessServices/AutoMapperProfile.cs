@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Diagnostics.CodeAnalysis;
+using AutoMapper;
 using DTO.LifePoint;
 using DTO.Location;
 using DTO.Person;
@@ -6,6 +7,7 @@ using Entities;
 
 namespace BusinessServices;
 
+[ExcludeFromCodeCoverage]
 public class AutoMapperProfile : Profile
 {
     /// <inheritdoc />
