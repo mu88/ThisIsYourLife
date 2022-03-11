@@ -20,7 +20,9 @@ jobs:
     - name: Build
       run: dotnet build --no-restore Project28.sln
     - name: Test
-      run: dotnet test --no-build --verbosity normal Project28.sln
+      run: dotnet test --collect:"XPlat Code Coverage" --no-build --verbosity normal Project28.sln
+    - name: Upload code coverage report
+      uses: codecov/codecov-action@v2
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
     - name: Set up Docker Buildx
