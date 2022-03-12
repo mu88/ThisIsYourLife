@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using BusinessServices;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace WebApp;
 
+[ExcludeFromCodeCoverage]
 public class Program
 {
     public static async Task Main(string[] args)

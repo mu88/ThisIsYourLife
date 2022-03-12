@@ -19,8 +19,4 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.CustomElements" Version="0.1.0-alpha.21466.1"/>
   </ItemGroup>
 
-  <ItemGroup>
-    <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"/>
-  </ItemGroup>
-
 </Project>

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using BusinessServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Web;
@@ -10,6 +11,7 @@ using WebApp.Shared;
 
 namespace WebApp;
 
+[ExcludeFromCodeCoverage]
 public class Startup
 {
     public Startup(IConfiguration configuration) => Configuration = configuration;
