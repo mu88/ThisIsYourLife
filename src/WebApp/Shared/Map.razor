@@ -6,6 +6,7 @@
 @inject ILifePointService _lifePointService
 @inject IPersonService _personService
 @inject IUserService _userService
+@inject IStringLocalizer<Main> _loc
 
 @if (!_userService.UserAlreadySet)
 {
@@ -16,7 +17,7 @@
     {
         @if (_distinctCreators.Any())
         {
-            <label for="distinctCreator">Created by: </label>
+            <label for="distinctCreator">@_loc["CreatedBy"]: </label>
             <select id="distinctCreator" @onchange="SelectedCreatorChanged">
                 @foreach (var (id, name) in _distinctCreators)
                 {
@@ -26,7 +27,7 @@
         }
         @if (_distinctYears.Any())
         {
-            <label for="distinctYear">Created in: </label>
+            <label for="distinctYear">@_loc["CreatedIn"]: </label>
             <select id="distinctYear" @onchange="SelectedYearChanged">
                 @foreach (var distinctYear in _distinctYears)
                 {

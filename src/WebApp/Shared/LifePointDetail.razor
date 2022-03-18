@@ -3,9 +3,10 @@
 @inject ILifePointService _lifePointService
 @inject IJSRuntime _jsRuntime
 @inject NavigationManager _navigator
+@inject IStringLocalizer<Main> _loc
 
 <h2>@_lifePoint.Caption</h2>
-<p>On @_lifePoint.Date with @_lifePoint.CreatedBy.Name</p>
+<p>@_loc["On"] @_lifePoint.Date @_loc["With"] @_lifePoint.CreatedBy.Name</p>
 <p>@_lifePoint.Description</p>
 
 @if (_imageUri != null)
@@ -13,7 +14,7 @@
     <img src="@_imageUri" alt="The image"/>
 }
 
-<button @onclick="OnDeleteClicked">Delete</button>
+<button @onclick="OnDeleteClicked">@_loc["Delete"]</button>
 
 @code {
 

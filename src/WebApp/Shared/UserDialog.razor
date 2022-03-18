@@ -1,16 +1,17 @@
 ﻿@using Persistence
 @using WebApp.Models
 @inject IUserService _userService
+@inject IStringLocalizer<Main> _loc
 
 <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);"
      aria-modal="true" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Welcome!</h4>
+                <h4 class="modal-title">@_loc["Welcome"]!</h4>
             </div>
             <div class="modal-body">
-                <p>Please enter your username</p>
+                <p>@_loc["PleaseEnterUsername"]</p>
             </div>
             <EditForm Model="@_userModel" OnValidSubmit="@HandleValidSubmitAsync">
                 <DataAnnotationsValidator/>

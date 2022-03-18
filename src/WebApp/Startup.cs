@@ -35,6 +35,8 @@ public class Startup
         ConfigureAutoMapper(services);
 
         services.AddOptions<UserConfig>().Bind(Configuration);
+
+        services.AddLocalization();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,6 +58,8 @@ public class Startup
 
         app.UseRouting();
 
+        UseRequestLocalization(app);
+
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapBlazorHub();
@@ -65,4 +69,15 @@ public class Startup
     }
 
     private static void ConfigureAutoMapper(IServiceCollection services) => services.AddAutoMapper(config => config.AddProfile(typeof(AutoMapperProfile)));
+
+    private void UseRequestLocalization(IApplicationBuilder app)
+    {
+        var supportedCultures = new[] { "en", "de" };
+        var localizationOptions = new RequestLocalizationOptions()
+            .SetDefaultCulture(supportedCultures[0])
+            .AddSupportedCultures(supportedCultures)
+            .AddSupportedUICultures(supportedCultures);
+
+        app.UseRequestLocalization(localizationOptions);
+    }
 }
