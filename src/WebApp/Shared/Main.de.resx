@@ -57,4 +57,10 @@
     <data name="Welcome" xml:space="preserve">
         <value>Willkommen</value>
     </data>
+    <data name="RequiredError" xml:space="preserve">
+        <value>Das Feld {0} muss ausgefüllt werden</value>
+    </data>
+    <data name="LengthError" xml:space="preserve">
+        <value>Darf zwischen {2} und {1} Zeichen lang sein</value>
+    </data>
 </root>

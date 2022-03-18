@@ -1,18 +1,19 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using WebApp.Shared;
 
 namespace WebApp.Models;
 
 public class NewLifePointModel
 {
-    [Required]
-    [StringLength(30, MinimumLength = 1, ErrorMessage = "Must be between 1 and 30 characters long.")]
+    [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(Main))]
+    [StringLength(30, MinimumLength = 1, ErrorMessageResourceName = "LengthError", ErrorMessageResourceType = typeof(Main))]
     public string Caption { get; set; } = string.Empty;
 
-    [Required]
-    [StringLength(200, MinimumLength = 1, ErrorMessage = "Must be between 1 and 200 characters long.")]
+    [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(Main))]
+    [StringLength(200, MinimumLength = 1, ErrorMessageResourceName = "LengthError", ErrorMessageResourceType = typeof(Main))]
     public string Description { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(Main))]
     public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 }

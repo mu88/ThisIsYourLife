@@ -124,6 +124,15 @@ namespace WebApp.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Must be between {2} and {1} characters long.
+        /// </summary>
+        internal static string LengthError {
+            get {
+                return ResourceManager.GetString("LengthError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to On.
         /// </summary>
         internal static string On {
@@ -138,6 +147,15 @@ namespace WebApp.Shared {
         internal static string PleaseEnterUsername {
             get {
                 return ResourceManager.GetString("PleaseEnterUsername", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The field {0} is mandatory.
+        /// </summary>
+        internal static string RequiredError {
+            get {
+                return ResourceManager.GetString("RequiredError", resourceCulture);
             }
         }
         
