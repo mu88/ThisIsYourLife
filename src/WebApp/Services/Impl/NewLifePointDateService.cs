@@ -2,7 +2,7 @@
 
 namespace WebApp.Services;
 
-public class NewLifePointDateService : INewLifePointDateService
+internal class NewLifePointDateService : INewLifePointDateService
 {
     public NewLifePointDateService() => ProposedCreationDate = DateOnly.FromDateTime(DateTime.Now);
 

@@ -7,10 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using WebApp.Api;
 
-namespace Tests.UnitTests.Controller;
+namespace Tests.UnitTests.WebApp.Api;
 
 [TestFixture]
-public class ControllerTests
+public class ImageControllerTests
 {
     [Test]
     public void GetImage()

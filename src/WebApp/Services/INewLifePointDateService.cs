@@ -2,7 +2,7 @@
 
 namespace WebApp.Services;
 
-public interface INewLifePointDateService
+internal interface INewLifePointDateService
 {
     public DateOnly ProposedCreationDate { get; set; }
 }
