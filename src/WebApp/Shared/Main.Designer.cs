@@ -115,6 +115,15 @@ namespace WebApp.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error has occurred. This application has to be reloaded. Please see the log file for more information..
+        /// </summary>
+        internal static string GeneralError {
+            get {
+                return ResourceManager.GetString("GeneralError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Image.
         /// </summary>
         internal static string Image {
@@ -147,6 +156,15 @@ namespace WebApp.Shared {
         internal static string PleaseEnterUsername {
             get {
                 return ResourceManager.GetString("PleaseEnterUsername", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reload.
+        /// </summary>
+        internal static string Reload {
+            get {
+                return ResourceManager.GetString("Reload", resourceCulture);
             }
         }
         

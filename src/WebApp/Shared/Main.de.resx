@@ -63,4 +63,10 @@
     <data name="LengthError" xml:space="preserve">
         <value>Darf zwischen {2} und {1} Zeichen lang sein</value>
     </data>
+    <data name="GeneralError" xml:space="preserve">
+        <value>Es ist ein Fehler aufgetreten. Die Applikation muss neu geladen werden. In der Log-Datei finden sich weitere Informationen.</value>
+    </data>
+    <data name="Reload" xml:space="preserve">
+        <value>Neu laden</value>
+    </data>
 </root>

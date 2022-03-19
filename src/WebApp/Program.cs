@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace WebApp;
 
@@ -16,7 +17,14 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
-        var host = CreateHostBuilder(args).Build();
+        var host = CreateHostBuilder(args)
+            .UseSerilog((context, services, configuration) => configuration
+                            .ReadFrom.Configuration(context.Configuration)
+                            .ReadFrom.Services(services)
+                            .Enrich.FromLogContext()
+                            .WriteTo.Console()
+                            .WriteTo.File(Path.Combine("logs", "ThisIsMyLife.log"), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 14))
+            .Build();
 
         await CreateDbIfNotExistsAsync(host);
 

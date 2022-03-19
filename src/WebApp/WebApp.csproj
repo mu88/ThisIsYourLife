@@ -17,6 +17,8 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.2"/>
     <PackageReference Include="Microsoft.AspNetCore.Components.CustomElements" Version="0.1.0-alpha.21466.1"/>
+    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0"/>
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +26,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Main.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Remove="logs\**"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +35,15 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Main.resx</DependentUpon>
     </Compile>
+    <Compile Remove="logs\**"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="logs\**"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="logs\**"/>
   </ItemGroup>
 
 </Project>

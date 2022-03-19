@@ -72,4 +72,10 @@
     <data name="LengthError" xml:space="preserve">
         <value>Must be between {2} and {1} characters long</value>
     </data>
+    <data name="GeneralError" xml:space="preserve">
+        <value>An error has occurred. This application has to be reloaded. Please see the log file for more information.</value>
+    </data>
+    <data name="Reload" xml:space="preserve">
+        <value>Reload</value>
+    </data>
 </root>
