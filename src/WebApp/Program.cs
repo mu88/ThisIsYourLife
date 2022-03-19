@@ -23,7 +23,7 @@ public class Program
                             .ReadFrom.Services(services)
                             .Enrich.FromLogContext()
                             .WriteTo.Console()
-                            .WriteTo.File(Path.Combine("logs", "ThisIsMyLife.log"), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 14))
+                            .WriteTo.File(Path.Combine("data", "logs", "ThisIsYourLife.log"), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 14))
             .Build();
 
         await CreateDbIfNotExistsAsync(host);
