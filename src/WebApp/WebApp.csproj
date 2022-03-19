@@ -26,7 +26,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Main.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Remove="logs\**"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -35,15 +34,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Main.resx</DependentUpon>
     </Compile>
-    <Compile Remove="logs\**"/>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="logs\**"/>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="logs\**"/>
   </ItemGroup>
 
 </Project>

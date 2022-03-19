@@ -1,0 +1,12 @@
+<Project>
+    <ItemGroup>
+        <None Remove="logs\**"/>
+        <Content Remove="logs\**"/>
+        <Compile Remove="logs\**"/>
+        <EmbeddedResource Remove="logs\**"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="*.csproj.DotSettings"/>
+    </ItemGroup>
+</Project>
