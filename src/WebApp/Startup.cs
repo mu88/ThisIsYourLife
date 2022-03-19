@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence;
+using WebApp.Services;
 using WebApp.Shared;
 
 namespace WebApp;
@@ -31,6 +32,7 @@ public class Startup
 
         services.AddPersistence();
         services.AddBusinessServices();
+        services.AddSingleton<INewLifePointDateService, NewLifePointDateService>();
 
         ConfigureAutoMapper(services);
 

@@ -1,12 +1,14 @@
 ﻿@using BusinessServices.Services
 @using DTO.LifePoint
 @using Persistence
+@using WebApp.Services
 @using WebApp.Models
 @using System.IO
 @inject ILifePointService _lifePointService
 @inject IPersonService _personService
 @inject IJSRuntime _jsRuntime
 @inject IUserService _userService
+@inject INewLifePointDateService _newLifePointDateService
 @inject IStringLocalizer<Main> _loc
 
 @if (_showModalSpinner)
@@ -80,6 +82,7 @@ else
             imageToCreate);
 
         var createdLifePoint = await _lifePointService.CreateLifePointAsync(lifePointToCreate);
+        _newLifePointDateService.ProposedCreationDate = _newLifePoint.Date;
 
         DisableSpinner();
 
@@ -110,6 +113,8 @@ else
         await LoadNewLifePointModuleAsync();
 
         await base.OnInitializedAsync();
+
+        _newLifePoint.Date = _newLifePointDateService.ProposedCreationDate;
     }
 
     private async Task LoadNewLifePointModuleAsync() => _newLifePointModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/NewLifePoint.razor.js");
