@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AnalysisInput>
+    <Rules>
+        <Rule>
+            <Key>S121</Key>
+        </Rule>
+        <Rule>
+            <Key>S3216</Key>
+        </Rule>
+    </Rules>
+</AnalysisInput>
