@@ -133,6 +133,15 @@ namespace WebApp.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The image was too big, a maximum of {0} MB is allowed. Please try it again..
+        /// </summary>
+        internal static string ImageTooBig {
+            get {
+                return ResourceManager.GetString("ImageTooBig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Must be between {2} and {1} characters long.
         /// </summary>
         internal static string LengthError {

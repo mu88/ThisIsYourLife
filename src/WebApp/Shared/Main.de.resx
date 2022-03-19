@@ -69,4 +69,7 @@
     <data name="Reload" xml:space="preserve">
         <value>Neu laden</value>
     </data>
+    <data name="ImageTooBig" xml:space="preserve">
+        <value>Das Bild war zu groß, es sind maximal {0} MB möglich. Bitte erneut versuchen.</value>
+    </data>
 </root>
