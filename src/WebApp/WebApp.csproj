@@ -26,6 +26,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Main.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Remove="data\**"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -34,12 +35,21 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Main.resx</DependentUpon>
     </Compile>
+    <Compile Remove="data\**"/>
   </ItemGroup>
 
   <ItemGroup>
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
       <_Parameter1>Tests</_Parameter1>
     </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="data\**"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="data\**"/>
   </ItemGroup>
 
 </Project>
