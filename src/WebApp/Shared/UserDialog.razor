@@ -11,18 +11,16 @@
                 <h4 class="modal-title">@_loc["Welcome"]!</h4>
             </div>
             <div class="modal-body">
-                <p>@_loc["PleaseEnterUsername"]</p>
+                <EditForm Model="@_userModel" OnValidSubmit="@HandleValidSubmitAsync">
+                    <DataAnnotationsValidator/>
+                    <ValidationSummary/>
+                    <div class="input-group">
+                        <span class="input-group-text">@_loc["PleaseEnterUsername"]</span>
+                        <InputText class="form-control" @bind-Value="_userModel.Name"/>
+                        <button class="btn btn-outline-secondary" type="submit">OK</button>
+                    </div>
+                </EditForm>
             </div>
-            <EditForm Model="@_userModel" OnValidSubmit="@HandleValidSubmitAsync">
-                <DataAnnotationsValidator/>
-                <ValidationSummary/>
-
-                <InputText id="name" @bind-Value="_userModel.Name"/>
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">OK</button>
-                </div>
-            </EditForm>
         </div>
     </div>
 </div>
