@@ -13,30 +13,40 @@
 
 @if (_showModalSpinner)
 {
-    <div class="spinner-border"></div>
-    <div>@_loc["Saving"]...</div>
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">@_loc["Saving"]...</span>
+    </div>
 }
 else
 {
     @if (_imageTooBig)
     {
-        <p>@_loc["ImageTooBig", MaxAllowedFileSizeInMegaBytes]</p>
+        <div class="alert alert-warning" role="alert">
+            @_loc["ImageTooBig", MaxAllowedFileSizeInMegaBytes]
+        </div>
     }
 
     <EditForm Model="@_newLifePoint" OnValidSubmit="@CreateNewLifePointAsync">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
 
-        <label for="caption">@_loc["Caption"]</label>
-        <InputText id="caption" @bind-Value="_newLifePoint.Caption"/>
-        <label for="date">@_loc["Date"]</label>
-        <InputDate id="date" @bind-Value="_newLifePoint.Date"/>
-        <label for="description">@_loc["Description"]</label>
-        <InputText id="description" @bind-Value="_newLifePoint.Description"/>
-        <label for="image">@_loc["Image"]</label>
-        <InputFile id="image" OnChange="@LoadImage" accept=".jpg,.jpeg,.png"/>
-
-        <button type="submit">@_loc["Save"]</button>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="caption">@_loc["Caption"]</span>
+            <InputText class="form-control" aria-describedby="caption" @bind-Value="_newLifePoint.Caption"/>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="date">@_loc["Date"]</span>
+            <InputDate class="form-control" aria-describedby="date" @bind-Value="_newLifePoint.Date"/>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="description">@_loc["Description"]</span>
+            <InputTextArea class="form-control" aria-describedby="description" @bind-Value="_newLifePoint.Description"/>
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="image">@_loc["Image"]</span>
+            <InputFile class="form-control" aria-describedby="image" OnChange="@LoadImage" accept=".jpg,.jpeg,.png"/>
+        </div>
+        <button class="btn btn-outline-secondary" type="submit">@_loc["Save"]</button>
     </EditForm>
 }
 
