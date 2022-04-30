@@ -5,16 +5,18 @@
 @inject NavigationManager _navigator
 @inject IStringLocalizer<Main> _loc
 
-<h2>@_lifePoint.Caption</h2>
-<p>@_loc["On"] @_lifePoint.Date @_loc["With"] @_lifePoint.CreatedBy.Name</p>
-<p>@_lifePoint.Description</p>
-
-@if (_imageUri != null)
-{
-    <img src="@_imageUri" alt="The image"/>
-}
-
-<button @onclick="OnDeleteClicked">@_loc["Delete"]</button>
+<div class="card">
+    @if (_imageUri != null)
+    {
+        <img src="@_imageUri" class="card-img-top" alt="The image">
+    }
+    <div class="card-body">
+        <h5 class="card-title">@_lifePoint.Caption</h5>
+        <h6 class="card-subtitle mb-2 text-muted">@_loc["On"] @_lifePoint.Date @_loc["With"] @_lifePoint.CreatedBy.Name</h6>
+        <p class="card-text" style="white-space: pre-line">@_lifePoint.Description</p>
+        <button class="btn btn-outline-secondary" @onclick="OnDeleteClicked">@_loc["Delete"]</button>
+    </div>
+</div>
 
 @code {
 
