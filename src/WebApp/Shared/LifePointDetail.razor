@@ -48,7 +48,7 @@
         await RemoveMarkerAsync();
     }
 
-    private async Task RemoveMarkerAsync() => await _lifePointDetailModule.InvokeVoidAsync("removeMarkerOfLifePoint");
+    private async Task RemoveMarkerAsync() => await _lifePointDetailModule.InvokeVoidAsync("removeMarkerOfLifePoint", Id);
 
     private async Task LoadLifePointDetailModuleAsync() => _lifePointDetailModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
 
