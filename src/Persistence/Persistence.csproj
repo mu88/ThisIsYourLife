@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\Logging\Logging.csproj"/>
         <ProjectReference Include="..\BusinessServices\BusinessServices.csproj"/>
         <ProjectReference Include="..\Entities\Entities.csproj"/>
     </ItemGroup>
@@ -19,9 +20,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
-            <_Parameter1>Tests</_Parameter1>
-        </AssemblyAttribute>
+        <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
+        <InternalsVisibleTo Include="Tests"/>
     </ItemGroup>
 
 </Project>

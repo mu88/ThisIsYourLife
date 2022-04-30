@@ -4,18 +4,22 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using BusinessServices.Services;
 using DTO.Person;
+using Logging.Extensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Persistence;
 
 internal class UserService : IUserService
 {
+    private readonly ILogger<UserService> _logger;
     private readonly IFileSystem _fileSystem;
     private readonly IPersonService _personService;
     private readonly UserConfig _configuration;
 
-    public UserService(IOptions<UserConfig> configuration, IFileSystem fileSystem, IPersonService personService)
+    public UserService(IOptions<UserConfig> configuration, ILogger<UserService> logger, IFileSystem fileSystem, IPersonService personService)
     {
+        _logger = logger;
         _fileSystem = fileSystem;
         _personService = personService;
         _configuration = configuration.Value;
@@ -32,8 +36,11 @@ internal class UserService : IUserService
     /// <inheritdoc />
     public async Task SetUserAsync(string name)
     {
+        _logger.MethodStarted();
+
         await SetNameAndIdAsync(name);
         PersistConfigInFile();
+        _logger.UserSet(name);
     }
 
     private void PersistConfigInFile()

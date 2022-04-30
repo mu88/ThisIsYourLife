@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using BusinessServices;
 using DTO.LifePoint;
 using Entities;
+using Logging.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 // ReSharper disable All - There are so many R# issues due to the usage of EF Core.
 
@@ -16,13 +18,15 @@ namespace Persistence;
 
 internal class Storage : DbContext, IStorage
 {
+    private readonly ILogger<Storage> _logger;
     private readonly IFileSystem _fileSystem;
     private readonly IImageService _imageService;
 
     /// <inheritdoc />
-    public Storage(DbContextOptions<Storage> options, IFileSystem fileSystem, IImageService imageService)
+    public Storage(DbContextOptions<Storage> options, ILogger<Storage> logger, IFileSystem fileSystem, IImageService imageService)
         : base(options)
     {
+        _logger = logger;
         _fileSystem = fileSystem;
         _imageService = imageService;
     }
@@ -74,33 +78,58 @@ internal class Storage : DbContext, IStorage
 
     public async Task EnsureStorageExistsAsync()
     {
-        if (!_fileSystem.DirectoryExists(DatabaseDirectory)) { _fileSystem.CreateDirectory(DatabaseDirectory); }
+        _logger.MethodStarted();
+
+        if (!_fileSystem.DirectoryExists(DatabaseDirectory))
+        {
+            _logger.CreatingDatabaseDirectory(DatabaseDirectory);
+            _fileSystem.CreateDirectory(DatabaseDirectory);
+        }
 
         if (!_fileSystem.FileExists(DatabasePath))
         {
-            await Database.EnsureCreatedAsync();
-            await Database.MigrateAsync();
-
-            var person = (await AddAsync(new Person("Ultras Dynamo"))).Entity;
-            await AddAsync(new LifePoint(new DateOnly(1953, 4, 12),
-                                         "Nur die SGD!",
-                                         "Wahre Liebe kennt keine Liga",
-                                         51.0405849,
-                                         13.7478431,
-                                         person));
-            await SaveChangesAsync();
+            await CreateDatabase();
+            await SeedData();
         }
+
+        _logger.MethodFinished();
     }
 
     /// <inheritdoc />
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        _logger.ExecutingBaseOnModelCreating();
         base.OnModelCreating(modelBuilder);
 
+        _logger.ExecutingCustomOnModelCreating();
         modelBuilder.Entity<LifePoint>().ToTable(nameof(LifePoint));
         modelBuilder.Entity<LifePoint>().HasKey(nameof(LifePoint.Id));
         modelBuilder.Entity<LifePoint>().Navigation(point => point.CreatedBy).AutoInclude();
         modelBuilder.Entity<Person>().ToTable(nameof(Person));
         modelBuilder.Entity<Person>().HasKey(nameof(LifePoint.Id));
+    }
+
+    private async Task SeedData()
+    {
+        _logger.SeedingData();
+
+        var person = (await AddAsync(new Person("Ultras Dynamo"))).Entity;
+        await AddAsync(new LifePoint(new DateOnly(1953, 4, 12),
+                                     "Nur die SGD!",
+                                     "Wahre Liebe kennt keine Liga",
+                                     51.0405849,
+                                     13.7478431,
+                                     person));
+        await SaveChangesAsync();
+    }
+
+    private async Task CreateDatabase()
+    {
+        _logger.CreatingDatabase(DatabasePath);
+
+        await Database.EnsureCreatedAsync();
+        await Database.MigrateAsync();
+
+        _logger.DatabaseCreated(DatabasePath);
     }
 }

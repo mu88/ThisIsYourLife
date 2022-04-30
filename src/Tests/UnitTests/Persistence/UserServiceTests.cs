@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using BusinessServices.Services;
 using DTO.Person;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
@@ -13,16 +15,16 @@ namespace Tests.UnitTests.Persistence;
 public class UserServiceTests
 {
     [Test]
-    public void SetUser()
+    public async Task SetUser()
     {
         var existingPerson = new ExistingPerson(Guid.NewGuid(), "Dixie");
         var personServiceMock = new Mock<IPersonService>();
         personServiceMock.Setup(service => service.CreatePersonAsync(It.Is<PersonToCreate>(create => create.Name == "Dixie"))).ReturnsAsync(existingPerson);
         var fileSystemMock = new Mock<IFileSystem>();
         var config = Options.Create(new UserConfig());
-        var testee = new UserService(config, fileSystemMock.Object, personServiceMock.Object);
+        var testee = new UserService(config, new Mock<ILogger<UserService>>().Object, fileSystemMock.Object, personServiceMock.Object);
 
-        testee.SetUserAsync("Dixie");
+        await testee.SetUserAsync("Dixie");
 
         testee.UserAlreadySet.Should().BeTrue();
         testee.Id.Should().NotBeNull();
@@ -38,7 +40,7 @@ public class UserServiceTests
         personServiceMock.Setup(service => service.PersonExists(id)).Returns(false);
         var config = Options.Create(new UserConfig { Id = id });
 
-        var testAction = () => new UserService(config, new Mock<IFileSystem>().Object, personServiceMock.Object);
+        var testAction = () => new UserService(config, new Mock<ILogger<UserService>>().Object, new Mock<IFileSystem>().Object, personServiceMock.Object);
 
         testAction.Should().Throw<ArgumentException>();
     }

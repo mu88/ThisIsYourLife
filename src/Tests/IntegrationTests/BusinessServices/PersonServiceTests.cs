@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using BusinessServices.Services;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Moq;
 using NUnit.Framework;
 using Tests.Doubles;
 
@@ -14,7 +16,7 @@ public class PersonServiceTests
     {
         var storage = TestStorage.Create();
         var personToCreate = TestPersonToCreate.Create("Bob");
-        var testee = new PersonService(storage, TestMapper.Create());
+        var testee = new PersonService(new Mock<ILogger<PersonService>>().Object, storage, TestMapper.Create());
 
         var result = await testee.CreatePersonAsync(personToCreate);
 

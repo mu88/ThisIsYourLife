@@ -7,16 +7,20 @@ using DTO.LifePoint;
 using DTO.Location;
 using DTO.Person;
 using Entities;
+using Logging.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace BusinessServices.Services;
 
 internal class LifePointService : ILifePointService
 {
+    private readonly ILogger<LifePointService> _logger;
     private readonly IStorage _storage;
     private readonly IMapper _mapper;
 
-    public LifePointService(IStorage storage, IMapper mapper)
+    public LifePointService(ILogger<LifePointService> logger, IStorage storage, IMapper mapper)
     {
+        _logger = logger;
         _storage = storage;
         _mapper = mapper;
     }
@@ -33,6 +37,8 @@ internal class LifePointService : ILifePointService
 
     public async Task<ExistingLifePoint> CreateLifePointAsync(LifePointToCreate lifePointToCreate)
     {
+        _logger.MethodStarted();
+
         var existingPerson = await _storage.FindAsync<Person>(lifePointToCreate.CreatedBy) ??
                              throw new NullReferenceException($"Could not find any existing Person with ID {lifePointToCreate.CreatedBy}");
 
@@ -43,19 +49,28 @@ internal class LifePointService : ILifePointService
                                                                          options.Items[nameof(LifePoint.CreatedBy)] = existingPerson;
                                                                          options.Items[nameof(LifePoint.ImageId)] = imageId;
                                                                      });
+        _logger.NewLifePointExtracted();
 
         var createdLifePoint = await _storage.AddItemAsync(newLifePoint);
         await _storage.SaveAsync();
+        _logger.NewLifePointCreated(createdLifePoint.Id);
+
+        _logger.MethodFinished();
 
         return _mapper.Map<LifePoint, ExistingLifePoint>(createdLifePoint);
     }
 
     public async Task DeleteLifePointAsync(Guid id)
     {
+        _logger.MethodStarted();
+
         var lifePoint = await GetLifePointInternalAsync(id);
         _storage.RemoveItem(lifePoint);
         if (lifePoint.ImageId != null) _storage.DeleteImage(lifePoint.CreatedBy.Id, lifePoint.ImageId.Value);
         await _storage.SaveAsync();
+        _logger.LifePointDeleted(id);
+
+        _logger.MethodFinished();
     }
 
     public IEnumerable<int> GetDistinctYears() => _storage.LifePoints.Select(x => x.Date.Year).Distinct().OrderBy(x => x);

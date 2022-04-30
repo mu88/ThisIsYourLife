@@ -1,9 +1,12 @@
-﻿@using BusinessServices.Services
+﻿@using Logging.Extensions
+@using BusinessServices.Services
 @using DTO.LifePoint
+@using Microsoft.Extensions.Logging
 @inject ILifePointService _lifePointService
 @inject IJSRuntime _jsRuntime
 @inject NavigationManager _navigator
 @inject IStringLocalizer<Main> _loc
+@inject ILogger<LifePointDetail> _logger
 
 <div class="card">
     @if (_imageUri != null)
@@ -30,6 +33,8 @@
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
     {
+        _logger.MethodStarted();
+
         if (string.IsNullOrWhiteSpace(Id)) { return; }
 
         _lifePoint = await _lifePointService.GetLifePointAsync(Guid.Parse(Id));
@@ -38,16 +43,22 @@
         await LoadLifePointDetailModuleAsync();
 
         await base.OnInitializedAsync();
+
+        _logger.MethodFinished();
     }
 
     private Uri ConstructImageUri(Guid imageId) => new(new Uri(_navigator.BaseUri), $"api/images/{_lifePoint.CreatedBy.Id}/{imageId.ToString()}");
 
     private async void OnDeleteClicked()
     {
+        _logger.MethodStarted();
+
         if (string.IsNullOrWhiteSpace(Id)) { return; }
 
         await _lifePointService.DeleteLifePointAsync(Guid.Parse(Id));
         await RemoveMarkerAsync();
+
+        _logger.MethodFinished();
     }
 
     private async Task RemoveMarkerAsync() => await _lifePointDetailModule.InvokeVoidAsync("removeMarkerOfLifePoint", Id);

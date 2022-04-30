@@ -1,15 +1,17 @@
-﻿@using BusinessServices.Services
+﻿@using Logging.Extensions
+@using BusinessServices.Services
 @using DTO.LifePoint
 @using Persistence
 @using WebApp.Services
+@using Microsoft.Extensions.Logging
 @using WebApp.Models
 @using System.IO
 @inject ILifePointService _lifePointService
-@inject IPersonService _personService
 @inject IJSRuntime _jsRuntime
 @inject IUserService _userService
 @inject INewLifePointDateService _newLifePointDateService
 @inject IStringLocalizer<Main> _loc
+@inject ILogger<LifePointDetail> _logger
 
 @if (_showModalSpinner)
 {
@@ -68,6 +70,8 @@ else
 
     private async Task CreateNewLifePointAsync()
     {
+        _logger.MethodStarted();
+
         EnableSpinner();
 
         ImageToCreate? imageToCreate;
@@ -78,6 +82,7 @@ else
         }
         catch (IOException)
         {
+            _logger.ImageTooBig();
             DisableSpinner();
             _imageTooBig = true;
             return;
@@ -98,6 +103,8 @@ else
 
         await RemovePopupAsync();
         await AddMarkerAsync(createdLifePoint);
+
+        _logger.MethodFinished();
     }
 
     private void EnableSpinner()
@@ -112,10 +119,23 @@ else
         StateHasChanged();
     }
 
-    private async Task RemovePopupAsync() => await _newLifePointModule.InvokeVoidAsync("removePopupForNewLifePoint");
+    private async Task RemovePopupAsync()
+    {
+        _logger.MethodStarted();
 
-    private async Task AddMarkerAsync(ExistingLifePoint existingLifePoint) =>
+        await _newLifePointModule.InvokeVoidAsync("removePopupForNewLifePoint");
+
+        _logger.MethodFinished();
+    }
+
+    private async Task AddMarkerAsync(ExistingLifePoint existingLifePoint)
+    {
+        _logger.MethodStarted();
+
         await _newLifePointModule.InvokeVoidAsync("addMarkerForCreatedLifePoint", existingLifePoint.Id, existingLifePoint.Latitude, existingLifePoint.Longitude);
+
+        _logger.MethodFinished();
+    }
 
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()

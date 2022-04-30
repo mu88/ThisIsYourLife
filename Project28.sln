@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solutions Items", "Solution
 		Directory.Build.targets = Directory.Build.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "src\Logging\Logging.csproj", "{F9EF6D22-1015-4266-BC5A-B15A6369A9DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,5 +107,17 @@ Global
 		{7F24D20C-CC82-4379-99BC-6EAEBD764804}.Release|x64.Build.0 = Release|Any CPU
 		{7F24D20C-CC82-4379-99BC-6EAEBD764804}.Release|x86.ActiveCfg = Release|Any CPU
 		{7F24D20C-CC82-4379-99BC-6EAEBD764804}.Release|x86.Build.0 = Release|Any CPU
+		{F9EF6D22-1015-4266-BC5A-B15A6369A9DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9EF6D22-1015-4266-BC5A-B15A6369A9DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9EF6D22-1015-4266-BC5A-B15A6369A9DA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F9EF6D22-1015-4266-BC5A-B15A6369A9DA}.Debug|x64.Build.0 = Debug|Any CPU
+		{F9EF6D22-1015-4266-BC5A-B15A6369A9DA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F9EF6D22-1015-4266-BC5A-B15A6369A9DA}.Debug|x86.Build.0 = Debug|Any CPU
+		{F9EF6D22-1015-4266-BC5A-B15A6369A9DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9EF6D22-1015-4266-BC5A-B15A6369A9DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9EF6D22-1015-4266-BC5A-B15A6369A9DA}.Release|x64.ActiveCfg = Release|Any CPU
+		{F9EF6D22-1015-4266-BC5A-B15A6369A9DA}.Release|x64.Build.0 = Release|Any CPU
+		{F9EF6D22-1015-4266-BC5A-B15A6369A9DA}.Release|x86.ActiveCfg = Release|Any CPU
+		{F9EF6D22-1015-4266-BC5A-B15A6369A9DA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

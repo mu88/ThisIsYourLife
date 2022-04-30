@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using BusinessServices.Services;
 using Entities;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Moq;
 using NUnit.Framework;
 using Tests.Doubles;
 
@@ -18,7 +20,7 @@ public class LifePointServiceTests
         await storage.AddItemAsync(TestLifePoint.Create());
         await storage.AddItemAsync(TestLifePoint.Create());
         await storage.SaveAsync();
-        var testee = new LifePointService(storage, TestMapper.Create());
+        var testee = new LifePointService(new Mock<ILogger<LifePointService>>().Object, storage, TestMapper.Create());
 
         var results = testee.GetAllLocations().ToList();
 
@@ -37,7 +39,7 @@ public class LifePointServiceTests
         var storage = TestStorage.Create();
         await storage.AddItemAsync(lifePoint);
         await storage.SaveAsync();
-        var testee = new LifePointService(storage, TestMapper.Create());
+        var testee = new LifePointService(new Mock<ILogger<LifePointService>>().Object, storage, TestMapper.Create());
 
         var result = await testee.GetLifePointAsync(lifePoint.Id);
 
@@ -51,7 +53,7 @@ public class LifePointServiceTests
         var storage = TestStorage.Create();
         var person = await storage.AddItemAsync(new Person("Bob"));
         var lifePointToCreate = TestLifePointToCreate.Create(person);
-        var testee = new LifePointService(storage, TestMapper.Create());
+        var testee = new LifePointService(new Mock<ILogger<LifePointService>>().Object, storage, TestMapper.Create());
 
         var result = await testee.CreateLifePointAsync(lifePointToCreate);
 
@@ -65,7 +67,7 @@ public class LifePointServiceTests
         var storage = TestStorage.Create();
         await storage.AddItemAsync(lifePoint);
         await storage.SaveAsync();
-        var testee = new LifePointService(storage, TestMapper.Create());
+        var testee = new LifePointService(new Mock<ILogger<LifePointService>>().Object, storage, TestMapper.Create());
 
         await testee.DeleteLifePointAsync(lifePoint.Id);
 

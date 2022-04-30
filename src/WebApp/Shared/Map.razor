@@ -1,12 +1,15 @@
-﻿@using BusinessServices.Services
+﻿@using Logging.Extensions
+@using BusinessServices.Services
 @using DTO.Location
 @using DTO.Person
 @using Persistence
+@using Microsoft.Extensions.Logging
 @inject IJSRuntime _jsRuntime
 @inject ILifePointService _lifePointService
 @inject IPersonService _personService
 @inject IUserService _userService
 @inject IStringLocalizer<Main> _loc
+@inject ILogger<LifePointDetail> _logger
 
 @if (!_userService.UserAlreadySet)
 {
@@ -58,28 +61,37 @@
     {
         if (firstRender)
         {
+            _logger.MethodStarted();
             _objRef = DotNetObjectReference.Create(this);
             await InitializeMapAsync(_objRef);
             await AddMarkersForExistingLocationsAsync();
+            _logger.MethodFinished();
         }
     }
 
     /// <inheritdoc />
     protected override void OnInitialized()
     {
+        _logger.MethodStarted();
+
         base.OnInitialized();
 
         _distinctCreators = _lifePointService.GetDistinctCreators();
         _distinctYears = _lifePointService.GetDistinctYears();
+
+        _logger.MethodFinished();
     }
 
     [JSInvokable]
-    public async Task OpenPopupForNewLifePointAsync(double latitude, double longitude) =>
+    public async Task OpenPopupForNewLifePointAsync(double latitude, double longitude)
+    {
+        _logger.MethodStarted();
         await _newLifePointModule.InvokeVoidAsync("createPopupForNewLifePoint", _objRef, _leafletMap, latitude, longitude);
+        _logger.MethodFinished();
+    }
 
     [JSInvokable]
-    public async Task AddMarkerAsync(Guid id, double latitude, double longitude) =>
-        await _lifePointDetailModule.InvokeVoidAsync("createMarkerForExistingLifePoint", _leafletMap, id, latitude, longitude);
+    public async Task AddMarkerAsync(Guid id, double latitude, double longitude) => await _lifePointDetailModule.InvokeVoidAsync("createMarkerForExistingLifePoint", _leafletMap, id, latitude, longitude);
 
     private async Task InitializeMapAsync(DotNetObjectReference<Map> dotNetObjectReference)
     {
@@ -92,8 +104,12 @@
 
     private async Task AddMarkersForExistingLocationsAsync()
     {
+        _logger.MethodStarted();
+
         foreach (var (latitude, longitude, id) in _lifePointService.GetAllLocations())
             await AddMarkerAsync(id, latitude, longitude);
+
+        _logger.MethodFinished();
     }
 
     private void SelectedCreatorChanged(ChangeEventArgs args)
