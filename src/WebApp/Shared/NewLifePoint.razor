@@ -15,9 +15,10 @@
 
 @if (_showModalSpinner)
 {
-    <div class="spinner-border" role="status">
-        <span class="visually-hidden">@_loc["Saving"]...</span>
-    </div>
+    <button class="btn btn-outline-secondary" type="button" disabled>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"/>
+        @_loc["Saving"]...
+    </button>
 }
 else
 {
