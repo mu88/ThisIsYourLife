@@ -35,8 +35,6 @@
     {
         _logger.MethodStarted();
 
-        if (string.IsNullOrWhiteSpace(Id)) { return; }
-
         _lifePoint = await _lifePointService.GetLifePointAsync(Guid.Parse(Id));
         if (_lifePoint.ImageId != null) { _imageUri = ConstructImageUri(_lifePoint.ImageId.Value); }
 
@@ -52,8 +50,6 @@
     private async void OnDeleteClicked()
     {
         _logger.MethodStarted();
-
-        if (string.IsNullOrWhiteSpace(Id)) { return; }
 
         await _lifePointService.DeleteLifePointAsync(Guid.Parse(Id));
         await RemoveMarkerAsync();

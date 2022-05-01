@@ -4,7 +4,7 @@
         <DataCollectors>
             <DataCollector friendlyName="XPlat code coverage">
                 <Configuration>
-                    <ExcludeByFile>**/*.razor,**/Models/*,**/Pages/*,**/Shared/*</ExcludeByFile>
+                    <ExcludeByFile>**/Pages/*</ExcludeByFile>
                     <IncludeTestAssembly>false</IncludeTestAssembly>
                 </Configuration>
             </DataCollector>

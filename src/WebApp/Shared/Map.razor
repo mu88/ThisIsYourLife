@@ -9,7 +9,7 @@
 @inject IPersonService _personService
 @inject IUserService _userService
 @inject IStringLocalizer<Main> _loc
-@inject ILogger<LifePointDetail> _logger
+@inject ILogger<Map> _logger
 
 @if (!_userService.UserAlreadySet)
 {
@@ -91,7 +91,8 @@
     }
 
     [JSInvokable]
-    public async Task AddMarkerAsync(Guid id, double latitude, double longitude) => await _lifePointDetailModule.InvokeVoidAsync("createMarkerForExistingLifePoint", _leafletMap, id, latitude, longitude);
+    public async Task AddMarkerAsync(Guid id, double latitude, double longitude)
+        => await _lifePointDetailModule.InvokeVoidAsync("createMarkerForExistingLifePoint", _leafletMap, id, latitude, longitude);
 
     private async Task InitializeMapAsync(DotNetObjectReference<Map> dotNetObjectReference)
     {

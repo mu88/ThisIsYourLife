@@ -35,19 +35,19 @@ else
 
         <div class="input-group mb-3">
             <span class="input-group-text" id="caption">@_loc["Caption"]</span>
-            <InputText class="form-control" aria-describedby="caption" @bind-Value="_newLifePoint.Caption"/>
+            <InputText class="form-control" id="input-caption" aria-describedby="caption" @bind-Value="_newLifePoint.Caption"/>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="date">@_loc["Date"]</span>
-            <InputDate class="form-control" aria-describedby="date" @bind-Value="_newLifePoint.Date"/>
+            <InputDate class="form-control" id="input-date" aria-describedby="date" @bind-Value="_newLifePoint.Date"/>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="description">@_loc["Description"]</span>
-            <InputTextArea class="form-control" aria-describedby="description" @bind-Value="_newLifePoint.Description"/>
+            <InputTextArea class="form-control" id="input-description" aria-describedby="description" @bind-Value="_newLifePoint.Description"/>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="image">@_loc["Image"]</span>
-            <InputFile class="form-control" aria-describedby="image" OnChange="@LoadImage" accept=".jpg,.jpeg,.png"/>
+            <InputFile class="form-control" id="input-file" aria-describedby="image" OnChange="@LoadImage" accept=".jpg,.jpeg,.png"/>
         </div>
         <button class="btn btn-outline-secondary" type="submit">@_loc["Save"]</button>
     </EditForm>

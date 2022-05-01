@@ -1,8 +1,10 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 
 namespace Logging.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static partial class Log
 {
     [LoggerMessage(EventId = 0, Level = LogLevel.Debug, Message = "Starting method `{methodName}`")]
