@@ -4,7 +4,7 @@
         <DataCollectors>
             <DataCollector friendlyName="XPlat code coverage">
                 <Configuration>
-                    <ExcludeByFile>**/Pages/*</ExcludeByFile>
+                    <ExcludeByFile>**/Pages/*,**/Shared/Main.Designer.cs</ExcludeByFile>
                     <IncludeTestAssembly>false</IncludeTestAssembly>
                 </Configuration>
             </DataCollector>
