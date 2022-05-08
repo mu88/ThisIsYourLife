@@ -1,12 +1,14 @@
 ﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 using Bunit;
 using BusinessServices.Services;
 using DTO.LifePoint;
 using FluentAssertions;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
-using Microsoft.JSInterop.Infrastructure;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using Persistence;
@@ -24,19 +26,69 @@ public class NewLifePointTests
     public void CreateNewLifePoint()
     {
         var lifePointToCreate = TestLifePointToCreate.Create();
-        using var testee = CreateTestee(lifePointToCreate);
+        using var ctx = new TestContext();
+        using var testee = CreateTestee(ctx, lifePointToCreate);
 
         EnterInput(testee, lifePointToCreate);
         ClickSave(testee);
 
         ProposedDateShouldBeCorrect(lifePointToCreate, testee);
-        PopupShouldBeRemoved(testee);
-        MarkerShouldBeAdded(lifePointToCreate, testee);
+        PopupShouldBeRemoved(ctx);
+        MarkerShouldBeAdded(ctx);
+    }
+
+    [Test]
+    public async Task CreateNewLifePointWithImage()
+    {
+        var imageMemoryStream = new MemoryStream(new byte[10]);
+        var browserFileMock = new Mock<IBrowserFile>();
+        browserFileMock.Setup(file => file.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes, default)).Returns(imageMemoryStream);
+        var lifePointToCreate = TestLifePointToCreate.Create(newImage: TestImageToCreate.Create(imageMemoryStream));
+        using var ctx = new TestContext();
+        using var testee = CreateTestee(ctx, lifePointToCreate);
+
+        EnterInput(testee, lifePointToCreate);
+        await ClickAndUploadImageAsync(testee, browserFileMock);
+        ClickSave(testee);
+
+        ProposedDateShouldBeCorrect(lifePointToCreate, testee);
+        PopupShouldBeRemoved(ctx);
+        MarkerShouldBeAdded(ctx);
+        NewLifeWithImagePointShouldHaveBeenCreated(ctx, imageMemoryStream);
+    }
+
+    [Test]
+    public async Task CreateNewLifeWithImage_ShouldShowWarning_IfImageIsTooBig()
+    {
+        var browserFileMock = new Mock<IBrowserFile>();
+        browserFileMock.Setup(file => file.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes, default)).Throws<IOException>();
+        var lifePointToCreate = TestLifePointToCreate.Create();
+        using var ctx = new TestContext();
+        using var testee = CreateTestee(ctx, lifePointToCreate);
+
+        EnterInput(testee, lifePointToCreate);
+        await ClickAndUploadImageAsync(testee, browserFileMock);
+        ClickSave(testee);
+
+        testee.Instance.ImageTooBig.Should().BeTrue();
     }
 
     private static void ClickSave(IRenderedComponent<NewLifePoint> testee) => testee.Find("button").Click();
 
-    private static IRenderedComponent<NewLifePoint> CreateTestee(LifePointToCreate lifePointToCreate)
+    private void NewLifeWithImagePointShouldHaveBeenCreated(TestContextBase testContext, MemoryStream imageMemoryStream)
+    {
+        var lifePointServiceMock = testContext.Services.GetRequiredService<Mock<ILifePointService>>();
+        lifePointServiceMock.Verify(service => service.CreateLifePointAsync(It.Is<LifePointToCreate>(create => create.ImageToCreate!.Stream.Equals(imageMemoryStream))));
+    }
+
+    private async Task ClickAndUploadImageAsync(IRenderedComponent<NewLifePoint> testee, IMock<IBrowserFile> browserFile)
+    {
+        var filesToUpload = new InputFileChangeEventArgs(new[] { browserFile.Object });
+        var inputComponent = testee.FindComponent<InputFile>().Instance;
+        await testee.InvokeAsync(() => inputComponent.OnChange.InvokeAsync(filesToUpload));
+    }
+
+    private IRenderedComponent<NewLifePoint> CreateTestee(TestContext testContext, LifePointToCreate lifePointToCreate)
     {
         var newLifePointDateServiceMock = new Mock<INewLifePointDateService>();
         newLifePointDateServiceMock.SetupProperty(service => service.ProposedCreationDate);
@@ -49,44 +101,34 @@ public class NewLifePointTests
             .Setup(service => service.CreateLifePointAsync(It.Is<LifePointToCreate>(input => input == lifePointToCreate)))
             .ReturnsAsync(TestExistingLifePoint.From(lifePointToCreate));
 
-        var newLifePointModuleMock = new Mock<IJSObjectReference>();
-        var jsRuntimeMock = new Mock<IJSRuntime>();
-        jsRuntimeMock
-            .Setup(runtime => runtime.InvokeAsync<IJSObjectReference>("import", new object?[] { "./Shared/NewLifePoint.razor.js" }))
-            .ReturnsAsync(newLifePointModuleMock.Object);
+        testContext.Services.AddLocalization();
+        testContext.Services.AddSingleton(lifePointServiceMock.Object);
+        testContext.Services.AddSingleton(lifePointServiceMock);
+        testContext.Services.AddSingleton(new Mock<ILogger<NewLifePoint>>().Object);
+        testContext.Services.AddSingleton(userServiceMock.Object);
+        testContext.Services.AddSingleton(newLifePointDateServiceMock.Object);
+#pragma warning disable CS0618
+        // Best practice according to: https://stackoverflow.com/questions/72077421/test-event-handler-of-inputfile-in-blazor-component-with-bunit
+        testContext.Services.AddSingleton(Options.Create(new RemoteBrowserFileStreamOptions()));
+#pragma warning restore CS0618
 
-        var ctx = new TestContext();
-        ctx.Services.AddLocalization();
-        ctx.Services.AddSingleton(lifePointServiceMock.Object);
-        ctx.Services.AddSingleton(jsRuntimeMock.Object);
-        ctx.Services.AddSingleton(new Mock<ILogger<NewLifePoint>>().Object);
-        ctx.Services.AddSingleton(userServiceMock.Object);
-        ctx.Services.AddSingleton(newLifePointDateServiceMock.Object);
-        ctx.Services.AddSingleton(newLifePointModuleMock);
+        var newLifePointModuleInterop = testContext.JSInterop.SetupModule("./Shared/NewLifePoint.razor.js");
+        newLifePointModuleInterop.SetupVoid("addMarkerForCreatedLifePoint", Guid.Empty, lifePointToCreate.Latitude, lifePointToCreate.Longitude).SetVoidResult();
+        newLifePointModuleInterop.SetupVoid("removePopupForNewLifePoint").SetVoidResult();
+        testContext.JSInterop.SetupVoid(invocation => invocation.Identifier == "Blazor._internal.InputFile.init").SetVoidResult();
 
-        var testee = ctx.RenderComponent<NewLifePoint>(parameters => parameters
-                                                           .Add(detail => detail.Latitude, lifePointToCreate.Latitude)
-                                                           .Add(detail => detail.Longitude, lifePointToCreate.Longitude));
+        var testee = testContext.RenderComponent<NewLifePoint>(parameters => parameters
+                                                                   .Add(detail => detail.Latitude, lifePointToCreate.Latitude)
+                                                                   .Add(detail => detail.Longitude, lifePointToCreate.Longitude));
 
         return testee;
     }
 
-    private void MarkerShouldBeAdded(LifePointToCreate lifePointToCreate, IRenderedComponent<NewLifePoint> testee)
-    {
-        var newLifePointModuleMock = testee.Services.GetRequiredService<Mock<IJSObjectReference>>();
-        newLifePointModuleMock.Verify(reference => reference.InvokeAsync<IJSVoidResult>("addMarkerForCreatedLifePoint",
-                                                                                        new object?[]
-                                                                                        {
-                                                                                            Guid.Empty, lifePointToCreate.Latitude, lifePointToCreate.Longitude
-                                                                                        }),
-                                      Times.Once);
-    }
+    private void MarkerShouldBeAdded(TestContext testContext) =>
+        testContext.JSInterop.Invocations.Should().ContainSingle(invocation => invocation.Identifier.Equals("addMarkerForCreatedLifePoint"));
 
-    private void PopupShouldBeRemoved(IRenderedComponent<NewLifePoint> testee)
-    {
-        var newLifePointModuleMock = testee.Services.GetRequiredService<Mock<IJSObjectReference>>();
-        newLifePointModuleMock.Verify(reference => reference.InvokeAsync<IJSVoidResult>("removePopupForNewLifePoint", new object?[] { }), Times.Once);
-    }
+    private void PopupShouldBeRemoved(TestContext testContext) =>
+        testContext.JSInterop.Invocations.Should().ContainSingle(invocation => invocation.Identifier.Equals("removePopupForNewLifePoint"));
 
     private void ProposedDateShouldBeCorrect(LifePointToCreate lifePointToCreate, IRenderedComponent<NewLifePoint> testee) =>
         testee.Services.GetRequiredService<INewLifePointDateService>().ProposedCreationDate.Should().Be(lifePointToCreate.Date);

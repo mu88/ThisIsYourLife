@@ -16,13 +16,13 @@
 @if (_showModalSpinner)
 {
     <button class="btn btn-outline-secondary" type="button" disabled>
-        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"/>
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
         @_loc["Saving"]...
     </button>
 }
 else
 {
-    @if (_imageTooBig)
+    @if (ImageTooBig)
     {
         <div class="alert alert-warning" role="alert">
             @_loc["ImageTooBig", MaxAllowedFileSizeInMegaBytes]
@@ -59,8 +59,8 @@ else
     private IJSObjectReference _newLifePointModule = null!; // is initialized on component construction 
     private IBrowserFile? _file;
     private bool _showModalSpinner;
-    private bool _imageTooBig;
-        private const long MaxAllowedFileSizeInBytes = MaxAllowedFileSizeInMegaBytes * 1024 * 1024;
+    internal bool ImageTooBig;
+        internal const long MaxAllowedFileSizeInBytes = MaxAllowedFileSizeInMegaBytes * 1024 * 1024;
         private const long MaxAllowedFileSizeInMegaBytes = 15;
 
     [Parameter]
@@ -78,14 +78,14 @@ else
         ImageToCreate? imageToCreate;
         try
         {
-            _imageTooBig = false;
+            ImageTooBig = false;
             imageToCreate = _file != null ? new ImageToCreate(_file.OpenReadStream(MaxAllowedFileSizeInBytes)) : null;
         }
         catch (IOException)
         {
             _logger.ImageTooBig();
             DisableSpinner();
-            _imageTooBig = true;
+            ImageTooBig = true;
             return;
         }
         var lifePointToCreate = new LifePointToCreate(
@@ -148,7 +148,8 @@ else
         _newLifePoint.Date = _newLifePointDateService.ProposedCreationDate;
     }
 
-    private async Task LoadNewLifePointModuleAsync() => _newLifePointModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/NewLifePoint.razor.js");
+    private async Task LoadNewLifePointModuleAsync() =>
+        _newLifePointModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/NewLifePoint.razor.js");
 
     private void LoadImage(InputFileChangeEventArgs args) => _file = args.File;
 
