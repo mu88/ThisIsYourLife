@@ -2,11 +2,11 @@
 @using BusinessServices.Services
 @using DTO.LifePoint
 @using Microsoft.Extensions.Logging
-@inject ILifePointService _lifePointService
-@inject IJSRuntime _jsRuntime
-@inject NavigationManager _navigator
-@inject IStringLocalizer<Main> _loc
-@inject ILogger<LifePointDetail> _logger
+@inject ILifePointService LifePointService
+@inject IJSRuntime JsRuntime
+@inject NavigationManager Navigator
+@inject IStringLocalizer<Main> Loc
+@inject ILogger<LifePointDetail> Logger
 
 <div class="card">
     @if (_imageUri != null)
@@ -15,9 +15,9 @@
     }
     <div class="card-body">
         <h5 class="card-title">@_lifePoint.Caption</h5>
-        <h6 class="card-subtitle mb-2 text-muted">@_loc["On"] @_lifePoint.Date @_loc["With"] @_lifePoint.CreatedBy.Name</h6>
+        <h6 class="card-subtitle mb-2 text-muted">@Loc["On"] @_lifePoint.Date @Loc["With"] @_lifePoint.CreatedBy.Name</h6>
         <p class="card-text" style="white-space: pre-line">@_lifePoint.Description</p>
-        <button class="btn btn-outline-secondary" @onclick="OnDeleteClicked">@_loc["Delete"]</button>
+        <button class="btn btn-outline-secondary" @onclick="OnDeleteClicked">@Loc["Delete"]</button>
     </div>
 </div>
 
@@ -33,32 +33,32 @@
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
     {
-        _logger.MethodStarted();
+        Logger.MethodStarted();
 
-        _lifePoint = await _lifePointService.GetLifePointAsync(Guid.Parse(Id));
+        _lifePoint = await LifePointService.GetLifePointAsync(Guid.Parse(Id));
         if (_lifePoint.ImageId != null) { _imageUri = ConstructImageUri(_lifePoint.ImageId.Value); }
 
         await LoadLifePointDetailModuleAsync();
 
         await base.OnInitializedAsync();
 
-        _logger.MethodFinished();
+        Logger.MethodFinished();
     }
 
-    private Uri ConstructImageUri(Guid imageId) => new(new Uri(_navigator.BaseUri), $"api/images/{_lifePoint.CreatedBy.Id}/{imageId.ToString()}");
+    private Uri ConstructImageUri(Guid imageId) => new(new Uri(Navigator.BaseUri), $"api/images/{_lifePoint.CreatedBy.Id}/{imageId.ToString()}");
 
     private async void OnDeleteClicked()
     {
-        _logger.MethodStarted();
+        Logger.MethodStarted();
 
-        await _lifePointService.DeleteLifePointAsync(Guid.Parse(Id));
+        await LifePointService.DeleteLifePointAsync(Guid.Parse(Id));
         await RemoveMarkerAsync();
 
-        _logger.MethodFinished();
+        Logger.MethodFinished();
     }
 
     private async Task RemoveMarkerAsync() => await _lifePointDetailModule.InvokeVoidAsync("removeMarkerOfLifePoint", Id);
 
-    private async Task LoadLifePointDetailModuleAsync() => _lifePointDetailModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
+    private async Task LoadLifePointDetailModuleAsync() => _lifePointDetailModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
 
 }

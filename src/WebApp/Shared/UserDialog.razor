@@ -1,21 +1,21 @@
 ﻿@using Persistence
 @using WebApp.Models
-@inject IUserService _userService
-@inject IStringLocalizer<Main> _loc
+@inject IUserService UserService
+@inject IStringLocalizer<Main> Loc
 
 <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);"
      aria-modal="true" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">@_loc["Welcome"]!</h4>
+                <h4 class="modal-title">@Loc["Welcome"]!</h4>
             </div>
             <div class="modal-body">
                 <EditForm Model="@_userModel" OnValidSubmit="@HandleValidSubmitAsync">
                     <DataAnnotationsValidator/>
                     <ValidationSummary/>
                     <div class="input-group">
-                        <span class="input-group-text">@_loc["PleaseEnterUsername"]</span>
+                        <span class="input-group-text">@Loc["PleaseEnterUsername"]</span>
                         <InputText class="form-control" @bind-Value="_userModel.Name"/>
                         <button class="btn btn-outline-secondary" type="submit">OK</button>
                     </div>
@@ -34,7 +34,7 @@
 
     private async Task HandleValidSubmitAsync()
     {
-        await _userService.SetUserAsync(_userModel.Name);
+        await UserService.SetUserAsync(_userModel.Name);
         await OnClose.InvokeAsync();
     }
 }

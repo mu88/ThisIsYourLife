@@ -6,18 +6,18 @@
 @using Microsoft.Extensions.Logging
 @using WebApp.Models
 @using System.IO
-@inject ILifePointService _lifePointService
-@inject IJSRuntime _jsRuntime
-@inject IUserService _userService
-@inject INewLifePointDateService _newLifePointDateService
-@inject IStringLocalizer<Main> _loc
-@inject ILogger<LifePointDetail> _logger
+@inject ILifePointService LifePointService
+@inject IJSRuntime JsRuntime
+@inject IUserService UserService
+@inject INewLifePointDateService NewLifePointDateService
+@inject IStringLocalizer<Main> Loc
+@inject ILogger<LifePointDetail> Logger
 
 @if (_showModalSpinner)
 {
     <button class="btn btn-outline-secondary" type="button" disabled>
         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-        @_loc["Saving"]...
+        @Loc["Saving"]...
     </button>
 }
 else
@@ -25,7 +25,7 @@ else
     @if (ImageTooBig)
     {
         <div class="alert alert-warning" role="alert">
-            @_loc["ImageTooBig", MaxAllowedFileSizeInMegaBytes]
+            @Loc["ImageTooBig", MaxAllowedFileSizeInMegaBytes]
         </div>
     }
 
@@ -34,22 +34,22 @@ else
         <ValidationSummary/>
 
         <div class="input-group mb-3">
-            <span class="input-group-text" id="caption">@_loc["Caption"]</span>
+            <span class="input-group-text" id="caption">@Loc["Caption"]</span>
             <InputText class="form-control" id="input-caption" aria-describedby="caption" @bind-Value="_newLifePoint.Caption"/>
         </div>
         <div class="input-group mb-3">
-            <span class="input-group-text" id="date">@_loc["Date"]</span>
+            <span class="input-group-text" id="date">@Loc["Date"]</span>
             <InputDate class="form-control" id="input-date" aria-describedby="date" @bind-Value="_newLifePoint.Date"/>
         </div>
         <div class="input-group mb-3">
-            <span class="input-group-text" id="description">@_loc["Description"]</span>
+            <span class="input-group-text" id="description">@Loc["Description"]</span>
             <InputTextArea class="form-control" id="input-description" aria-describedby="description" @bind-Value="_newLifePoint.Description"/>
         </div>
         <div class="input-group mb-3">
-            <span class="input-group-text" id="image">@_loc["Image"]</span>
+            <span class="input-group-text" id="image">@Loc["Image"]</span>
             <InputFile class="form-control" id="input-file" aria-describedby="image" OnChange="@LoadImage" accept=".jpg,.jpeg,.png"/>
         </div>
-        <button class="btn btn-outline-secondary" type="submit">@_loc["Save"]</button>
+        <button class="btn btn-outline-secondary" type="submit">@Loc["Save"]</button>
     </EditForm>
 }
 
@@ -71,7 +71,7 @@ else
 
     private async Task CreateNewLifePointAsync()
     {
-        _logger.MethodStarted();
+        Logger.MethodStarted();
 
         EnableSpinner();
 
@@ -83,7 +83,7 @@ else
         }
         catch (IOException)
         {
-            _logger.ImageTooBig();
+            Logger.ImageTooBig();
             DisableSpinner();
             ImageTooBig = true;
             return;
@@ -94,18 +94,18 @@ else
             _newLifePoint.Description,
             Latitude,
             Longitude,
-            _userService.Id ?? throw new NullReferenceException(_loc["UserHasNotBeenSet"]),
+            UserService.Id ?? throw new NullReferenceException(Loc["UserHasNotBeenSet"]),
             imageToCreate);
 
-        var createdLifePoint = await _lifePointService.CreateLifePointAsync(lifePointToCreate);
-        _newLifePointDateService.ProposedCreationDate = _newLifePoint.Date;
+        var createdLifePoint = await LifePointService.CreateLifePointAsync(lifePointToCreate);
+        NewLifePointDateService.ProposedCreationDate = _newLifePoint.Date;
 
         DisableSpinner();
 
         await RemovePopupAsync();
         await AddMarkerAsync(createdLifePoint);
 
-        _logger.MethodFinished();
+        Logger.MethodFinished();
     }
 
     private void EnableSpinner()
@@ -122,20 +122,20 @@ else
 
     private async Task RemovePopupAsync()
     {
-        _logger.MethodStarted();
+        Logger.MethodStarted();
 
         await _newLifePointModule.InvokeVoidAsync("removePopupForNewLifePoint");
 
-        _logger.MethodFinished();
+        Logger.MethodFinished();
     }
 
     private async Task AddMarkerAsync(ExistingLifePoint existingLifePoint)
     {
-        _logger.MethodStarted();
+        Logger.MethodStarted();
 
         await _newLifePointModule.InvokeVoidAsync("addMarkerForCreatedLifePoint", existingLifePoint.Id, existingLifePoint.Latitude, existingLifePoint.Longitude);
 
-        _logger.MethodFinished();
+        Logger.MethodFinished();
     }
 
     /// <inheritdoc />
@@ -145,11 +145,11 @@ else
 
         await base.OnInitializedAsync();
 
-        _newLifePoint.Date = _newLifePointDateService.ProposedCreationDate;
+        _newLifePoint.Date = NewLifePointDateService.ProposedCreationDate;
     }
 
     private async Task LoadNewLifePointModuleAsync() =>
-        _newLifePointModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/NewLifePoint.razor.js");
+        _newLifePointModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/NewLifePoint.razor.js");
 
     private void LoadImage(InputFileChangeEventArgs args) => _file = args.File;
 

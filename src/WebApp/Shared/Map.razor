@@ -4,14 +4,14 @@
 @using DTO.Person
 @using Persistence
 @using Microsoft.Extensions.Logging
-@inject IJSRuntime _jsRuntime
-@inject ILifePointService _lifePointService
-@inject IPersonService _personService
-@inject IUserService _userService
-@inject IStringLocalizer<Main> _loc
-@inject ILogger<Map> _logger
+@inject IJSRuntime JsRuntime
+@inject ILifePointService LifePointService
+@inject IPersonService PersonService
+@inject IUserService UserService
+@inject IStringLocalizer<Main> Loc
+@inject ILogger<Map> Logger
 
-@if (!_userService.UserAlreadySet)
+@if (!UserService.UserAlreadySet)
 {
     <UserDialog OnClose="OnUserDialogClose"/>
 }
@@ -20,7 +20,7 @@
     {
         @if (_distinctCreators.Any())
         {
-            <label for="distinctCreator">@_loc["CreatedBy"]: </label>
+            <label for="distinctCreator">@Loc["CreatedBy"]: </label>
             <select id="distinctCreator" @onchange="SelectedCreatorChanged">
                 @foreach (var (id, name) in _distinctCreators)
                 {
@@ -30,7 +30,7 @@
         }
         @if (_distinctYears.Any())
         {
-            <label for="distinctYear">@_loc["CreatedIn"]: </label>
+            <label for="distinctYear">@Loc["CreatedIn"]: </label>
             <select id="distinctYear" @onchange="SelectedYearChanged">
                 @foreach (var distinctYear in _distinctYears)
                 {
@@ -61,33 +61,33 @@
     {
         if (firstRender)
         {
-            _logger.MethodStarted();
+            Logger.MethodStarted();
             _objRef = DotNetObjectReference.Create(this);
             await InitializeMapAsync(_objRef);
             await AddMarkersForExistingLocationsAsync();
-            _logger.MethodFinished();
+            Logger.MethodFinished();
         }
     }
 
     /// <inheritdoc />
     protected override void OnInitialized()
     {
-        _logger.MethodStarted();
+        Logger.MethodStarted();
 
         base.OnInitialized();
 
-        _distinctCreators = _lifePointService.GetDistinctCreators();
-        _distinctYears = _lifePointService.GetDistinctYears();
+        _distinctCreators = LifePointService.GetDistinctCreators();
+        _distinctYears = LifePointService.GetDistinctYears();
 
-        _logger.MethodFinished();
+        Logger.MethodFinished();
     }
 
     [JSInvokable]
     public async Task OpenPopupForNewLifePointAsync(double latitude, double longitude)
     {
-        _logger.MethodStarted();
+        Logger.MethodStarted();
         await _newLifePointModule.InvokeVoidAsync("createPopupForNewLifePoint", _objRef, _leafletMap, latitude, longitude);
-        _logger.MethodFinished();
+        Logger.MethodFinished();
     }
 
     [JSInvokable]
@@ -96,21 +96,20 @@
 
     private async Task InitializeMapAsync(DotNetObjectReference<Map> dotNetObjectReference)
     {
-        _mapModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js");
+        _mapModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js");
         _leafletMap = await _mapModule.InvokeAsync<IJSObjectReference>("initializeMap", 51.0405849, 13.7478431, 20, dotNetObjectReference);
 
-        _newLifePointModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/NewLifePoint.razor.js");
-        _lifePointDetailModule = await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
+        _newLifePointModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/NewLifePoint.razor.js");
+        _lifePointDetailModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
     }
 
     private async Task AddMarkersForExistingLocationsAsync()
     {
-        _logger.MethodStarted();
+        Logger.MethodStarted();
 
-        foreach (var (latitude, longitude, id) in _lifePointService.GetAllLocations())
-            await AddMarkerAsync(id, latitude, longitude);
+        foreach (var (latitude, longitude, id) in LifePointService.GetAllLocations()) await AddMarkerAsync(id, latitude, longitude);
 
-        _logger.MethodFinished();
+        Logger.MethodFinished();
     }
 
     private void SelectedCreatorChanged(ChangeEventArgs args)
