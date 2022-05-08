@@ -73,6 +73,25 @@ public class NewLifePointTests
         testee.Instance.ImageTooBig.Should().BeTrue();
     }
 
+    [Test]
+    public async Task CreateNewLifeWithImage_ShouldShowWarning_IfInputIsNoImage()
+    {
+        var imageMemoryStream = new MemoryStream(new byte[10]);
+        var browserFileMock = new Mock<IBrowserFile>();
+        browserFileMock.Setup(file => file.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes, default)).Returns(imageMemoryStream);
+        var lifePointServiceMock = new Mock<ILifePointService>();
+        lifePointServiceMock.Setup(service => service.CreateLifePointAsync(It.IsAny<LifePointToCreate>())).Throws<NoImageException>();
+        var lifePointToCreate = TestLifePointToCreate.Create();
+        using var ctx = new TestContext();
+        using var testee = CreateTestee(ctx, lifePointToCreate, lifePointServiceMock);
+
+        EnterInput(testee, lifePointToCreate);
+        await ClickAndUploadImageAsync(testee, browserFileMock);
+        ClickSave(testee);
+
+        testee.Instance.InputIsNoImage.Should().BeTrue();
+    }
+
     private static void ClickSave(IRenderedComponent<NewLifePoint> testee) => testee.Find("button").Click();
 
     private void NewLifeWithImagePointShouldHaveBeenCreated(TestContextBase testContext, MemoryStream imageMemoryStream)
@@ -88,7 +107,9 @@ public class NewLifePointTests
         await testee.InvokeAsync(() => inputComponent.OnChange.InvokeAsync(filesToUpload));
     }
 
-    private IRenderedComponent<NewLifePoint> CreateTestee(TestContext testContext, LifePointToCreate lifePointToCreate)
+    private IRenderedComponent<NewLifePoint> CreateTestee(TestContext testContext,
+                                                          LifePointToCreate lifePointToCreate,
+                                                          Mock<ILifePointService>? lifePointServiceMock = null)
     {
         var newLifePointDateServiceMock = new Mock<INewLifePointDateService>();
         newLifePointDateServiceMock.SetupProperty(service => service.ProposedCreationDate);
@@ -96,10 +117,13 @@ public class NewLifePointTests
         var userServiceMock = new Mock<IUserService>();
         userServiceMock.Setup(service => service.Id).Returns(lifePointToCreate.CreatedBy);
 
-        var lifePointServiceMock = new Mock<ILifePointService>();
-        lifePointServiceMock
-            .Setup(service => service.CreateLifePointAsync(It.Is<LifePointToCreate>(input => input == lifePointToCreate)))
-            .ReturnsAsync(TestExistingLifePoint.From(lifePointToCreate));
+        if (lifePointServiceMock == null)
+        {
+            lifePointServiceMock = new Mock<ILifePointService>();
+            lifePointServiceMock
+                .Setup(service => service.CreateLifePointAsync(It.Is<LifePointToCreate>(input => input == lifePointToCreate)))
+                .ReturnsAsync(TestExistingLifePoint.From(lifePointToCreate));
+        }
 
         testContext.Services.AddLocalization();
         testContext.Services.AddSingleton(lifePointServiceMock.Object);

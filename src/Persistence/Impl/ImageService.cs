@@ -33,11 +33,15 @@ internal class ImageService : IImageService
         var filePathForImage = GetFilePathForImage(owner, imageId);
         EnsureImagePathExists(filePathForImage);
 
-        using var image = await Image.LoadAsync(newImage.Stream);
+        Image image;
+        try { image = await Image.LoadAsync(newImage.Stream); }
+        catch (Exception) { throw new NoImageException(); }
+
         ResizeImage(image);
 
         await using var fileStream = _fileSystem.CreateFile(filePathForImage);
         await image.SaveAsync(fileStream, new JpegEncoder());
+        image.Dispose();
         _logger.ImageResizedAndSaved(imageId);
 
         _logger.MethodFinished();

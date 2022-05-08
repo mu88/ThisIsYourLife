@@ -29,6 +29,13 @@ else
         </div>
     }
 
+    @if (InputIsNoImage)
+    {
+        <div class="alert alert-warning" role="alert">
+            @Loc["InputIsNoImage"]
+        </div>
+    }
+
     <EditForm Model="@_newLifePoint" OnValidSubmit="@CreateNewLifePointAsync">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
@@ -60,6 +67,7 @@ else
     private IBrowserFile? _file;
     private bool _showModalSpinner;
     internal bool ImageTooBig;
+    internal bool InputIsNoImage;
         internal const long MaxAllowedFileSizeInBytes = MaxAllowedFileSizeInMegaBytes * 1024 * 1024;
         private const long MaxAllowedFileSizeInMegaBytes = 15;
 
@@ -88,6 +96,7 @@ else
             ImageTooBig = true;
             return;
         }
+
         var lifePointToCreate = new LifePointToCreate(
             _newLifePoint.Date,
             _newLifePoint.Caption,
@@ -97,7 +106,19 @@ else
             UserService.Id ?? throw new NullReferenceException(Loc["UserHasNotBeenSet"]),
             imageToCreate);
 
-        var createdLifePoint = await LifePointService.CreateLifePointAsync(lifePointToCreate);
+        ExistingLifePoint createdLifePoint;
+        try
+        {
+            createdLifePoint = await LifePointService.CreateLifePointAsync(lifePointToCreate);
+            InputIsNoImage = false;
+        }
+        catch (NoImageException)
+        {
+            DisableSpinner();
+            InputIsNoImage = true;
+            return;
+        }
+
         NewLifePointDateService.ProposedCreationDate = _newLifePoint.Date;
 
         DisableSpinner();

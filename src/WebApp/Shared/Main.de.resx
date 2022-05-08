@@ -72,4 +72,7 @@
     <data name="ImageTooBig" xml:space="preserve">
         <value>Das Bild war zu groß, es sind maximal {0} MB möglich. Bitte erneut versuchen.</value>
     </data>
+    <data name="InputIsNoImage" xml:space="preserve">
+        <value>Bei der Datei handelt es sich nicht um ein Bild</value>
+    </data>
 </root>

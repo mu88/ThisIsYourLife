@@ -142,6 +142,15 @@ namespace WebApp.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The provided file is not an image.
+        /// </summary>
+        internal static string InputIsNoImage {
+            get {
+                return ResourceManager.GetString("InputIsNoImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Must be between {2} and {1} characters long.
         /// </summary>
         internal static string LengthError {

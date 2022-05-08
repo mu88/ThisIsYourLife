@@ -55,6 +55,22 @@ public class ImageServiceTests
     }
 
     [Test]
+    public async Task ProcessAndStoreImage_ShouldFail_IfInputIsNoImage()
+    {
+        var person = TestPerson.Create("Dixie");
+        var notAnImageStream = new MemoryStream(new byte[10]);
+        var newImage = TestImageToCreate.Create(notAnImageStream);
+        var autoMocker = new CustomAutoMocker();
+        autoMocker.Setup<IFileSystem, Stream>(system => system.CreateFile(It.IsAny<string>())).Returns(new MemoryStream());
+        autoMocker.Setup<IFileSystem, bool>(system => system.DirectoryExists(It.IsAny<string>())).Returns(true);
+        var testee = autoMocker.CreateInstance<ImageService>();
+
+        var testAction = async () => await testee.ProcessAndStoreImageAsync(person, newImage);
+
+        await testAction.Should().ThrowAsync<NoImageException>();
+    }
+
+    [Test]
     public async Task ProcessAndStoreImage_CreatesImageDirectory()
     {
         var person = TestPerson.Create("Dixie");
