@@ -1,4 +1,12 @@
 ---
+engines:
+  sonarcsharp:
+    exclude_paths:
+      - "**.razor"
+languages:
+  csharp:
+    extensions:
+      - ".razor"
 exclude_paths:
   - "**/.github/**"
   - "**/wwwroot/**"
