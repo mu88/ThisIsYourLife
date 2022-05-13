@@ -50,8 +50,9 @@
   <ItemGroup>
     <Content Remove="data\**"/>
     <None Remove="Start me.url"/>
-    <Content Include="Start me.url">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Remove="Start me.bat"/>
+    <Content Include="Start me.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
