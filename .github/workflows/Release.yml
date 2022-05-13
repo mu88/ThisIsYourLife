@@ -47,8 +47,15 @@ jobs:
         type: 'zip'
         filename: ThisIsYourLife.${{ github.ref_name }}.zip
         directory: 'src/WebApp/bin/Debug/net6.0/win-x64/publish'
+    - name: Create CHANGELOG
+      id: changelog
+      uses: Requarks/changelog-action@v1
+      with:
+        token: ${{ github.token }}
+        tag: ${{ github.ref_name }}
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
         files: src/WebApp/bin/Debug/net6.0/win-x64/publish/ThisIsYourLife*.zip
         tag_name: ${{ github.ref_name }}
+        body: ${{ steps.changelog.outputs.changes }}
