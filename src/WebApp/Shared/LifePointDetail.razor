@@ -45,7 +45,8 @@
         Logger.MethodFinished();
     }
 
-    private Uri ConstructImageUri(Guid imageId) => new(new Uri(Navigator.BaseUri), $"api/images/{_lifePoint.CreatedBy.Id}/{imageId.ToString()}");
+    private Uri ConstructImageUri(Guid imageId)
+        => new(new Uri(Navigator.BaseUri), $"api/images/{_lifePoint.CreatedBy.Id}/{imageId.ToString()}");
 
     private async void OnDeleteClicked()
     {
@@ -57,8 +58,10 @@
         Logger.MethodFinished();
     }
 
-    private async Task RemoveMarkerAsync() => await _lifePointDetailModule.InvokeVoidAsync("removeMarkerOfLifePoint", Id);
+    private async Task RemoveMarkerAsync()
+        => await _lifePointDetailModule.InvokeVoidAsync("removeMarkerOfLifePoint", Id);
 
-    private async Task LoadLifePointDetailModuleAsync() => _lifePointDetailModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
+    private async Task LoadLifePointDetailModuleAsync()
+        => _lifePointDetailModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
 
 }

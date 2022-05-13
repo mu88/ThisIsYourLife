@@ -107,7 +107,8 @@
     {
         Logger.MethodStarted();
 
-        foreach (var (latitude, longitude, id) in LifePointService.GetAllLocations()) await AddMarkerAsync(id, latitude, longitude);
+        foreach (var (latitude, longitude, id) in LifePointService.GetAllLocations())
+            await AddMarkerAsync(id, latitude, longitude);
 
         Logger.MethodFinished();
     }
