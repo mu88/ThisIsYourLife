@@ -1,4 +1,6 @@
-﻿let _markers = []
+﻿/* global L */
+
+let _markers = [];
 let _markerClusterGroup;
 
 export function createMarkerForExistingLifePoint(leafletMap, id, latitude, longitude) {
@@ -16,11 +18,13 @@ export function createMarkerForExistingLifePoint(leafletMap, id, latitude, longi
 
 export function removeMarkerOfLifePoint(id) {
     // https://stackoverflow.com/questions/45931963/leaflet-remove-specific-marker
-    let new_markers = [];
+    let newMarkers = [];
     _markers.forEach(function (marker) {
         if (marker._id === id) {
             _markerClusterGroup.removeLayer(marker);
-        } else new_markers.push(marker);
-    })
-    _markers = new_markers;
+        } else {
+            newMarkers.push(marker);
+        }
+    });
+    _markers = newMarkers;
 }

@@ -3,6 +3,10 @@ engines:
   sonarcsharp:
     exclude_paths:
       - "**.razor"
+      - "src/Logging/Extensions/Log.cs" # Sonar for C# does not understand compile-time logging
+  csslint:
+    exclude_paths:
+      - "**/MainLayout.razor.css"
 languages:
   csharp:
     extensions:

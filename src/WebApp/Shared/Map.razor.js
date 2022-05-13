@@ -1,5 +1,7 @@
 ﻿// TODO mu88: Refactor class into better functions
 
+/* global L */
+
 let _dotNetMapReference;
 let _leafletMap;
 
