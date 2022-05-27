@@ -11,7 +11,7 @@
 <div class="card">
     @if (_imageUri != null)
     {
-        <img src="@_imageUri" class="card-img-top" alt="The image">
+        <img src="@_imageUri" alt="The image" @onload="UpdatePopupAsync"> // don't apply class or style - it will break the popup sizing 
     }
     <div class="card-body">
         <h5 class="card-title">@_lifePoint.Caption</h5>
@@ -58,10 +58,33 @@
         Logger.MethodFinished();
     }
 
+    /// <inheritdoc />
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (_imageUri == null && !firstRender) { await UpdatePopupAsync(); }
+    }
+
     private async Task RemoveMarkerAsync()
         => await _lifePointDetailModule.InvokeVoidAsync("removeMarkerOfLifePoint", Id);
 
     private async Task LoadLifePointDetailModuleAsync()
         => _lifePointDetailModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
+
+    /// <summary>Updates the underlying Leaflet popup so that size and position are correct and visible.</summary>
+    /// <remarks>
+    ///     Since the Blazor component is rendered lazily (and therefore after the Leaflet popup has been created),
+    ///     the popup has to be updated manually. This will resize it according to the Blazor content and
+    ///     also pan the map so that it becomes visible.
+    ///     If an image is present, this must happen after the image is loaded - otherwise the calculated size of
+    ///     the popup is wrong and would therefore be displayed at the wrong map position.
+    /// </remarks>
+    private async Task UpdatePopupAsync()
+    {
+        if (_lifePointDetailModule == null!) { return; } // due to unknown reasons, this really can happen 
+
+        await _lifePointDetailModule.InvokeVoidAsync("updatePopup", Id);
+    }
 
 }

@@ -139,6 +139,7 @@ public class NewLifePointTests
         var newLifePointModuleInterop = testContext.JSInterop.SetupModule("./Shared/NewLifePoint.razor.js");
         newLifePointModuleInterop.SetupVoid("addMarkerForCreatedLifePoint", Guid.Empty, lifePointToCreate.Latitude, lifePointToCreate.Longitude).SetVoidResult();
         newLifePointModuleInterop.SetupVoid("removePopupForNewLifePoint").SetVoidResult();
+        newLifePointModuleInterop.SetupVoid("updatePopup").SetVoidResult();
         testContext.JSInterop.SetupVoid(invocation => invocation.Identifier == "Blazor._internal.InputFile.init").SetVoidResult();
 
         var testee = testContext.RenderComponent<NewLifePoint>(parameters => parameters

@@ -169,9 +169,32 @@ else
         _newLifePoint.Date = NewLifePointDateService.ProposedCreationDate;
     }
 
+    /// <inheritdoc />
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (!firstRender) { await UpdatePopupAsync(); }
+    }
+
     private async Task LoadNewLifePointModuleAsync() =>
         _newLifePointModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/NewLifePoint.razor.js");
 
     private void LoadImage(InputFileChangeEventArgs args) => _file = args.File;
+
+    /// <summary>Updates the underlying Leaflet popup so that size and position are correct and visible.</summary>
+    /// <remarks>
+    ///     Since the Blazor component is rendered lazily (and therefore after the Leaflet popup has been created),
+    ///     the popup has to be updated manually. This will resize it according to the Blazor content and
+    ///     also pan the map so that it becomes visible.
+    ///     If an image is present, this must happen after the image is loaded - otherwise the calculated size of
+    ///     the popup is wrong and would therefore be displayed at the wrong map position.
+    /// </remarks>
+    private async Task UpdatePopupAsync()
+    {
+        if (_newLifePointModule == null!) { return; } // due to unknown reasons, this really can happen 
+
+        await _newLifePointModule.InvokeVoidAsync("updatePopup");
+    }
 
 }

@@ -11,9 +11,13 @@ export function createMarkerForExistingLifePoint(leafletMap, id, latitude, longi
 
     let marker = L.marker([latitude, longitude]);
     marker._id = id;
-    marker.bindPopup("<life-point-detail id='" + id + "'></life-point-detail>", {minWidth: 500});
+    marker.bindPopup("<life-point-detail id='" + id + "'></life-point-detail>", {maxWidth: _calculateMaxWidth()});
     _markerClusterGroup.addLayer(marker);
     _markers.push(marker);
+}
+
+function _calculateMaxWidth() {
+    return (window.devicePixelRatio > 1 ? 300 : 500);
 }
 
 export function removeMarkerOfLifePoint(id) {
@@ -27,4 +31,19 @@ export function removeMarkerOfLifePoint(id) {
         }
     });
     _markers = newMarkers;
+}
+
+export function updatePopup(id) {
+    _markers.forEach(function (marker) {
+        if (marker._id === id) {
+            let popup = marker.getPopup();
+            // the following code is borrowed from the original Leaflet sources
+            // /src/layer/DivOverlay.js (base class of popup), update().
+            // Make sure that this._updateContent() doesn't get called, because otherwise there'll be an infinite loop
+            // between updating the popup and recreating the Blazor component. 
+            popup._updateLayout();
+            popup._updatePosition();
+            popup._adjustPan();
+        }
+    })
 }
