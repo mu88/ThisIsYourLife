@@ -9,7 +9,7 @@ namespace BusinessServices.Services;
 
 public interface ILifePointService
 {
-    IEnumerable<ExistingLocation> GetAllLocations();
+    IEnumerable<ExistingLocation> GetAllLocations(int? year = null, Guid? creatorId = null);
 
     Task<ExistingLifePoint> GetLifePointAsync(Guid id);
 
@@ -17,11 +17,9 @@ public interface ILifePointService
 
     Task DeleteLifePointAsync(Guid id);
 
-    IEnumerable<int> GetDistinctYears();
+    // TODO mu88: Write tests
+    IEnumerable<int> GetDistinctYears(Guid? creatorId = null);
 
-    IEnumerable<ExistingPerson> GetDistinctCreators();
-
-    IEnumerable<ExistingLocation> GetAllLocations(uint year);
-
-    IEnumerable<ExistingLocation> GetAllLocations(Guid creatorId);
+    // TODO mu88: Write tests
+    IEnumerable<ExistingPerson> GetDistinctCreators(int? year = null);
 }

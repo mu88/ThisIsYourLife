@@ -2,22 +2,29 @@
 
 let _markers = [];
 let _markerClusterGroup;
+let _leafletMap;
 
-export function createMarkerForExistingLifePoint(leafletMap, id, latitude, longitude) {
-    if (!_markerClusterGroup) {
-        _markerClusterGroup = L.markerClusterGroup();
-        leafletMap.addLayer(_markerClusterGroup);
+export function initialize(leafletMap) {
+    _leafletMap = leafletMap;
+    reset();
+}
+
+export function reset() {
+    if (_markerClusterGroup) {
+        _leafletMap.removeLayer(_markerClusterGroup);
     }
 
+    _markers = [];
+    _markerClusterGroup = L.markerClusterGroup();
+    _leafletMap.addLayer(_markerClusterGroup);
+}
+
+export function createMarkerForExistingLifePoint(id, latitude, longitude) {
     let marker = L.marker([latitude, longitude]);
     marker._id = id;
     marker.bindPopup("<life-point-detail id='" + id + "'></life-point-detail>", {maxWidth: _calculateMaxWidth()});
     _markerClusterGroup.addLayer(marker);
     _markers.push(marker);
-}
-
-function _calculateMaxWidth() {
-    return (window.devicePixelRatio > 1 ? 300 : 500);
 }
 
 export function removeMarkerOfLifePoint(id) {
@@ -49,4 +56,8 @@ export function updatePopup(id) {
             popup._adjustPan();
         }
     })
+}
+
+function _calculateMaxWidth() {
+    return (window.devicePixelRatio > 1 ? 300 : 500);
 }

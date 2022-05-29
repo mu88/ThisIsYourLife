@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using DTO.LifePoint;
@@ -25,13 +26,30 @@ internal class LifePointService : ILifePointService
         _mapper = mapper;
     }
 
-    public IEnumerable<ExistingLocation> GetAllLocations() => _mapper.Map<IQueryable<LifePoint>, IEnumerable<ExistingLocation>>(_storage.LifePoints);
+    public IEnumerable<ExistingLocation> GetAllLocations(int? year = null, Guid? creatorId = null)
+    {
+        Expression<Func<LifePoint, bool>>? searchExpression;
 
-    public IEnumerable<ExistingLocation> GetAllLocations(uint year) =>
-        _mapper.Map<IQueryable<LifePoint>, IEnumerable<ExistingLocation>>(_storage.LifePoints.Where(point => point.Date.Year == year));
+        // TODO mu88: Write tests
+        if (creatorId != null)
+        {
+            if (year != null)
+                searchExpression = point => point.Date.Year == year && point.CreatedBy.Id == creatorId;
+            else
+                searchExpression = point => point.CreatedBy.Id == creatorId;
+        }
+        else
+        {
+            if (year != null)
+                searchExpression = point => point.Date.Year == year;
+            else
+                searchExpression = null;
+        }
 
-    public IEnumerable<ExistingLocation> GetAllLocations(Guid creatorId) =>
-        _mapper.Map<IQueryable<LifePoint>, IEnumerable<ExistingLocation>>(_storage.LifePoints.Where(point => point.CreatedBy.Id == creatorId));
+        return _mapper.Map<IQueryable<LifePoint>, IEnumerable<ExistingLocation>>(searchExpression != null
+                                                                                     ? _storage.LifePoints.Where(searchExpression)
+                                                                                     : _storage.LifePoints);
+    }
 
     public async Task<ExistingLifePoint> GetLifePointAsync(Guid id) => _mapper.Map<LifePoint, ExistingLifePoint>(await GetLifePointInternalAsync(id));
 
@@ -73,11 +91,18 @@ internal class LifePointService : ILifePointService
         _logger.MethodFinished();
     }
 
-    public IEnumerable<int> GetDistinctYears() => _storage.LifePoints.Select(x => x.Date.Year).Distinct().OrderBy(x => x);
+    public IEnumerable<int> GetDistinctYears(Guid? creatorId) => creatorId != null
+                                                                     ? _storage.LifePoints.Where(point => point.CreatedBy.Id == creatorId)
+                                                                         .Select(x => x.Date.Year)
+                                                                         .Distinct()
+                                                                         .OrderBy(x => x)
+                                                                     : _storage.LifePoints.Select(x => x.Date.Year).Distinct().OrderBy(x => x);
 
-    public IEnumerable<ExistingPerson> GetDistinctCreators()
+    public IEnumerable<ExistingPerson> GetDistinctCreators(int? year)
     {
-        var distinctCreators = _storage.LifePoints.Select(x => x.CreatedBy).Distinct().OrderBy(x => x.Name);
+        var distinctCreators = year != null
+                                   ? _storage.LifePoints.Where(point => point.Date.Year == year).Select(x => x.CreatedBy).Distinct().OrderBy(x => x.Name)
+                                   : _storage.LifePoints.Select(x => x.CreatedBy).Distinct().OrderBy(x => x.Name);
         return _mapper.Map<IQueryable<Person>, IEnumerable<ExistingPerson>>(distinctCreators);
     }
 

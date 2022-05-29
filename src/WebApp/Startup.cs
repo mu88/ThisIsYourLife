@@ -27,8 +27,12 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddRazorPages();
-        services.AddServerSideBlazor(options => { options.RootComponents.RegisterAsCustomElement<LifePointDetail>("life-point-detail"); });
-        services.AddServerSideBlazor(options => { options.RootComponents.RegisterAsCustomElement<NewLifePoint>("new-life-point"); });
+        services.AddServerSideBlazor(options =>
+        {
+            options.RootComponents.RegisterAsCustomElement<LifePointDetail>("life-point-detail");
+            options.RootComponents.RegisterAsCustomElement<NewLifePoint>("new-life-point");
+            options.RootComponents.RegisterAsCustomElement<FilterLifePoints>("filter-life-points");
+        });
 
         services.AddPersistence();
         services.AddBusinessServices();

@@ -52,7 +52,7 @@ public class MapTests
                                                         Mock<IJSObjectReference>? leafletMapMock = null)
     {
         var lifePointServiceMock = new Mock<ILifePointService>();
-        lifePointServiceMock.Setup(service => service.GetAllLocations()).Returns(existingLocations);
+        lifePointServiceMock.Setup(service => service.GetAllLocations(null, null)).Returns(existingLocations);
 
         newLifePointModuleMock ??= new Mock<IJSObjectReference>();
         lifePointDetailModuleMock ??= new Mock<IJSObjectReference>();
@@ -113,9 +113,8 @@ public class MapTests
         foreach (var existingLocation in existingLocations)
         {
             lifePointDetailModuleMock.Verify(reference => reference.InvokeAsync<IJSVoidResult>("createMarkerForExistingLifePoint",
-                                                                                               new[]
+                                                                                               new object[]
                                                                                                {
-                                                                                                   GetLeafletMap(testee),
                                                                                                    existingLocation.Id,
                                                                                                    existingLocation.Latitude,
                                                                                                    existingLocation.Longitude

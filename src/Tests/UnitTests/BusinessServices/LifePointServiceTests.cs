@@ -57,7 +57,28 @@ public class LifePointServiceTests
         autoMocker.Setup<IStorage, IQueryable<LifePoint>>(x => x.LifePoints).Returns(lifePoints.AsQueryable);
         var testee = autoMocker.CreateInstance<LifePointService>();
 
-        var results = testee.GetAllLocations(person1.Id).ToList();
+        var results = testee.GetAllLocations(creatorId: person1.Id).ToList();
+
+        results.Should().HaveCount(1);
+    }
+
+    [Test]
+    public void GetAllLifePointLocations_FilteredBy_CreatorAndYear()
+    {
+        var person1 = TestPerson.Create("Dixie");
+        var person2 = TestPerson.Create("Ulf");
+        var lifePoints = new[]
+        {
+            TestLifePoint.Create(person1, new DateOnly(1953, 4, 12)),
+            TestLifePoint.Create(person1, new DateOnly(1954, 4, 12)),
+            TestLifePoint.Create(person2, new DateOnly(1953, 4, 12)),
+            TestLifePoint.Create(person2, new DateOnly(1954, 4, 12))
+        };
+        var autoMocker = new CustomAutoMocker();
+        autoMocker.Setup<IStorage, IQueryable<LifePoint>>(x => x.LifePoints).Returns(lifePoints.AsQueryable);
+        var testee = autoMocker.CreateInstance<LifePointService>();
+
+        var results = testee.GetAllLocations(1953, person1.Id).ToList();
 
         results.Should().HaveCount(1);
     }
@@ -219,23 +240,68 @@ public class LifePointServiceTests
         autoMocker.Setup<IStorage, IQueryable<LifePoint>>(x => x.LifePoints).Returns(lifePoints.AsQueryable);
         var testee = autoMocker.CreateInstance<LifePointService>();
 
-        var results = testee.GetDistinctYears();
+        var results = testee.GetDistinctYears(null);
 
         results.Should().Equal(1952, 1953);
     }
 
     [Test]
-    public void GetDistinctCreatorNames()
+    public void GetDistinctYears_FilteredBy_Creator()
     {
-        var alice = new Person("Alice");
-        var bob = new Person("Bob");
-        var lifePoints = new[] { TestLifePoint.Create(bob), TestLifePoint.Create(alice), TestLifePoint.Create(alice) };
+        var person1 = TestPerson.Create("Dixie");
+        var person2 = TestPerson.Create("Ulf");
+        var lifePoints = new[]
+        {
+            TestLifePoint.Create(person1, new DateOnly(1953, 4, 12)),
+            TestLifePoint.Create(person1, new DateOnly(1952, 4, 12)),
+            TestLifePoint.Create(person2, new DateOnly(1952, 4, 12))
+        };
         var autoMocker = new CustomAutoMocker();
         autoMocker.Setup<IStorage, IQueryable<LifePoint>>(x => x.LifePoints).Returns(lifePoints.AsQueryable);
         var testee = autoMocker.CreateInstance<LifePointService>();
 
-        var results = testee.GetDistinctCreators();
+        var results = testee.GetDistinctYears(person2.Id);
 
-        results.Select(x => x.Name).Should().Equal("Alice", "Bob");
+        results.Should().Equal(1952);
+    }
+
+    [Test]
+    public void GetDistinctCreatorNames()
+    {
+        var person1 = TestPerson.Create("Dixie");
+        var person2 = TestPerson.Create("Ulf");
+        var lifePoints = new[]
+        {
+            TestLifePoint.Create(person1, new DateOnly(1953, 4, 12)),
+            TestLifePoint.Create(person1, new DateOnly(1952, 4, 12)),
+            TestLifePoint.Create(person2, new DateOnly(1952, 4, 12))
+        };
+        var autoMocker = new CustomAutoMocker();
+        autoMocker.Setup<IStorage, IQueryable<LifePoint>>(x => x.LifePoints).Returns(lifePoints.AsQueryable);
+        var testee = autoMocker.CreateInstance<LifePointService>();
+
+        var results = testee.GetDistinctCreators(null);
+
+        results.Select(x => x.Name).Should().Equal("Dixie", "Ulf");
+    }
+
+    [Test]
+    public void GetDistinctCreatorNames_FilteredBy_Years()
+    {
+        var person1 = TestPerson.Create("Dixie");
+        var person2 = TestPerson.Create("Ulf");
+        var lifePoints = new[]
+        {
+            TestLifePoint.Create(person1, new DateOnly(1953, 4, 12)),
+            TestLifePoint.Create(person1, new DateOnly(1952, 4, 12)),
+            TestLifePoint.Create(person2, new DateOnly(1952, 4, 12))
+        };
+        var autoMocker = new CustomAutoMocker();
+        autoMocker.Setup<IStorage, IQueryable<LifePoint>>(x => x.LifePoints).Returns(lifePoints.AsQueryable);
+        var testee = autoMocker.CreateInstance<LifePointService>();
+
+        var results = testee.GetDistinctCreators(1953);
+
+        results.Select(x => x.Name).Should().Equal("Dixie");
     }
 }

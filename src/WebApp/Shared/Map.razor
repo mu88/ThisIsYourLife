@@ -1,4 +1,4 @@
-﻿@using BusinessServices.Services
+@using BusinessServices.Services
 @using Persistence
 @using Microsoft.Extensions.Logging
 @inject IJSRuntime JsRuntime
@@ -12,30 +12,5 @@
 {
     <UserDialog OnClose="OnUserDialogClose"/>
 }
-<div>
-    @if (false)
-    {
-        @if (_distinctCreators.Any())
-        {
-            <label for="distinctCreator">@Loc["CreatedBy"]: </label>
-            <select id="distinctCreator" @onchange="SelectedCreatorChanged">
-                @foreach (var (id, name) in _distinctCreators)
-                {
-                    <option value="@id">@name</option>
-                }
-            </select>
-        }
-        @if (_distinctYears.Any())
-        {
-            <label for="distinctYear">@Loc["CreatedIn"]: </label>
-            <select id="distinctYear" @onchange="SelectedYearChanged">
-                @foreach (var distinctYear in _distinctYears)
-                {
-                    <option value="@distinctYear">@distinctYear</option>
-                }
-            </select>
-        }
-    }
-</div>
 
 <div id="mapid"></div>

@@ -1,0 +1,32 @@
+﻿@using BusinessServices.Services
+@using Microsoft.Extensions.Logging
+@* TODO mu88: Update distinct years when creating new LifePoint *@
+@inject ILifePointService LifePointService
+@inject IStringLocalizer<Main> Loc
+@inject ILogger<FilterLifePoints> Logger
+@inject IJSRuntime JsRuntime
+
+<form class="form-inline">
+    @if (_showFilter)
+    {
+        <div class="form-group">
+            <select class="form-control" disabled="@_yearFilterApplied" id="distinctCreator" @onchange="SelectedCreatorChangedAsync">
+                <option value="@DefaultCreatorId">@Loc["CreatedBy"]</option>
+                @foreach (var (id, name) in _distinctCreators)
+                {
+                    <option value="@id">@name</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <select class="form-control" disabled="@_creatorFilterApplied" id="distinctYear" @onchange="SelectedYearChangedAsync">
+                <option value="@DefaultYear">@Loc["CreatedIn"]</option>
+                @foreach (var distinctYear in _distinctYears)
+                {
+                    <option value="@distinctYear">@distinctYear</option>
+                }
+            </select>
+        </div>
+    }
+    <img class="img-fluid" id="filterButton" src="filter.png" alt="The filter button" @onclick="OnFilterButtonClickAsync"/>
+</form>

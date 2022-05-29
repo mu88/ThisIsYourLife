@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using DTO.Location;
-using DTO.Person;
 using Logging.Extensions;
-using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 
 namespace WebApp.Shared;
@@ -15,10 +11,7 @@ public partial class Map
     private IJSObjectReference _newLifePointModule = null!;
     private IJSObjectReference _lifePointDetailModule = null!;
     private IJSObjectReference _leafletMap = null!;
-    private IReadOnlyList<ExistingLocation> _allLocations = new List<ExistingLocation>();
     private DotNetObjectReference<Map>? _objRef;
-    private IEnumerable<ExistingPerson> _distinctCreators = new List<ExistingPerson>();
-    private IEnumerable<int> _distinctYears = new List<int>();
 
     [JSInvokable]
     public async Task OpenPopupForNewLifePointAsync(double latitude, double longitude)
@@ -30,7 +23,7 @@ public partial class Map
 
     [JSInvokable]
     public async Task AddMarkerAsync(Guid id, double latitude, double longitude)
-        => await _lifePointDetailModule.InvokeVoidAsync("createMarkerForExistingLifePoint", _leafletMap, id, latitude, longitude);
+        => await _lifePointDetailModule.InvokeVoidAsync("createMarkerForExistingLifePoint", id, latitude, longitude);
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -44,19 +37,6 @@ public partial class Map
         }
     }
 
-    /// <inheritdoc />
-    protected override void OnInitialized()
-    {
-        Logger.MethodStarted();
-
-        base.OnInitialized();
-
-        _distinctCreators = LifePointService.GetDistinctCreators();
-        _distinctYears = LifePointService.GetDistinctYears();
-
-        Logger.MethodFinished();
-    }
-
     private async Task InitializeMapAsync(DotNetObjectReference<Map> dotNetObjectReference)
     {
         _mapModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js");
@@ -64,25 +44,18 @@ public partial class Map
 
         _newLifePointModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/NewLifePoint.razor.js");
         _lifePointDetailModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
+
+        await _lifePointDetailModule.InvokeVoidAsync("initialize", _leafletMap);
     }
 
     private async Task AddMarkersForExistingLocationsAsync()
     {
         Logger.MethodStarted();
 
+        // TODO mu88: Rethink whether adding all markers at once provides better performance on redraw
         foreach (var (latitude, longitude, id) in LifePointService.GetAllLocations()) { await AddMarkerAsync(id, latitude, longitude); }
 
         Logger.MethodFinished();
-    }
-
-    private void SelectedCreatorChanged(ChangeEventArgs args)
-    {
-        // TODO mu88: Redraw
-    }
-
-    private void SelectedYearChanged(ChangeEventArgs args)
-    {
-        // TODO mu88: Redraw
     }
 
     private void OnUserDialogClose() => StateHasChanged();
