@@ -1,59 +1,60 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <NoWarn>NU1603</NoWarn>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BusinessServices\BusinessServices.csproj" />
-    <ProjectReference Include="..\DTO\DTO.csproj" />
-    <ProjectReference Include="..\Persistence\Persistence.csproj"/>
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\BusinessServices\BusinessServices.csproj"/>
+        <ProjectReference Include="..\DTO\DTO.csproj"/>
+        <ProjectReference Include="..\Persistence\Persistence.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="11.0.1"/>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.3"/>
-    <PackageReference Include="Microsoft.AspNetCore.Components.CustomElements" Version="0.1.0-alpha.21466.1"/>
-    <PackageReference Include="Serilog.AspNetCore" Version="5.0.0"/>
-    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0"/>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="11.0.1"/>
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.3"/>
+        <PackageReference Include="Microsoft.AspNetCore.Components.CustomElements" Version="0.1.0-alpha.21466.1"/>
+        <PackageReference Include="Serilog.AspNetCore" Version="5.0.0"/>
+        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Shared\Main.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Main.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Remove="data\**"/>
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Update="Shared\Main.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Main.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Remove="data\**"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Shared\Main.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Main.resx</DependentUpon>
-    </Compile>
-    <Compile Remove="data\**"/>
-  </ItemGroup>
+    <ItemGroup>
+        <Compile Update="Shared\Main.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Main.resx</DependentUpon>
+        </Compile>
+        <Compile Remove="data\**"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
-    <InternalsVisibleTo Include="Tests"/>
-  </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
+        <InternalsVisibleTo Include="Tests"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <None Remove="data\**"/>
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="data\**"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Content Remove="data\**"/>
-    <None Remove="Start me.url"/>
-    <None Remove="Start me.bat"/>
-    <Content Include="Start me.bat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+        <Content Remove="data\**"/>
+        <None Remove="Start me.url"/>
+        <None Remove="Start me.bat"/>
+        <Content Include="Start me.bat">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
 </Project>
