@@ -64,7 +64,7 @@ public class LifePointDetailTests
 
         testee.Find("h5").TextContent.Should().Be(existingLifePoint.Caption);
 
-        testee.Find("h6").TextContent.Should().Match($"On *05*2022 with {existingLifePoint.CreatedBy.Name}");
+        testee.Find("h6").TextContent.Should().Match($"On *{DateTime.Now.Month}*{DateTime.Now.Year} with {existingLifePoint.CreatedBy.Name}");
 
         testee.Find("p").TextContent.Should().Be(existingLifePoint.Description);
     }
