@@ -20,6 +20,9 @@ export function addMarkerForCreatedLifePoint(id, latitude, longitude) {
 }
 
 export function updatePopup() {
+    if (!_popup._map)
+        return;
+
     // the following code is borrowed from the original Leaflet sources
     // /src/layer/DivOverlay.js (base class of popup), update().
     // Make sure that this._updateContent() doesn't get called, because otherwise there'll be an infinite loop

@@ -37,6 +37,9 @@ export function updatePopup(id) {
     _markers.forEach(function (marker) {
         if (marker._id === id) {
             let popup = marker.getPopup();
+            if (!popup._map)
+                return;
+
             // the following code is borrowed from the original Leaflet sources
             // /src/layer/DivOverlay.js (base class of popup), update().
             // Make sure that this._updateContent() doesn't get called, because otherwise there'll be an infinite loop
