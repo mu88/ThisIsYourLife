@@ -10,8 +10,7 @@ public class NewLifePointModel
     [StringLength(50, MinimumLength = 1, ErrorMessageResourceName = "LengthError", ErrorMessageResourceType = typeof(Main))]
     public string Caption { get; set; } = string.Empty;
 
-    [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(Main))]
-    [StringLength(500, MinimumLength = 1, ErrorMessageResourceName = "LengthError", ErrorMessageResourceType = typeof(Main))]
+    [StringLength(500, ErrorMessageResourceName = "LengthError", ErrorMessageResourceType = typeof(Main))]
     public string Description { get; set; } = string.Empty;
 
     [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(Main))]

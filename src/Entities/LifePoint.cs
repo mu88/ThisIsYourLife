@@ -17,7 +17,7 @@ public class LifePoint
 
     public LifePoint(DateOnly date,
                      string caption,
-                     string description,
+                     string? description,
                      double latitude,
                      double longitude,
                      Person createdBy,
@@ -39,7 +39,7 @@ public class LifePoint
 
     public string Caption { get; private set; }
 
-    public string Description { get; private set; }
+    public string? Description { get; private set; }
 
     public double Latitude { get; private set; }
 

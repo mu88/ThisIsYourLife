@@ -6,7 +6,7 @@ namespace DTO.LifePoint;
 public record ExistingLifePoint(Guid Id,
                                 DateOnly Date,
                                 string Caption,
-                                string Description,
+                                string? Description,
                                 double Latitude,
                                 double Longitude,
                                 ExistingPerson CreatedBy,

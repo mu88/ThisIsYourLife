@@ -16,7 +16,10 @@
     <div class="card-body">
         <h5 class="card-title">@_lifePoint.Caption</h5>
         <h6 class="card-subtitle mb-2 text-muted">@Loc["On"] @_lifePoint.Date @Loc["With"] @_lifePoint.CreatedBy.Name</h6>
-        <p class="card-text" style="white-space: pre-line">@_lifePoint.Description</p>
+        @if (_lifePoint.Description != null)
+        {
+            <p class="card-text" style="white-space: pre-line">@_lifePoint.Description</p>
+        }
         <button class="btn btn-outline-secondary" @onclick="OnDeleteClicked">@Loc["Delete"]</button>
     </div>
 </div>
