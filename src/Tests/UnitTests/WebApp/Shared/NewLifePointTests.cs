@@ -6,6 +6,7 @@ using BusinessServices.Services;
 using DTO.LifePoint;
 using FluentAssertions;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -23,15 +24,21 @@ namespace Tests.UnitTests.WebApp.Shared;
 public class NewLifePointTests
 {
     [Test]
-    public void CreateNewLifePoint()
+    public async Task CreateNewLifePoint()
     {
         var lifePointToCreate = TestLifePointToCreate.Create();
+        var lifePointServiceMock = new Mock<ILifePointService>();
+        lifePointServiceMock
+            .Setup(service => service.CreateLifePointAsync(It.IsAny<LifePointToCreate>()))
+            .ReturnsAsync(TestExistingLifePoint.From(lifePointToCreate), TimeSpan.FromSeconds(1));
         using var ctx = new TestContext();
-        using var testee = CreateTestee(ctx, lifePointToCreate);
+        using var testee = CreateTestee(ctx, lifePointToCreate, lifePointServiceMock);
 
         EnterInput(testee, lifePointToCreate);
-        ClickSave(testee);
+        var task = ClickSaveAsync(testee);
 
+        SpinnerShouldBeDisplayed(testee);
+        await task;
         ProposedDateShouldBeCorrect(lifePointToCreate, testee);
         PopupShouldBeRemoved(ctx);
         MarkerShouldBeAdded(ctx);
@@ -49,7 +56,7 @@ public class NewLifePointTests
 
         EnterInput(testee, lifePointToCreate);
         await ClickAndUploadImageAsync(testee, browserFileMock);
-        ClickSave(testee);
+        await ClickSaveAsync(testee);
 
         ProposedDateShouldBeCorrect(lifePointToCreate, testee);
         PopupShouldBeRemoved(ctx);
@@ -68,7 +75,7 @@ public class NewLifePointTests
 
         EnterInput(testee, lifePointToCreate);
         await ClickAndUploadImageAsync(testee, browserFileMock);
-        ClickSave(testee);
+        await ClickSaveAsync(testee);
 
         testee.Instance.ImageTooBig.Should().BeTrue();
     }
@@ -87,12 +94,12 @@ public class NewLifePointTests
 
         EnterInput(testee, lifePointToCreate);
         await ClickAndUploadImageAsync(testee, browserFileMock);
-        ClickSave(testee);
+        await ClickSaveAsync(testee);
 
         testee.Instance.InputIsNoImage.Should().BeTrue();
     }
 
-    private static void ClickSave(IRenderedComponent<NewLifePoint> testee) => testee.Find("button").Click();
+    private static async Task ClickSaveAsync(IRenderedComponent<NewLifePoint> testee) => await testee.Find("button").ClickAsync(new MouseEventArgs());
 
     private void NewLifeWithImagePointShouldHaveBeenCreated(TestContextBase testContext, MemoryStream imageMemoryStream)
     {
@@ -164,4 +171,6 @@ public class NewLifePointTests
         testee.Find("[id^=\"input-date\"]").Change(lifePointToCreate.Date.ToString("MM-dd-yyyy"));
         testee.Find("[id^=\"input-description\"]").Change(lifePointToCreate.Description);
     }
+
+    private void SpinnerShouldBeDisplayed(IRenderedComponent<NewLifePoint> testee) => testee.Find("[id^=\"spinner\"]").TextContent.Should().Contain("Saving");
 }

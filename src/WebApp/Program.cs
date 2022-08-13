@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using BusinessServices;
@@ -76,4 +77,9 @@ static async Task CreateDbIfNotExistsAsync(IHost host)
         var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "An error occurred creating the DB");
     }
+}
+
+[ExcludeFromCodeCoverage]
+public partial class Program
+{
 }

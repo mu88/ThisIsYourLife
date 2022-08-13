@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Reflection;
+using System.Threading.Tasks;
 using Bunit;
 using BusinessServices.Services;
 using DTO.LifePoint;
@@ -32,6 +34,24 @@ public class LifePointDetailTests
     }
 
     [Test]
+    public async Task UpdatePopup()
+    {
+        var existingLifePoint = TestExistingLifePoint.Create();
+        var id = existingLifePoint.Id;
+        var lifePointServiceMock = new Mock<ILifePointService>();
+        lifePointServiceMock.Setup(service => service.GetLifePointAsync(id)).ReturnsAsync(existingLifePoint);
+        var lifePointDetailModuleMock = new Mock<IJSObjectReference>();
+        using var testee = CreateTestee(lifePointServiceMock, id, lifePointDetailModuleMock);
+
+        await (Task)typeof(LifePointDetail)
+            .GetTypeInfo()
+            .GetMethod("UpdatePopupAsync", BindingFlags.NonPublic | BindingFlags.Instance)!
+            .Invoke(testee.Instance, Array.Empty<object>())!;
+
+        PopupShouldBeUpdated(lifePointDetailModuleMock, testee.Instance.Id);
+    }
+
+    [Test]
     public void DeleteExistingLifePoint()
     {
         var existingLifePoint = TestExistingLifePoint.Create();
@@ -52,6 +72,11 @@ public class LifePointDetailTests
     private static void MarkerShouldBeRemoved(Mock<IJSObjectReference> lifePointDetailModuleMock, Guid id) =>
         lifePointDetailModuleMock.Verify(lifePointDetailModule =>
                                              lifePointDetailModule.InvokeAsync<IJSVoidResult>("removeMarkerOfLifePoint", new object?[] { id.ToString() }),
+                                         Times.Once);
+
+    private static void PopupShouldBeUpdated(Mock<IJSObjectReference> lifePointDetailModuleMock, string id) =>
+        lifePointDetailModuleMock.Verify(lifePointDetailModule =>
+                                             lifePointDetailModule.InvokeAsync<IJSVoidResult>("updatePopup", new object?[] { id }),
                                          Times.Once);
 
     private static void LifePointShouldBeDeleted(Mock<ILifePointService> lifePointServiceMock, Guid id) =>
