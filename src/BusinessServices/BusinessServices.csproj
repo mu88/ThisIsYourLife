@@ -6,21 +6,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Logging\Logging.csproj"/>
+        <ProjectReference Include="..\Logging\Logging.csproj" />
         <ProjectReference Include="..\DTO\DTO.csproj" />
         <ProjectReference Include="..\Entities\Entities.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="11.0.1"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1"/>
-        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0"/>
+        <PackageReference Include="AutoMapper" Version="11.0.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
-        <InternalsVisibleTo Include="Tests"/>
+        <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+        <InternalsVisibleTo Include="Tests" />
     </ItemGroup>
 
 

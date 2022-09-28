@@ -8,14 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="bunit" Version="1.9.8"/>
-        <PackageReference Include="FluentAssertions" Version="6.7.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.7"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0"/>
-        <PackageReference Include="Moq" Version="4.18.2"/>
-        <PackageReference Include="Moq.AutoMock" Version="3.4.0"/>
-        <PackageReference Include="NUnit" Version="3.13.3"/>
-        <PackageReference Include="NUnit3TestAdapter" Version="4.2.1"/>
+        <PackageReference Include="bunit" Version="1.10.14" />
+        <PackageReference Include="FluentAssertions" Version="6.7.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.9" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+        <PackageReference Include="Moq" Version="4.18.2" />
+        <PackageReference Include="Moq.AutoMock" Version="3.4.0" />
+        <PackageReference Include="NUnit" Version="3.13.3" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
         <PackageReference Include="coverlet.collector" Version="3.1.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -23,30 +23,30 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\BusinessServices\BusinessServices.csproj"/>
-        <ProjectReference Include="..\Entities\Entities.csproj"/>
-        <ProjectReference Include="..\Persistence\Persistence.csproj"/>
-        <ProjectReference Include="..\WebApp\WebApp.csproj"/>
+        <ProjectReference Include="..\BusinessServices\BusinessServices.csproj" />
+        <ProjectReference Include="..\Entities\Entities.csproj" />
+        <ProjectReference Include="..\Persistence\Persistence.csproj" />
+        <ProjectReference Include="..\WebApp\WebApp.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="Doubles\Dynamo.jpg"/>
+        <None Remove="Doubles\Dynamo.jpg" />
         <Content Include="Doubles\Dynamo.jpg">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <None Remove="TestResults\**"/>
+        <None Remove="TestResults\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage"/>
+        <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage" />
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="TestResults\**"/>
+        <Compile Remove="TestResults\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Remove="TestResults\**"/>
+        <EmbeddedResource Remove="TestResults\**" />
     </ItemGroup>
 
 </Project>

@@ -8,18 +8,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\BusinessServices\BusinessServices.csproj"/>
-        <ProjectReference Include="..\DTO\DTO.csproj"/>
-        <ProjectReference Include="..\Persistence\Persistence.csproj"/>
+        <ProjectReference Include="..\BusinessServices\BusinessServices.csproj" />
+        <ProjectReference Include="..\DTO\DTO.csproj" />
+        <ProjectReference Include="..\Persistence\Persistence.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="11.0.1"/>
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.7"/>
-        <PackageReference Include="Microsoft.AspNetCore.Components.CustomElements" Version="0.1.0-alpha.22320.2"/>
-        <PackageReference Include="Serilog.AspNetCore" Version="6.0.1"/>
-        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0"/>
+        <PackageReference Include="AutoMapper" Version="11.0.1" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.9" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.CustomElements" Version="0.1.0-alpha.22320.2" />
+        <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
+        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -27,7 +27,7 @@
             <Generator>ResXFileCodeGenerator</Generator>
             <LastGenOutput>Main.Designer.cs</LastGenOutput>
         </EmbeddedResource>
-        <EmbeddedResource Remove="data\**"/>
+        <EmbeddedResource Remove="data\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -36,22 +36,22 @@
             <AutoGen>True</AutoGen>
             <DependentUpon>Main.resx</DependentUpon>
         </Compile>
-        <Compile Remove="data\**"/>
+        <Compile Remove="data\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
-        <InternalsVisibleTo Include="Tests"/>
+        <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+        <InternalsVisibleTo Include="Tests" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="data\**"/>
+        <None Remove="data\**" />
     </ItemGroup>
 
     <ItemGroup>
-        <Content Remove="data\**"/>
-        <None Remove="Start me.url"/>
-        <None Remove="Start me.bat"/>
+        <Content Remove="data\**" />
+        <None Remove="Start me.url" />
+        <None Remove="Start me.bat" />
         <Content Include="Start me.bat">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
