@@ -44,8 +44,9 @@ export function updatePopup(id) {
     _markers.forEach(function (marker) {
         if (marker._id === id) {
             let popup = marker.getPopup();
-            if (!popup._map)
+            if (!popup._map) {
                 return;
+            }
 
             // the following code is borrowed from the original Leaflet sources
             // /src/layer/DivOverlay.js (base class of popup), update().
@@ -55,7 +56,7 @@ export function updatePopup(id) {
             popup._updatePosition();
             popup._adjustPan();
         }
-    })
+    });
 }
 
 function _calculateMaxWidth() {
