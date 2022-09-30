@@ -25,9 +25,9 @@ function _onMapDoubleClick(e) {
 }
 
 function _createFilterLifePointsCommand() {
-    let command = L.control({position: 'topright'});
+    let command = L.control({position: "topright"});
     command.onAdd = function () {
-        let div = L.DomUtil.create('div', 'command');
+        let div = L.DomUtil.create("div", "command");
         div.innerHTML = "<filter-life-points/>";
         L.DomUtil.addClass(div, "filter-div");
         return div;
