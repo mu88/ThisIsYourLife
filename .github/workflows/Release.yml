@@ -14,7 +14,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '6.0'
+        dotnet-version: '7.0'
     - name: Restore dependencies
       run: dotnet restore Project28.sln
     - name: Build
@@ -46,7 +46,7 @@ jobs:
       with:
         type: 'zip'
         filename: ThisIsYourLife.${{ github.ref_name }}.zip
-        directory: 'src/WebApp/bin/Debug/net6.0/win-x64/publish'
+        directory: 'src/WebApp/bin/Debug/net7.0/win-x64/publish'
     - name: Create CHANGELOG
       id: changelog
       uses: Requarks/changelog-action@v1
