@@ -14,7 +14,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '6.0'
+        dotnet-version: '7.0'
     - name: Restore dependencies
       run: dotnet restore Project28.sln
     - name: Build
@@ -40,13 +40,13 @@ jobs:
           mu88/thisisyourlife:${{ github.ref_name }}
         file: src/WebApp/Dockerfile
     - name: Build single-file EXE
-      run: dotnet publish src/WebApp/WebApp.csproj -r win-x64 -p:PublishSingleFile=true --self-contained true
+      run: dotnet publish src/WebApp/WebApp.csproj -r win-x64 -p:PublishSingleFile=true -p:Configuration=Release --self-contained true
     - name: Create ZIP for release
       uses: thedoctor0/zip-release@master
       with:
         type: 'zip'
         filename: ThisIsYourLife.${{ github.ref_name }}.zip
-        directory: 'src/WebApp/bin/Debug/net6.0/win-x64/publish'
+        directory: 'src/WebApp/bin/Release/net7.0/win-x64/publish'
     - name: Create CHANGELOG
       id: changelog
       uses: Requarks/changelog-action@v1
@@ -56,6 +56,6 @@ jobs:
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
-        files: src/WebApp/bin/Debug/net6.0/win-x64/publish/ThisIsYourLife*.zip
+        files: src/WebApp/bin/Release/net7.0/win-x64/publish/ThisIsYourLife*.zip
         tag_name: ${{ github.ref_name }}
         body: ${{ steps.changelog.outputs.changes }}

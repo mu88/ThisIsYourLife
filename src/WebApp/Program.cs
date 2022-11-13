@@ -29,9 +29,9 @@ builder.Configuration.AddJsonFile(Path.Combine(AppDomain.CurrentDomain.BaseDirec
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor(options =>
 {
-    options.RootComponents.RegisterAsCustomElement<LifePointDetail>("life-point-detail");
-    options.RootComponents.RegisterAsCustomElement<NewLifePoint>("new-life-point");
-    options.RootComponents.RegisterAsCustomElement<FilterLifePoints>("filter-life-points");
+    options.RootComponents.RegisterCustomElement<LifePointDetail>("life-point-detail");
+    options.RootComponents.RegisterCustomElement<NewLifePoint>("new-life-point");
+    options.RootComponents.RegisterCustomElement<FilterLifePoints>("filter-life-points");
 });
 
 builder.Services.AddPersistence();
