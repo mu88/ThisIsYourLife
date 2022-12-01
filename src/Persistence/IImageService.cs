@@ -8,7 +8,7 @@ namespace Persistence;
 
 public interface IImageService
 {
-    Task<Guid> ProcessAndStoreImageAsync(Person newImage, ImageToCreate filePathForImage);
+    Task<Guid> ProcessAndStoreImageAsync(Person owner, ImageToCreate newImage);
 
     Stream GetImage(Guid ownerId, Guid imageId);
 

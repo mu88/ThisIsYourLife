@@ -91,14 +91,14 @@ internal class LifePointService : ILifePointService
         _logger.MethodFinished();
     }
 
-    public IEnumerable<int> GetDistinctYears(Guid? creatorId) => creatorId != null
+    public IEnumerable<int> GetDistinctYears(Guid? creatorId = null) => creatorId != null
                                                                      ? _storage.LifePoints.Where(point => point.CreatedBy.Id == creatorId)
                                                                          .Select(x => x.Date.Year)
                                                                          .Distinct()
                                                                          .OrderBy(x => x)
                                                                      : _storage.LifePoints.Select(x => x.Date.Year).Distinct().OrderBy(x => x);
 
-    public IEnumerable<ExistingPerson> GetDistinctCreators(int? year)
+    public IEnumerable<ExistingPerson> GetDistinctCreators(int? year = null)
     {
         var distinctCreators = year != null
                                    ? _storage.LifePoints.Where(point => point.Date.Year == year).Select(x => x.CreatedBy).Distinct().OrderBy(x => x.Name)
