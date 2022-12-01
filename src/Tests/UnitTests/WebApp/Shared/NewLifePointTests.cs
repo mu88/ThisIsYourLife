@@ -101,20 +101,20 @@ public class NewLifePointTests
 
     private static async Task ClickSaveAsync(IRenderedComponent<NewLifePoint> testee) => await testee.Find("button").ClickAsync(new MouseEventArgs());
 
-    private void NewLifeWithImagePointShouldHaveBeenCreated(TestContextBase testContext, MemoryStream imageMemoryStream)
+    private static void NewLifeWithImagePointShouldHaveBeenCreated(TestContextBase testContext, MemoryStream imageMemoryStream)
     {
         var lifePointServiceMock = testContext.Services.GetRequiredService<Mock<ILifePointService>>();
         lifePointServiceMock.Verify(service => service.CreateLifePointAsync(It.Is<LifePointToCreate>(create => create.ImageToCreate!.Stream.Equals(imageMemoryStream))));
     }
 
-    private async Task ClickAndUploadImageAsync(IRenderedComponent<NewLifePoint> testee, IMock<IBrowserFile> browserFile)
+    private static async Task ClickAndUploadImageAsync(IRenderedComponent<NewLifePoint> testee, IMock<IBrowserFile> browserFile)
     {
         var filesToUpload = new InputFileChangeEventArgs(new[] { browserFile.Object });
         var inputComponent = testee.FindComponent<InputFile>().Instance;
         await testee.InvokeAsync(() => inputComponent.OnChange.InvokeAsync(filesToUpload));
     }
 
-    private IRenderedComponent<NewLifePoint> CreateTestee(TestContext testContext,
+    private static IRenderedComponent<NewLifePoint> CreateTestee(TestContext testContext,
                                                           LifePointToCreate lifePointToCreate,
                                                           Mock<ILifePointService>? lifePointServiceMock = null)
     {
@@ -156,21 +156,21 @@ public class NewLifePointTests
         return testee;
     }
 
-    private void MarkerShouldBeAdded(TestContext testContext) =>
+    private static void MarkerShouldBeAdded(TestContext testContext) =>
         testContext.JSInterop.Invocations.Should().ContainSingle(invocation => invocation.Identifier.Equals("addMarkerForCreatedLifePoint"));
 
-    private void PopupShouldBeRemoved(TestContext testContext) =>
+    private static void PopupShouldBeRemoved(TestContext testContext) =>
         testContext.JSInterop.Invocations.Should().ContainSingle(invocation => invocation.Identifier.Equals("removePopupForNewLifePoint"));
 
-    private void ProposedDateShouldBeCorrect(LifePointToCreate lifePointToCreate, IRenderedComponent<NewLifePoint> testee) =>
+    private static void ProposedDateShouldBeCorrect(LifePointToCreate lifePointToCreate, IRenderedComponent<NewLifePoint> testee) =>
         testee.Services.GetRequiredService<INewLifePointDateService>().ProposedCreationDate.Should().Be(lifePointToCreate.Date);
 
-    private void EnterInput(IRenderedComponent<NewLifePoint> testee, LifePointToCreate lifePointToCreate)
+    private static void EnterInput(IRenderedComponent<NewLifePoint> testee, LifePointToCreate lifePointToCreate)
     {
         testee.Find("[id^=\"input-caption\"]").Change(lifePointToCreate.Caption);
         testee.Find("[id^=\"input-date\"]").Change(lifePointToCreate.Date.ToString("MM-dd-yyyy"));
         testee.Find("[id^=\"input-description\"]").Change(lifePointToCreate.Description);
     }
 
-    private void SpinnerShouldBeDisplayed(IRenderedComponent<NewLifePoint> testee) => testee.Find("[id^=\"spinner\"]").TextContent.Should().Contain("Saving");
+    private static void SpinnerShouldBeDisplayed(IRenderedComponent<NewLifePoint> testee) => testee.Find("[id^=\"spinner\"]").TextContent.Should().Contain("Saving");
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Logging.Extensions;
 using Microsoft.JSInterop;
@@ -58,5 +59,6 @@ public partial class Map
         Logger.MethodFinished();
     }
 
+    [ExcludeFromCodeCoverage]
     private void OnUserDialogClose() => StateHasChanged();
 }

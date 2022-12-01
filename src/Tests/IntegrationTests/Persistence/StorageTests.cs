@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Entities;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -22,5 +23,17 @@ public class StorageTests
 
         testee.LifePoints.Should().ContainSingle(point => point.Caption.Equals("Nur die SGD!"));
         testee.Persons.Should().ContainSingle(point => point.Name.Equals("Ultras Dynamo"));
+    }
+    
+    [Test]
+    public async Task FindEntity()
+    {
+        Person person = TestPerson.Create("Dixie");
+        var testee = TestStorage.Create();
+        await testee.AddItemAsync(person);
+
+        var result = testee.Find<Person>(person.Id);
+
+        result.Should().Be(person);
     }
 }
