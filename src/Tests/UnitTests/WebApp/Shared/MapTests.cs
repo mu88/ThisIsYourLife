@@ -30,7 +30,7 @@ public class MapTests
         using var testee = CreateTestee(existingLocations, lifePointDetailModuleMock: lifePointDetailModuleMock, leafletMapMock: leafletMapMock);
 
         ShouldBeCenteredInDresden(leafletMapMock, testee);
-        MarkersForExistingLifePointsShouldBeAdded(existingLocations, lifePointDetailModuleMock, testee);
+        MarkersForExistingLifePointsShouldBeAdded(existingLocations, lifePointDetailModuleMock);
     }
 
     [Test]
@@ -91,7 +91,7 @@ public class MapTests
 
     private static object? GetDotNetObjectReference(IRenderedComponent<Map> testee) => GetPrivateFieldFromTestee(testee, "_objRef");
 
-    private void MarkerForNewLifePointShouldBeAdded(double latitude,
+    private static void MarkerForNewLifePointShouldBeAdded(double latitude,
                                                     double longitude,
                                                     Mock<IJSObjectReference> newLifePointModuleMock,
                                                     IRenderedComponent<Map> testee)
@@ -106,9 +106,8 @@ public class MapTests
                                                                                         }));
     }
 
-    private void MarkersForExistingLifePointsShouldBeAdded(IEnumerable<ExistingLocation> existingLocations,
-                                                           Mock<IJSObjectReference> lifePointDetailModuleMock,
-                                                           IRenderedComponent<Map> testee)
+    private static void MarkersForExistingLifePointsShouldBeAdded(IEnumerable<ExistingLocation> existingLocations,
+                                                           Mock<IJSObjectReference> lifePointDetailModuleMock)
     {
         foreach (var existingLocation in existingLocations)
         {
@@ -122,7 +121,7 @@ public class MapTests
         }
     }
 
-    private void ShouldBeCenteredInDresden(Mock<IJSObjectReference> leafletMapMock, IRenderedComponent<Map> testee)
+    private static void ShouldBeCenteredInDresden(Mock<IJSObjectReference> leafletMapMock, IRenderedComponent<Map> testee)
     {
         leafletMapMock.Verify(reference => reference.InvokeAsync<IJSObjectReference>("initializeMap",
                                                                                      new[] { 51.0405849, 13.7478431, 20, GetDotNetObjectReference(testee) }));

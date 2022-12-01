@@ -213,7 +213,7 @@ public class FilterLifePointsTests
     private static async Task ChangeCreatorSelectElementAsync(IRenderedComponent<FilterLifePoints> testee, object value) =>
         await testee.Find("[id^=\"distinctCreator\"]").ChangeAsync(new ChangeEventArgs { Value = value });
 
-    private void DistinctCreatorsShouldBeDisplayed(IRenderedComponent<FilterLifePoints> testee)
+    private static void DistinctCreatorsShouldBeDisplayed(IRenderedComponent<FilterLifePoints> testee)
     {
         var creatorSelectElement = testee.Find("[id^=\"distinctCreator\"]");
         creatorSelectElement.Children.Should().HaveCount(3).And.Subject.Should().AllSatisfy(element => element.Should().BeAssignableTo<IHtmlOptionElement>());
@@ -222,7 +222,7 @@ public class FilterLifePointsTests
         creatorSelectElement.Children[2].As<IHtmlOptionElement>().Label.Should().Be("Ulf");
     }
 
-    private void DistinctYearsShouldBeDisplayed(IRenderedComponent<FilterLifePoints> testee)
+    private static void DistinctYearsShouldBeDisplayed(IRenderedComponent<FilterLifePoints> testee)
     {
         var yearSelectElement = testee.Find("[id^=\"distinctYear\"]");
         yearSelectElement.Children.Should().HaveCount(3).And.Subject.Should().AllSatisfy(element => element.Should().BeAssignableTo<IHtmlOptionElement>());
@@ -231,13 +231,13 @@ public class FilterLifePointsTests
         yearSelectElement.Children[2].As<IHtmlOptionElement>().Label.Should().Be("1954");
     }
 
-    private void CreatorFilteringShouldBeDisabled(IRenderedComponent<FilterLifePoints> testee) =>
+    private static void CreatorFilteringShouldBeDisabled(IRenderedComponent<FilterLifePoints> testee) =>
         testee.Find("[id^=\"distinctCreator\"]").HasAttribute("disabled").Should().BeTrue();
 
-    private void YearFilteringShouldBeDisabled(IRenderedComponent<FilterLifePoints> testee) =>
+    private static void YearFilteringShouldBeDisabled(IRenderedComponent<FilterLifePoints> testee) =>
         testee.Find("[id^=\"distinctYear\"]").HasAttribute("disabled").Should().BeTrue();
 
-    private void MarkersShouldBeDisplayed(TestContext testContext, int numberOfCalls = 1)
+    private static void MarkersShouldBeDisplayed(TestContext testContext, int numberOfCalls = 1)
     {
         testContext.JSInterop.VerifyInvoke("reset", numberOfCalls);
 
@@ -247,11 +247,11 @@ public class FilterLifePointsTests
             .AllSatisfy(invocation => invocation.Arguments.Should().BeEquivalentTo(new object[] { id, latitude, longitude }));
     }
 
-    private async Task FilterByYearAsync(IRenderedComponent<FilterLifePoints> testee, int year) => await ChangeYearSelectElementAsync(testee, year);
+    private static async Task FilterByYearAsync(IRenderedComponent<FilterLifePoints> testee, int year) => await ChangeYearSelectElementAsync(testee, year);
 
-    private async Task ResetYearFilterToDefaultAsync(IRenderedComponent<FilterLifePoints> testee) => await ChangeYearSelectElementAsync(testee, -1);
+    private static async Task ResetYearFilterToDefaultAsync(IRenderedComponent<FilterLifePoints> testee) => await ChangeYearSelectElementAsync(testee, -1);
 
-    private async Task FilterByCreatorAsync(IRenderedComponent<FilterLifePoints> testee, TestContext testContext, string name)
+    private static async Task FilterByCreatorAsync(IRenderedComponent<FilterLifePoints> testee, TestContext testContext, string name)
     {
         var idForName = testContext.Services.GetRequiredService<ILifePointService>()
             .GetDistinctCreators()
@@ -261,7 +261,7 @@ public class FilterLifePointsTests
         await ChangeCreatorSelectElementAsync(testee, idForName);
     }
 
-    private async Task ResetCreatorFilterToDefaultAsync(IRenderedComponent<FilterLifePoints> testee) => await ChangeCreatorSelectElementAsync(testee, Guid.Empty);
+    private static async Task ResetCreatorFilterToDefaultAsync(IRenderedComponent<FilterLifePoints> testee) => await ChangeCreatorSelectElementAsync(testee, Guid.Empty);
 
-    private void ClickFilterButton(IRenderedComponent<FilterLifePoints> testee) => testee.Find("[id^=\"filterButton\"]").Click();
+    private static void ClickFilterButton(IRenderedComponent<FilterLifePoints> testee) => testee.Find("[id^=\"filterButton\"]").Click();
 }
