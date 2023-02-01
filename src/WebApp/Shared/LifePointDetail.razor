@@ -1,5 +1,7 @@
 ﻿@using BusinessServices.Services
 @using Microsoft.Extensions.Logging
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
 @inject ILifePointService LifePointService
 @inject IJSRuntime JsRuntime
 @inject NavigationManager Navigator
@@ -18,6 +20,9 @@
         {
             <p class="card-text" style="white-space: pre-line">@_lifePoint.Description</p>
         }
-        <button class="btn btn-outline-secondary" @onclick="OnDeleteClicked">@Loc["Delete"]</button>
+        @if (bool.TryParse(Configuration["CanDelete"], out var canDelete) && canDelete)
+        {
+            <button class="btn btn-outline-secondary" @onclick="OnDeleteClicked">@Loc["Delete"]</button>
+        }
     </div>
 </div>

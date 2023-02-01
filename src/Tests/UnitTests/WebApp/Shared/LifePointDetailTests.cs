@@ -108,6 +108,9 @@ public class LifePointDetailTests
         ctx.Services.AddSingleton(lifePointServiceMock.Object);
         ctx.Services.AddSingleton(jsRuntimeMock.Object);
         ctx.Services.AddSingleton(new Mock<ILogger<LifePointDetail>>().Object);
+        var configurationMock = new Mock<Microsoft.Extensions.Configuration.IConfiguration>();
+        configurationMock.Setup(configuration => configuration["CanDelete"]).Returns("true");
+        ctx.Services.AddSingleton(configurationMock.Object);
         var testee = ctx.RenderComponent<LifePointDetail>(parameters => parameters.Add(detail => detail.Id, id.ToString()));
 
         return testee;
