@@ -19,7 +19,7 @@ Die Textdaten (Titel, Beschreibung, Datum) werden in einer lokalen SQLite-Datenb
 Es handelt sich um eine Web-App, die auf allen Desktop-Betriebssystemen läuft (Windows, Linux, macOS). Sie steht für Windows zur Verfügung, kann aber sehr leicht für Linux nachgereicht werden. Bei Bedarf einfach mit mir Kontakt aufnehmen.
 
 ### Download
-Die aktuellste Version kann von [hier](https://github.com/mu88/Project28/releases/latest) heruntergeladen werden. Einfach die ZIP-Datei `ThisIsYourLife.<<Version>>.zip` herunterladen und merken, wo man sie abspeichert 😉 Für diese Anleitung gehen wir von `C:\temp` aus.
+Die aktuellste Version kann von [hier](https://github.com/mu88/ThisIsYourLife/releases/latest) heruntergeladen werden. Einfach die ZIP-Datei `ThisIsYourLife.<<Version>>.zip` herunterladen und merken, wo man sie abspeichert 😉 Für diese Anleitung gehen wir von `C:\temp` aus.
 
 Nach dem Herunterladen den Ordner öffnen, in den die ZIP-Datei heruntergeladen wurde, und sie entpacken. In Windows geht das wie [hier](https://support.microsoft.com/de-de/windows/zippen-und-entzippen-von-dateien-f6dde0a7-0fec-8294-e1d3-703ed85e7ebc) unter _Entzippen von Dateien_ beschrieben. Für diese Anleitung gehen wir davon aus, dass die Datei nach `C:\temp\ThisIsYourLife` entpackt wurde.
 

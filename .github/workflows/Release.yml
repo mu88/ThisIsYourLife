@@ -16,11 +16,11 @@ jobs:
       with:
         dotnet-version: '7.0'
     - name: Restore dependencies
-      run: dotnet restore Project28.sln
+      run: dotnet restore ThisIsYourLife.sln
     - name: Build
-      run: dotnet build --no-restore Project28.sln
+      run: dotnet build --no-restore ThisIsYourLife.sln
     - name: Test
-      run: dotnet test --no-build --verbosity normal Project28.sln
+      run: dotnet test --no-build --verbosity normal ThisIsYourLife.sln
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v2
     - name: Set up Docker Buildx
