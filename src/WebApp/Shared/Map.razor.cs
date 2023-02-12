@@ -53,11 +53,19 @@ public partial class Map
     {
         Logger.MethodStarted();
 
+        await EnableSpinnerAsync();
+
         // TODO mu88: Rethink whether adding all markers at once provides better performance on redraw
         foreach (var (latitude, longitude, id) in LifePointService.GetAllLocations()) { await AddMarkerAsync(id, latitude, longitude); }
 
+        await DisableSpinnerAsync();
+
         Logger.MethodFinished();
     }
+
+    private async Task EnableSpinnerAsync() => await _lifePointDetailModule.InvokeVoidAsync("enableSpinner");
+
+    private async Task DisableSpinnerAsync() => await _lifePointDetailModule.InvokeVoidAsync("disableSpinner");
 
     [ExcludeFromCodeCoverage]
     private void OnUserDialogClose() => StateHasChanged();

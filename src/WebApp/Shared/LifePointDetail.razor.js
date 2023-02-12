@@ -59,6 +59,14 @@ export function updatePopup(id) {
     });
 }
 
+export function enableSpinner() {
+    _leafletMap.spin(true);
+}
+
+export function disableSpinner() {
+    _leafletMap.spin(false);
+}
+
 function _calculateMaxWidth() {
     return (window.devicePixelRatio > 1 ? 300 : 500);
 }

@@ -199,6 +199,8 @@ public class FilterLifePointsTests
         testContext.Services.AddLocalization();
         var lifePointDetailModule = testContext.JSInterop.SetupModule("./Shared/LifePointDetail.razor.js");
         lifePointDetailModule.SetupVoid("reset").SetVoidResult();
+        lifePointDetailModule.SetupVoid("enableSpinner").SetVoidResult();
+        lifePointDetailModule.SetupVoid("disableSpinner").SetVoidResult();
         lifePointDetailModule.SetupVoid("createMarkerForExistingLifePoint", existingLocation.Id, existingLocation.Latitude, existingLocation.Longitude)
             .SetVoidResult();
 

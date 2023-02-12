@@ -81,18 +81,26 @@ public partial class FilterLifePoints
 
     private async Task DrawSubsetOfMarkersAsync()
     {
+        await EnableSpinnerAsync();
+        
         await RemoveAllExistingMarkersAsync();
 
         var yearToFilter = _selectedYear == DefaultYear ? null : _selectedYear;
         var creatorIdToFilter = _selectedCreatorId == DefaultCreatorId ? null : _selectedCreatorId;
 
         foreach (var (latitude, longitude, id) in LifePointService.GetAllLocations(yearToFilter, creatorIdToFilter)) { await AddMarkerAsync(id, latitude, longitude); }
+        
+        await DisableSpinnerAsync();
     }
 
     private async Task RemoveAllExistingMarkersAsync() => await _lifePointDetailModule.InvokeVoidAsync("reset");
 
     private async Task AddMarkerAsync(Guid id, double latitude, double longitude)
         => await _lifePointDetailModule.InvokeVoidAsync("createMarkerForExistingLifePoint", id, latitude, longitude);
+    
+    private async Task EnableSpinnerAsync() => await _lifePointDetailModule.InvokeVoidAsync("enableSpinner");
+
+    private async Task DisableSpinnerAsync() => await _lifePointDetailModule.InvokeVoidAsync("disableSpinner");
 
     private async Task OnFilterButtonClickAsync()
     {
