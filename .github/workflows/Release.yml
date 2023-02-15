@@ -53,6 +53,7 @@ jobs:
       with:
         token: ${{ github.token }}
         tag: ${{ github.ref_name }}
+        excludeTypes: build,docs,other,style,chore(deps)
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
