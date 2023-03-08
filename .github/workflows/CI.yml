@@ -45,6 +45,7 @@ jobs:
       uses: docker/build-push-action@v4
       with:
         push: false
+        provenance: false
         tags: mu88/thisisyourlife:latest
         file: src/WebApp/Dockerfile
     - name: Build single-file EXE
