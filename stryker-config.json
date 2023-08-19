@@ -1,0 +1,17 @@
+{
+    "stryker-config":
+    {
+        "project": "BusinessServices",
+        "reporters": [
+            "html",
+            "progress",
+            "dashboard"
+        ],
+        "project-info": {
+            "name": "github.com/mu88/ThisIsYourLife"
+        },
+        "ignore-methods": [
+            "_logger.*"
+        ]
+    }
+}

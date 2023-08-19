@@ -4,10 +4,11 @@
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=mu88_Project28&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=mu88_Project28)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=mu88_Project28&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=mu88_Project28)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=mu88_Project28&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=mu88_Project28)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=mu88_Project28&metric=coverage)](https://sonarcloud.io/summary/new_code?id=mu88_Project28)
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=mu88_Project28&metric=bugs)](https://sonarcloud.io/summary/new_code?id=mu88_Project28)
 [![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=mu88_Project28&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=mu88_Project28)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=mu88_Project28&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=mu88_Project28)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=mu88_Project28&metric=coverage)](https://sonarcloud.io/summary/new_code?id=mu88_Project28)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fmu88%2FThisIsYourLife%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/mu88/ThisIsYourLife/main)
 
 This repo contains a web application to remember of special moments of your life as a photo diary. You can create so called _lifepoints_ on a map and link them to a photo with a description.
 
