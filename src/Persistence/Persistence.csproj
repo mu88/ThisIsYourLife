@@ -16,7 +16,7 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.10" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.10" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.10" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="3.0.1" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.0.2" />
     </ItemGroup>
 
     <ItemGroup>
