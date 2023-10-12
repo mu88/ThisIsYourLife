@@ -71,7 +71,7 @@ public partial class NewLifePoint
                                                       _newLifePoint.Description,
                                                       Latitude,
                                                       Longitude,
-                                                      UserService.Id ?? throw new NullReferenceException(Loc["UserHasNotBeenSet"]),
+                                                      UserService.Id ?? throw new ArgumentNullException(Loc["UserHasNotBeenSet"]),
                                                       imageToCreate);
 
         ExistingLifePoint createdLifePoint;

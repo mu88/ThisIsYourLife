@@ -30,7 +30,7 @@
     [Parameter]
     public EventCallback OnClose { get; set; }
 
-    private UserModel _userModel = new();
+    private readonly UserModel _userModel = new();
 
     private async Task HandleValidSubmitAsync()
     {

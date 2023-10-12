@@ -57,7 +57,7 @@ internal class LifePointService : ILifePointService
         _logger.MethodStarted();
 
         var existingPerson = await _storage.FindAsync<Person>(lifePointToCreate.CreatedBy) ??
-                             throw new NullReferenceException($"Could not find any existing Person with ID {lifePointToCreate.CreatedBy}");
+                             throw new ArgumentNullException(nameof(lifePointToCreate), $"Could not find any existing Person with ID {lifePointToCreate.CreatedBy}");
 
         Guid? imageId = lifePointToCreate.ImageToCreate != null ? await _storage.StoreImageAsync(existingPerson, lifePointToCreate.ImageToCreate) : null;
         var newLifePoint = _mapper.Map<LifePointToCreate, LifePoint>(lifePointToCreate,
@@ -107,5 +107,5 @@ internal class LifePointService : ILifePointService
 
     private async Task<LifePoint> GetLifePointInternalAsync(Guid id) =>
         await _storage.FindAsync<LifePoint>(id) ??
-        throw new NullReferenceException($"Could not find any existing LifePoint with ID {id}");
+        throw new ArgumentNullException(nameof(id), $"Could not find any existing LifePoint with ID {id}");
 }

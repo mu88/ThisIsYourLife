@@ -138,7 +138,7 @@ public class LifePointServiceTests
 
         var testAction = () => testee.GetLifePointAsync(lifePoints.First().Id);
 
-        await testAction.Should().ThrowAsync<NullReferenceException>();
+        await testAction.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Test]
@@ -189,7 +189,7 @@ public class LifePointServiceTests
 
         var testAction = () => testee.CreateLifePointAsync(lifePointToCreate);
 
-        await testAction.Should().ThrowAsync<NullReferenceException>().WithMessage($"Could not find*{lifePointToCreate.CreatedBy}*");
+        await testAction.Should().ThrowAsync<ArgumentNullException>().WithMessage($"Could not find*{lifePointToCreate.CreatedBy}*");
     }
 
     [Test]
@@ -231,7 +231,7 @@ public class LifePointServiceTests
 
         var testAction = () => testee.DeleteLifePointAsync(lifePoints.First().Id);
 
-        await testAction.Should().ThrowAsync<NullReferenceException>().WithMessage($"Could not find*{lifePoints.First().Id}*");
+        await testAction.Should().ThrowAsync<ArgumentNullException>().WithMessage($"Could not find*{lifePoints.First().Id}*");
     }
 
     [Test]

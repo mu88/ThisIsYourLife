@@ -67,7 +67,7 @@ internal class ImageService : IImageService
 
     private void EnsureImagePathExists(string filePathForImage)
     {
-        var parentDirectory = Directory.GetParent(filePathForImage) ?? throw new NullReferenceException($"Could not resolve parent directory from {filePathForImage}");
+        var parentDirectory = Directory.GetParent(filePathForImage) ?? throw new ArgumentNullException(nameof(filePathForImage), $"Could not resolve parent directory from {filePathForImage}");
         if (!_fileSystem.DirectoryExists(parentDirectory))
         {
             _fileSystem.CreateDirectory(parentDirectory.ToString());
