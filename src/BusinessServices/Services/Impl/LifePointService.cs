@@ -30,7 +30,6 @@ internal class LifePointService : ILifePointService
     {
         Expression<Func<LifePoint, bool>>? searchExpression;
 
-        // TODO mu88: Write tests
         if (creatorId != null)
         {
             if (year != null)
