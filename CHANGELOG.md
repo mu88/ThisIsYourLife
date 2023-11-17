@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="3.0.2"></a>
+## [3.0.2](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v3.0.2) (2023-11-17)
+
+### Bug Fixes
+
+* don't rename assembly as it breaks the frontend ([8455402](https://www.github.com/mu88/ThisIsYourLife/commit/8455402e7511f1e621a1540fcf684ad9fe8412e4))
+
 <a name="3.0.1"></a>
 ## [3.0.1](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v3.0.1) (2023-11-17)
 
