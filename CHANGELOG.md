@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="3.0.0"></a>
+## [3.0.0](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v3.0.0) (2023-11-17)
+
+### Features
+
+* use .NET 8 ([2fe0c2f](https://www.github.com/mu88/ThisIsYourLife/commit/2fe0c2fe18be39a569e027ca40c7b398ec82792d))
+
+### Breaking Changes
+
+* use .NET 8 ([2fe0c2f](https://www.github.com/mu88/ThisIsYourLife/commit/2fe0c2fe18be39a569e027ca40c7b398ec82792d))
+
 <a name="2.2.0"></a>
 ## [2.2.0](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v2.2.0) (2023-11-17)
 
