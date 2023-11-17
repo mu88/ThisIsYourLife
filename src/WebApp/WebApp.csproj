@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <AssemblyName>ThisIsYourLife</AssemblyName>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <NoWarn>NU1603</NoWarn>
     <ContainerRepository>mu88/thisisyourlife</ContainerRepository>
