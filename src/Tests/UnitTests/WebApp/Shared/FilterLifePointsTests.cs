@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using AngleSharp.Html.Dom;
+﻿using AngleSharp.Html.Dom;
 using Bunit;
 using BusinessServices.Services;
 using FluentAssertions;

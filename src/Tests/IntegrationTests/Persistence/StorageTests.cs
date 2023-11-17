@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Entities;
+﻿using Entities;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;

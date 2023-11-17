@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace Persistence;
+﻿namespace Persistence;
 
 public interface IFileSystem
 {

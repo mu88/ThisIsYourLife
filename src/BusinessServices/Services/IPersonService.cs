@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using DTO.Person;
+﻿using DTO.Person;
 
 namespace BusinessServices.Services;
 

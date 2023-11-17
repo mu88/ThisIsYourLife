@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using DTO.LifePoint;
+﻿using DTO.LifePoint;
 using DTO.Location;
 using DTO.Person;
 

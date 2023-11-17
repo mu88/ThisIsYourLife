@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Net.Mime;
+﻿using System.Net.Mime;
 using BusinessServices;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;

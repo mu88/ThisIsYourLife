@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace WebApp.Services;
+﻿namespace WebApp.Services;
 
 internal class NewLifePointDateService : INewLifePointDateService
 {

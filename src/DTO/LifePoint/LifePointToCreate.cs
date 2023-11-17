@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DTO.LifePoint;
+﻿namespace DTO.LifePoint;
 
 public record LifePointToCreate(DateOnly Date,
                                 string Caption,

@@ -1,60 +1,49 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
-    <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <NoWarn>NU1603</NoWarn>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\BusinessServices\BusinessServices.csproj" />
-        <ProjectReference Include="..\DTO\DTO.csproj" />
-        <ProjectReference Include="..\Persistence\Persistence.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="12.0.1" />
-        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.13" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.CustomElements" Version="7.0.13" />
-        <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
-        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <EmbeddedResource Update="Shared\Main.resx">
-            <Generator>ResXFileCodeGenerator</Generator>
-            <LastGenOutput>Main.Designer.cs</LastGenOutput>
-        </EmbeddedResource>
-        <EmbeddedResource Remove="data\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Compile Update="Shared\Main.Designer.cs">
-            <DesignTime>True</DesignTime>
-            <AutoGen>True</AutoGen>
-            <DependentUpon>Main.resx</DependentUpon>
-        </Compile>
-        <Compile Remove="data\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
-        <InternalsVisibleTo Include="Tests" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Remove="data\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Content Remove="data\**" />
-        <None Remove="Start me.url" />
-        <None Remove="Start me.bat" />
-        <Content Include="Start me.bat">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
-
+  <PropertyGroup>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <NoWarn>NU1603</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessServices\BusinessServices.csproj" />
+    <ProjectReference Include="..\DTO\DTO.csproj" />
+    <ProjectReference Include="..\Persistence\Persistence.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.CustomElements" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Shared\Main.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Main.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Remove="data\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Shared\Main.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Main.resx</DependentUpon>
+    </Compile>
+    <Compile Remove="data\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
+    <InternalsVisibleTo Include="Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="data\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="data\**" />
+    <None Remove="Start me.url" />
+    <None Remove="Start me.bat" />
+    <Content Include="Start me.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

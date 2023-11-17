@@ -1,5 +1,4 @@
-﻿using System;
-using DTO.Person;
+﻿using DTO.Person;
 
 namespace DTO.LifePoint;
 

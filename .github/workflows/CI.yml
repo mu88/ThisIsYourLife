@@ -2,7 +2,10 @@ name: CI
 
 on:
   push:
-  pull_request:
+    tags-ignore:
+      - '**'
+    branches:
+      - '**'
 
 jobs:
   build:
@@ -14,7 +17,7 @@ jobs:
     - name: Set up .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: '7.0'
+        dotnet-version: '8.0'
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -50,4 +53,4 @@ jobs:
         tags: mu88/thisisyourlife:latest
         file: src/WebApp/Dockerfile
     - name: Build single-file EXE
-      run: dotnet publish src/WebApp/WebApp.csproj -r win-x64 -p:PublishSingleFile=true -p:Configuration=Release --self-contained true
+      run: dotnet publish src/WebApp/WebApp.csproj -r win-x64 -p:PublishSingleFile=true --self-contained true

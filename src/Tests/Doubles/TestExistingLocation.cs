@@ -1,5 +1,4 @@
-﻿using System;
-using DTO.Location;
+﻿using DTO.Location;
 
 namespace Tests.Doubles;
 

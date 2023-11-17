@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using DTO.LifePoint;
+﻿using DTO.LifePoint;
 using Logging.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;

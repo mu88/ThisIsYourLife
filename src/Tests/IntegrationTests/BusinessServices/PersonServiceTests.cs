@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using BusinessServices.Services;
+﻿using BusinessServices.Services;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;

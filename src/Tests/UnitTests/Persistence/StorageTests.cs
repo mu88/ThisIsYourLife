@@ -1,5 +1,4 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
@@ -38,14 +37,14 @@ public class StorageTests
     }
 
     [Test]
-    public void StoreImage()
+    public async Task StoreImage()
     {
         var person = TestPerson.Create("Dixie");
         var imageToCreate = TestImageToCreate.Create();
         var autoMocker = CreateAutoMocker();
         var testee = autoMocker.CreateInstance<Storage>();
 
-        testee.StoreImageAsync(person, imageToCreate);
+        await testee.StoreImageAsync(person, imageToCreate);
 
         autoMocker.Verify<IImageService>(system => system.ProcessAndStoreImageAsync(person, imageToCreate), Times.Once);
     }

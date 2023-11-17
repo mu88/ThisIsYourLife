@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using BusinessServices;
+﻿using BusinessServices;
 using DTO.LifePoint;
 using Entities;
 using Logging.Extensions;
