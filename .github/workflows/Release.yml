@@ -30,6 +30,11 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Write release version
+      run: |
+        VERSION=${GITHUB_REF_NAME#v}
+        echo Version: $VERSION
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
     - name: Build and push Docker image for Raspberry Pi
       id: docker_build
       uses: docker/build-push-action@v5
@@ -38,7 +43,7 @@ jobs:
         provenance: false
         tags: |
           mu88/thisisyourlife:latest
-          mu88/thisisyourlife:${{ github.ref_name }}
+          mu88/thisisyourlife:${{ env.VERSION }}
         file: src/WebApp/Dockerfile
     - name: Build single-file EXE
       run: dotnet publish src/WebApp/WebApp.csproj -r win-x64 -p:PublishSingleFile=true -p:Configuration=Release --self-contained true
@@ -46,7 +51,7 @@ jobs:
       uses: thedoctor0/zip-release@master
       with:
         type: 'zip'
-        filename: ThisIsYourLife.${{ github.ref_name }}.zip
+        filename: ThisIsYourLife.${{ env.VERSION }}.zip
         directory: 'src/WebApp/bin/Release/net7.0/win-x64/publish'
     - name: Create CHANGELOG
       id: changelog
