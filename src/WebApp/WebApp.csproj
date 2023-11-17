@@ -2,6 +2,7 @@
   <PropertyGroup>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <NoWarn>NU1603</NoWarn>
+    <ContainerRepository>mu88/thisisyourlife</ContainerRepository>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\BusinessServices\BusinessServices.csproj" />
