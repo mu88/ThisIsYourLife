@@ -6,6 +6,8 @@ using Serilog;
 using WebApp.Services;
 using WebApp.Shared;
 
+#pragma warning disable CA1861
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure logging and configuration

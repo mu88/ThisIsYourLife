@@ -10,6 +10,8 @@ using Tests.Doubles;
 using WebApp.Shared;
 using TestContext = Bunit.TestContext;
 
+#pragma warning disable CA1861
+
 namespace Tests.UnitTests.WebApp.Shared;
 
 [TestFixture]

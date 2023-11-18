@@ -21,7 +21,7 @@ public static class TestStorage
         return storage;
     }
 
-    private static DbConnection CreateInMemoryDatabase()
+    private static SqliteConnection CreateInMemoryDatabase()
     {
         var connection = new SqliteConnection("Filename=:memory:");
         connection.Open();
