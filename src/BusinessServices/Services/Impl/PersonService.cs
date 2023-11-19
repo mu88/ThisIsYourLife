@@ -6,33 +6,21 @@ using Microsoft.Extensions.Logging;
 
 namespace BusinessServices.Services;
 
-public class PersonService
-    : IPersonService
+public class PersonService(ILogger<PersonService> logger, IStorage storage, IMapper mapper) : IPersonService
 {
-    private readonly ILogger<PersonService> _logger;
-    private readonly IStorage _storage;
-    private readonly IMapper _mapper;
-
-    public PersonService(ILogger<PersonService> logger, IStorage storage, IMapper mapper)
-    {
-        _logger = logger;
-        _storage = storage;
-        _mapper = mapper;
-    }
-
     public async Task<ExistingPerson> CreatePersonAsync(PersonToCreate personToCreate)
     {
-        _logger.MethodStarted();
+        logger.MethodStarted();
 
-        var newPerson = _mapper.Map<Person>(personToCreate);
-        var createdPerson = await _storage.AddItemAsync(newPerson);
-        await _storage.SaveAsync();
-        _logger.NewPersonCreated(createdPerson.Id);
+        var newPerson = mapper.Map<Person>(personToCreate);
+        var createdPerson = await storage.AddItemAsync(newPerson);
+        await storage.SaveAsync();
+        logger.NewPersonCreated(createdPerson.Id);
 
-        _logger.MethodFinished();
-        return _mapper.Map<ExistingPerson>(createdPerson);
+        logger.MethodFinished();
+        return mapper.Map<ExistingPerson>(createdPerson);
     }
 
     /// <inheritdoc />
-    public bool PersonExists(Guid id) => _storage.Find<Person>(id) != null;
+    public bool PersonExists(Guid id) => storage.Find<Person>(id) != null;
 }

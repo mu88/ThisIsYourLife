@@ -10,10 +10,6 @@ namespace WebApp.Pages;
 [ExcludeFromCodeCoverage]
 public class ErrorModel : PageModel
 {
-    private readonly ILogger<ErrorModel> _logger;
-
-    public ErrorModel(ILogger<ErrorModel> logger) => _logger = logger;
-
     public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
     public string? RequestId { get; set; }

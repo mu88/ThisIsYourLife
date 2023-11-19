@@ -2,8 +2,6 @@
 
 internal class NewLifePointDateService : INewLifePointDateService
 {
-    public NewLifePointDateService() => ProposedCreationDate = DateOnly.FromDateTime(DateTime.Now);
-
     /// <inheritdoc />
-    public DateOnly ProposedCreationDate { get; set; }
+    public DateOnly ProposedCreationDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 }

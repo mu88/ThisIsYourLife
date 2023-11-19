@@ -6,23 +6,14 @@ using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace Persistence;
 
-internal class ImageService : IImageService
+internal class ImageService(ILogger<ImageService> logger, IFileSystem fileSystem) : IImageService
 {
     private static readonly string ImageDirectory = Path.Combine(Storage.UserDirectory, "images");
-
-    private readonly ILogger<ImageService> _logger;
-    private readonly IFileSystem _fileSystem;
-
-    public ImageService(ILogger<ImageService> logger, IFileSystem fileSystem)
-    {
-        _logger = logger;
-        _fileSystem = fileSystem;
-    }
 
     /// <inheritdoc />
     public async Task<Guid> ProcessAndStoreImageAsync(Person owner, ImageToCreate newImage)
     {
-        _logger.MethodStarted();
+        logger.MethodStarted();
 
         var imageId = Guid.NewGuid();
         var filePathForImage = GetFilePathForImage(owner, imageId);
@@ -34,28 +25,28 @@ internal class ImageService : IImageService
 
         ResizeImage(image);
 
-        await using var fileStream = _fileSystem.CreateFile(filePathForImage);
+        await using var fileStream = fileSystem.CreateFile(filePathForImage);
         await image.SaveAsync(fileStream, new JpegEncoder());
         image.Dispose();
-        _logger.ImageResizedAndSaved(imageId);
+        logger.ImageResizedAndSaved(imageId);
 
-        _logger.MethodFinished();
+        logger.MethodFinished();
         return imageId;
     }
 
     /// <inheritdoc />
     public Stream GetImage(Guid ownerId, Guid imageId)
     {
-        _logger.MethodStarted();
-        return _fileSystem.OpenRead(GetFilePathForImage(ownerId, imageId));
+        logger.MethodStarted();
+        return fileSystem.OpenRead(GetFilePathForImage(ownerId, imageId));
     }
 
     /// <inheritdoc />
     public void DeleteImage(Guid ownerId, Guid imageId)
     {
-        _logger.MethodStarted();
-        _fileSystem.DeleteFile(GetFilePathForImage(ownerId, imageId));
-        _logger.ImageDeleted(ownerId, imageId);
+        logger.MethodStarted();
+        fileSystem.DeleteFile(GetFilePathForImage(ownerId, imageId));
+        logger.ImageDeleted(ownerId, imageId);
     }
 
     private static void ResizeImage(Image image) => image.Mutate(context => context.Resize(new ResizeOptions { Mode = ResizeMode.Max, Size = new Size(600) }));
@@ -63,10 +54,10 @@ internal class ImageService : IImageService
     private void EnsureImagePathExists(string filePathForImage)
     {
         var parentDirectory = Directory.GetParent(filePathForImage) ?? throw new ArgumentNullException(nameof(filePathForImage), $"Could not resolve parent directory from {filePathForImage}");
-        if (!_fileSystem.DirectoryExists(parentDirectory))
+        if (!fileSystem.DirectoryExists(parentDirectory))
         {
-            _fileSystem.CreateDirectory(parentDirectory.ToString());
-            _logger.ImageDirectoryCreated(parentDirectory);
+            fileSystem.CreateDirectory(parentDirectory.ToString());
+            logger.ImageDirectoryCreated(parentDirectory);
         }
     }
 

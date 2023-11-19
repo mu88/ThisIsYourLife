@@ -16,8 +16,8 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
                             .ReadFrom.Services(services)
                             .Enrich.FromLogContext()
                             .WriteTo.Console()
-                            .WriteTo.File(Path.Combine("data", "logs", "ThisIsYourLife.log"), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 14));
-builder.Configuration.AddJsonFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "data", "user.json"), true);
+                            .WriteTo.File(Path.Combine("home", "app", "data", "logs", "ThisIsYourLife.log"), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 14));
+builder.Configuration.AddJsonFile(Path.Combine("home", "app", "data", "user.json"), true);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -74,6 +74,4 @@ static async Task CreateDbIfNotExistsAsync(IHost host)
 }
 
 [ExcludeFromCodeCoverage]
-public partial class Program
-{
-}
+public partial class Program;

@@ -2,6 +2,7 @@
     "stryker-config":
     {
         "project": "BusinessServices",
+        "language-version": "Preview", // see https://github.com/stryker-mutator/stryker-net/issues/2741
         "reporters": [
             "html",
             "progress",
@@ -11,7 +12,8 @@
             "name": "github.com/mu88/ThisIsYourLife"
         },
         "ignore-methods": [
-            "_logger.*"
+            "_logger.*",
+            "logger.*"
         ]
     }
 }
