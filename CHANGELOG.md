@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="3.0.4"></a>
+## [3.0.4](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v3.0.4) (2023-11-19)
+
+### Bug Fixes
+
+* fix path ([e3bc187](https://www.github.com/mu88/ThisIsYourLife/commit/e3bc187d92d93761318269aa3e587356fd4b6e6c))
+
 <a name="3.0.3"></a>
 ## [3.0.3](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v3.0.3) (2023-11-19)
 
