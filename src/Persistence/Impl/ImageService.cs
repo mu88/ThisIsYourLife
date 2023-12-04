@@ -2,7 +2,9 @@
 using Entities;
 using Logging.Extensions;
 using Microsoft.Extensions.Logging;
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
 
 namespace Persistence;
 
