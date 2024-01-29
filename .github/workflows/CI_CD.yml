@@ -51,10 +51,14 @@ jobs:
         echo "VERSION=$VERSION" >> $GITHUB_ENV
     - name: Build Docker
       if: ${{ env.IS_RELEASE != 'true' }}
-      run: dotnet publish src/WebApp/WebApp.csproj --os linux --arch arm64 /t:PublishContainer '-p:ContainerImageTags="${{ env.VERSION }};latest"'
+      run: |
+        dotnet publish src/WebApp/WebApp.csproj --os linux --arch arm64 /t:PublishContainer '-p:ContainerImageTags="${{ env.VERSION }};latest"'
+        dotnet publish src/WebApp/WebApp.csproj --os linux --arch arm64 /t:PublishContainer '-p:ContainerImageTags="${{ env.VERSION }}-chiseled;latest-chiseled"' -p:ContainerFamily=jammy-chiseled-extra
     - name: Push Docker
       if: ${{ env.IS_RELEASE == 'true' }}
-      run: dotnet publish src/WebApp/WebApp.csproj --os linux --arch arm64 /t:PublishContainer '-p:ContainerImageTags="${{ env.VERSION }};latest"' -p:ContainerRegistry=registry.hub.docker.com
+      run: |
+        dotnet publish src/WebApp/WebApp.csproj --os linux --arch arm64 /t:PublishContainer '-p:ContainerImageTags="${{ env.VERSION }};latest"' -p:ContainerRegistry=registry.hub.docker.com
+        dotnet publish src/WebApp/WebApp.csproj --os linux --arch arm64 /t:PublishContainer '-p:ContainerImageTags="${{ env.VERSION }}-chiseled;latest-chiseled"' -p:ContainerFamily=jammy-chiseled-extra -p:ContainerRegistry=registry.hub.docker.com
     - name: Build single-file EXE
       run: dotnet publish src/WebApp/WebApp.csproj -r win-x64 -p:PublishSingleFile=true --self-contained true
     - name: Create ZIP for release
