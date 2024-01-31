@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="3.0.5"></a>
+## [3.0.5](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v3.0.5) (2024-01-31)
+
 <a name="3.0.4"></a>
 ## [3.0.4](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v3.0.4) (2023-11-19)
 
