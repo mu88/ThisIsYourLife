@@ -52,8 +52,8 @@ jobs:
     - name: Build Docker
       if: ${{ env.IS_RELEASE != 'true' }}
       run: |
-        dotnet publish src/WebApp/WebApp.csproj --os linux --arch arm64 /t:PublishContainer '-p:ContainerImageTags="${{ env.VERSION }};latest"'
-        dotnet publish src/WebApp/WebApp.csproj --os linux --arch arm64 /t:PublishContainer '-p:ContainerImageTags="${{ env.VERSION }}-chiseled;latest-chiseled"' -p:ContainerFamily=jammy-chiseled-extra
+        dotnet publish src/WebApp/WebApp.csproj --os linux --arch arm64 /t:PublishContainer '-p:ContainerImageTags="dev"'
+        dotnet publish src/WebApp/WebApp.csproj --os linux --arch arm64 /t:PublishContainer '-p:ContainerImageTags="dev-chiseled"' -p:ContainerFamily=jammy-chiseled-extra
     - name: Push Docker
       if: ${{ env.IS_RELEASE == 'true' }}
       run: |
