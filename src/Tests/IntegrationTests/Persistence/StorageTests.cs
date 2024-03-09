@@ -1,6 +1,6 @@
 ﻿using Entities;
 using FluentAssertions;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using Persistence;
 using Tests.Doubles;
@@ -8,15 +8,16 @@ using Tests.Doubles;
 namespace Tests.IntegrationTests.Persistence;
 
 [TestFixture]
+[Category("Integration")]
 public class StorageTests
 {
     [Test]
     public async Task EnsureStorageExists_InitializesDb()
     {
-        var fileSystemMock = new Mock<IFileSystem>();
-        fileSystemMock.Setup(system => system.DirectoryExists(Storage.DatabaseDirectory)).Returns(true);
-        fileSystemMock.Setup(system => system.FileExists(Storage.DatabasePath)).Returns(false);
-        var testee = TestStorage.Create(fileSystemMock.Object);
+        var fileSystemMock = Substitute.For<IFileSystem>();
+        fileSystemMock.DirectoryExists(Storage.DatabaseDirectory).Returns(true);
+        fileSystemMock.FileExists(Storage.DatabasePath).Returns(false);
+        var testee = TestStorage.Create(fileSystemMock);
 
         await testee.EnsureStorageExistsAsync();
 

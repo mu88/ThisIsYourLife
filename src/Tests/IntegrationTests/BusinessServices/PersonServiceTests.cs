@@ -1,13 +1,14 @@
 ﻿using BusinessServices.Services;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using Tests.Doubles;
 
 namespace Tests.IntegrationTests.BusinessServices;
 
 [TestFixture]
+[Category("Integration")]
 public class PersonServiceTests
 {
     [Test]
@@ -15,7 +16,7 @@ public class PersonServiceTests
     {
         var storage = TestStorage.Create();
         var personToCreate = TestPersonToCreate.Create("Bob");
-        var testee = new PersonService(new Mock<ILogger<PersonService>>().Object, storage, TestMapper.Create());
+        var testee = new PersonService(Substitute.For<ILogger<PersonService>>(), storage, TestMapper.Create());
 
         var result = await testee.CreatePersonAsync(personToCreate);
 

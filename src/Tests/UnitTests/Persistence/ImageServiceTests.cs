@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
-using Moq;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Persistence;
 using Tests.Doubles;
@@ -7,19 +8,22 @@ using Tests.Doubles;
 namespace Tests.UnitTests.Persistence;
 
 [TestFixture]
+[FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+[Category("Unit")]
 public class ImageServiceTests
 {
+    private readonly IFileSystem _fileSystem = Substitute.For<IFileSystem>();
+
     [Test]
     public void GetImage()
     {
         var ownerId = Guid.NewGuid();
         var imageId = Guid.NewGuid();
-        var autoMocker = new CustomAutoMocker();
-        var testee = autoMocker.CreateInstance<ImageService>();
+        var testee = CreateTestee();
 
         testee.GetImage(ownerId, imageId);
 
-        autoMocker.Verify<IFileSystem>(system => system.OpenRead(It.Is<string>(s => s.Contains(ownerId.ToString()) && s.Contains(imageId.ToString()))), Times.Once);
+        _fileSystem.Received(1).OpenRead(Arg.Is<string>(s => s.Contains(ownerId.ToString()) && s.Contains(imageId.ToString())));
     }
 
     [Test]
@@ -27,12 +31,11 @@ public class ImageServiceTests
     {
         var ownerId = Guid.NewGuid();
         var imageId = Guid.NewGuid();
-        var autoMocker = new CustomAutoMocker();
-        var testee = autoMocker.CreateInstance<ImageService>();
+        var testee = CreateTestee();
 
         testee.DeleteImage(ownerId, imageId);
 
-        autoMocker.Verify<IFileSystem>(system => system.DeleteFile(It.Is<string>(s => s.Contains(ownerId.ToString()) && s.Contains(imageId.ToString()))), Times.Once);
+        _fileSystem.Received(1).DeleteFile(Arg.Is<string>(s => s.Contains(ownerId.ToString()) && s.Contains(imageId.ToString())));
     }
 
     [Test]
@@ -40,15 +43,14 @@ public class ImageServiceTests
     {
         var person = TestPerson.Create("Dixie");
         var newImage = TestImageToCreate.Create();
-        var autoMocker = new CustomAutoMocker();
-        autoMocker.Setup<IFileSystem, Stream>(system => system.CreateFile(It.IsAny<string>())).Returns(new MemoryStream());
-        autoMocker.Setup<IFileSystem, bool>(system => system.DirectoryExists(It.IsAny<string>())).Returns(true);
-        var testee = autoMocker.CreateInstance<ImageService>();
+        _fileSystem.CreateFile(Arg.Any<string>()).Returns(new MemoryStream());
+        _fileSystem.DirectoryExists(Arg.Any<string>()).Returns(true);
+        var testee = CreateTestee();
 
         var result = await testee.ProcessAndStoreImageAsync(person, newImage);
 
         result.Should().NotBeEmpty();
-        autoMocker.Verify<IFileSystem>(system => system.CreateFile(It.Is<string>(s => s.Contains(person.Id.ToString()))));
+        _fileSystem.Received(1).CreateFile(Arg.Is<string>(s => s.Contains(person.Id.ToString())));
     }
 
     [Test]
@@ -57,10 +59,9 @@ public class ImageServiceTests
         var person = TestPerson.Create("Dixie");
         var notAnImageStream = new MemoryStream(new byte[10]);
         var newImage = TestImageToCreate.Create(notAnImageStream);
-        var autoMocker = new CustomAutoMocker();
-        autoMocker.Setup<IFileSystem, Stream>(system => system.CreateFile(It.IsAny<string>())).Returns(new MemoryStream());
-        autoMocker.Setup<IFileSystem, bool>(system => system.DirectoryExists(It.IsAny<string>())).Returns(true);
-        var testee = autoMocker.CreateInstance<ImageService>();
+        _fileSystem.CreateFile(Arg.Any<string>()).Returns(new MemoryStream());
+        _fileSystem.DirectoryExists(Arg.Any<string>()).Returns(true);
+        var testee = CreateTestee();
 
         var testAction = async () => await testee.ProcessAndStoreImageAsync(person, newImage);
 
@@ -72,14 +73,15 @@ public class ImageServiceTests
     {
         var person = TestPerson.Create("Dixie");
         var newImage = TestImageToCreate.Create();
-        var autoMocker = new CustomAutoMocker();
-        autoMocker.Setup<IFileSystem, Stream>(system => system.CreateFile(It.IsAny<string>())).Returns(new MemoryStream());
-        autoMocker.Setup<IFileSystem, bool>(system => system.DirectoryExists(It.IsAny<string>())).Returns(false);
-        var testee = autoMocker.CreateInstance<ImageService>();
+        _fileSystem.CreateFile(Arg.Any<string>()).Returns(new MemoryStream());
+        _fileSystem.DirectoryExists(Arg.Any<string>()).Returns(false);
+        var testee = CreateTestee();
 
         var result = await testee.ProcessAndStoreImageAsync(person, newImage);
 
         result.Should().NotBeEmpty();
-        autoMocker.Verify<IFileSystem>(system => system.CreateDirectory(It.Is<string>(s => s.Contains(person.Id.ToString()))));
+        _fileSystem.Received(1).CreateDirectory(Arg.Is<string>(s => s.Contains(person.Id.ToString())));
     }
+
+    private ImageService CreateTestee() => new(Substitute.For<ILogger<ImageService>>(), _fileSystem);
 }

@@ -3,11 +3,10 @@ using Bunit;
 using BusinessServices.Services;
 using DTO.LifePoint;
 using FluentAssertions;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.JSInterop;
-using Microsoft.JSInterop.Infrastructure;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using Tests.Doubles;
 using WebApp.Shared;
@@ -16,6 +15,8 @@ using TestContext = Bunit.TestContext;
 namespace Tests.UnitTests.WebApp.Shared;
 
 [TestFixture]
+[FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+[Category("Unit")]
 public class LifePointDetailTests
 {
     [Test]
@@ -23,10 +24,11 @@ public class LifePointDetailTests
     {
         var existingLifePoint = TestExistingLifePoint.Create();
         var id = existingLifePoint.Id;
-        var lifePointServiceMock = new Mock<ILifePointService>();
-        lifePointServiceMock.Setup(service => service.GetLifePointAsync(id)).ReturnsAsync(existingLifePoint);
+        var lifePointServiceMock = Substitute.For<ILifePointService>();
+        lifePointServiceMock.GetLifePointAsync(id).Returns(existingLifePoint);
+        var testContext = CreateTestContext(lifePointServiceMock);
 
-        using var testee = CreateTestee(lifePointServiceMock, id);
+        using var testee = CreateTestee(testContext, id);
 
         ShouldBeRenderedProperly(testee, existingLifePoint);
     }
@@ -36,49 +38,49 @@ public class LifePointDetailTests
     {
         var existingLifePoint = TestExistingLifePoint.Create();
         var id = existingLifePoint.Id;
-        var lifePointServiceMock = new Mock<ILifePointService>();
-        lifePointServiceMock.Setup(service => service.GetLifePointAsync(id)).ReturnsAsync(existingLifePoint);
-        var lifePointDetailModuleMock = new Mock<IJSObjectReference>();
-        using var testee = CreateTestee(lifePointServiceMock, id, lifePointDetailModuleMock);
+        var lifePointServiceMock = Substitute.For<ILifePointService>();
+        lifePointServiceMock.GetLifePointAsync(id).Returns(existingLifePoint);
+        var testContext = CreateTestContext(lifePointServiceMock, module => module.SetupVoid("updatePopup", _ => true).SetVoidResult());
+        using var testee = CreateTestee(testContext, id);
 
         await (Task)typeof(LifePointDetail)
             .GetTypeInfo()
             .GetMethod("UpdatePopupAsync", BindingFlags.NonPublic | BindingFlags.Instance)!
             .Invoke(testee.Instance, Array.Empty<object>())!;
 
-        PopupShouldBeUpdated(lifePointDetailModuleMock, testee.Instance.Id);
+        PopupShouldBeUpdated(testContext, testee.Instance.Id);
     }
 
     [Test]
-    public void DeleteExistingLifePoint()
+    public async Task DeleteExistingLifePoint()
     {
         var existingLifePoint = TestExistingLifePoint.Create();
         var id = existingLifePoint.Id;
-        var lifePointServiceMock = new Mock<ILifePointService>();
-        lifePointServiceMock.Setup(service => service.GetLifePointAsync(id)).ReturnsAsync(existingLifePoint);
-        var lifePointDetailModuleMock = new Mock<IJSObjectReference>();
-        using var testee = CreateTestee(lifePointServiceMock, id, lifePointDetailModuleMock);
+        var lifePointServiceMock = Substitute.For<ILifePointService>();
+        lifePointServiceMock.GetLifePointAsync(id).Returns(existingLifePoint);
+        var testContext = CreateTestContext(lifePointServiceMock);
+        using var testee = CreateTestee(testContext, id);
 
         ClickDelete(testee);
 
-        LifePointShouldBeDeleted(lifePointServiceMock, id);
-        MarkerShouldBeRemoved(lifePointDetailModuleMock, id);
+        await LifePointShouldBeDeletedAsync(lifePointServiceMock, id);
+        MarkerShouldBeRemoved(testContext, id);
     }
 
     private static void ClickDelete(IRenderedComponent<LifePointDetail> testee) => testee.Find("button").Click();
 
-    private static void MarkerShouldBeRemoved(Mock<IJSObjectReference> lifePointDetailModuleMock, Guid id) =>
-        lifePointDetailModuleMock.Verify(lifePointDetailModule =>
-                                             lifePointDetailModule.InvokeAsync<IJSVoidResult>("removeMarkerOfLifePoint", new object?[] { id.ToString() }),
-                                         Times.Once);
+    private static void MarkerShouldBeRemoved(TestContext testContext, Guid id) =>
+        testContext.JSInterop.Invocations.Should()
+            .ContainSingle(invocation => invocation.Identifier.Equals("removeMarkerOfLifePoint")
+                                         && Equals(id.ToString(), invocation.Arguments[0]));
 
-    private static void PopupShouldBeUpdated(Mock<IJSObjectReference> lifePointDetailModuleMock, string id) =>
-        lifePointDetailModuleMock.Verify(lifePointDetailModule =>
-                                             lifePointDetailModule.InvokeAsync<IJSVoidResult>("updatePopup", new object?[] { id }),
-                                         Times.Once);
+    private static void PopupShouldBeUpdated(TestContext testContext, string id) =>
+        testContext.JSInterop.Invocations.Should()
+            .ContainSingle(invocation => invocation.Identifier.Equals("updatePopup")
+                                         && Equals(id, invocation.Arguments[0]));
 
-    private static void LifePointShouldBeDeleted(Mock<ILifePointService> lifePointServiceMock, Guid id) =>
-        lifePointServiceMock.Verify(service => service.DeleteLifePointAsync(id), Times.Once);
+    private static async Task LifePointShouldBeDeletedAsync(ILifePointService lifePointServiceMock, Guid id) =>
+        await lifePointServiceMock.Received(1).DeleteLifePointAsync(id);
 
     private static void ShouldBeRenderedProperly(IRenderedFragment testee, ExistingLifePoint existingLifePoint)
     {
@@ -92,25 +94,21 @@ public class LifePointDetailTests
         testee.Find("p").TextContent.Should().Be(existingLifePoint.Description);
     }
 
-    private static IRenderedComponent<LifePointDetail> CreateTestee(IMock<ILifePointService> lifePointServiceMock,
-                                                                    Guid id,
-                                                                    Mock<IJSObjectReference>? lifePointDetailModuleMock = null)
-    {
-        lifePointDetailModuleMock ??= new Mock<IJSObjectReference>();
-        var jsRuntimeMock = new Mock<IJSRuntime>();
-        jsRuntimeMock
-            .Setup(runtime => runtime.InvokeAsync<IJSObjectReference>("import", new object?[] { "./Shared/LifePointDetail.razor.js" }))
-            .ReturnsAsync(lifePointDetailModuleMock.Object);
-        var ctx = new TestContext();
-        ctx.Services.AddLocalization();
-        ctx.Services.AddSingleton(lifePointServiceMock.Object);
-        ctx.Services.AddSingleton(jsRuntimeMock.Object);
-        ctx.Services.AddSingleton(new Mock<ILogger<LifePointDetail>>().Object);
-        var configurationMock = new Mock<Microsoft.Extensions.Configuration.IConfiguration>();
-        configurationMock.Setup(configuration => configuration["CanDelete"]).Returns("true");
-        ctx.Services.AddSingleton(configurationMock.Object);
-        var testee = ctx.RenderComponent<LifePointDetail>(parameters => parameters.Add(detail => detail.Id, id.ToString()));
+    private static IRenderedComponent<LifePointDetail> CreateTestee(TestContext testContext, Guid id) =>
+        testContext.RenderComponent<LifePointDetail>(parameters => parameters.Add(detail => detail.Id, id.ToString()));
 
-        return testee;
+    private static TestContext CreateTestContext(ILifePointService lifePointServiceMock, Action<BunitJSModuleInterop>? configureLifePointDetailModule = null)
+    {
+        var testContext = new TestContext();
+        var lifePointDetailModule = testContext.JSInterop.SetupModule("./Shared/LifePointDetail.razor.js");
+        configureLifePointDetailModule?.Invoke(lifePointDetailModule);
+        testContext.Services.AddLocalization();
+        testContext.Services.AddSingleton(lifePointServiceMock);
+        testContext.Services.AddSingleton(Substitute.For<ILogger<LifePointDetail>>());
+        var configurationMock = Substitute.For<IConfiguration>();
+        configurationMock["CanDelete"].Returns("true");
+        testContext.Services.AddSingleton(configurationMock);
+
+        return testContext;
     }
 }

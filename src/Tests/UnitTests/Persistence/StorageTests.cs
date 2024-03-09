@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using Moq;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using Persistence;
 using Tests.Doubles;
@@ -8,19 +9,23 @@ using Tests.Doubles;
 namespace Tests.UnitTests.Persistence;
 
 [TestFixture]
+[FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+[Category("Unit")]
 public class StorageTests
 {
+    private readonly IFileSystem _fileSystem = Substitute.For<IFileSystem>();
+    private readonly IImageService _imageService = Substitute.For<IImageService>();
+
     [Test]
     public void DeleteImage()
     {
         var ownerId = Guid.NewGuid();
         var imageId = Guid.NewGuid();
-        var autoMocker = CreateAutoMocker();
-        var testee = autoMocker.CreateInstance<Storage>();
+        var testee = CreateTestee();
 
         testee.DeleteImage(ownerId, imageId);
 
-        autoMocker.Verify<IImageService>(system => system.DeleteImage(ownerId, imageId), Times.Once);
+        _imageService.Received(1).DeleteImage(ownerId, imageId);
     }
 
     [Test]
@@ -28,12 +33,11 @@ public class StorageTests
     {
         var ownerId = Guid.NewGuid();
         var imageId = Guid.NewGuid();
-        var autoMocker = CreateAutoMocker();
-        var testee = autoMocker.CreateInstance<Storage>();
+        var testee = CreateTestee();
 
         testee.GetImage(ownerId, imageId);
 
-        autoMocker.Verify<IImageService>(system => system.GetImage(ownerId, imageId), Times.Once);
+        _imageService.Received(1).GetImage(ownerId, imageId);
     }
 
     [Test]
@@ -41,46 +45,42 @@ public class StorageTests
     {
         var person = TestPerson.Create("Dixie");
         var imageToCreate = TestImageToCreate.Create();
-        var autoMocker = CreateAutoMocker();
-        var testee = autoMocker.CreateInstance<Storage>();
+        var testee = CreateTestee();
 
         await testee.StoreImageAsync(person, imageToCreate);
 
-        autoMocker.Verify<IImageService>(system => system.ProcessAndStoreImageAsync(person, imageToCreate), Times.Once);
+        await _imageService.Received(1).ProcessAndStoreImageAsync(person, imageToCreate);
     }
 
     [Test]
     public void EnsureStorageExists_CreatesDirectory_IfItDoesNotExist()
     {
-        var autoMocker = CreateAutoMocker();
-        autoMocker.Setup<IFileSystem, bool>(system => system.DirectoryExists(Storage.DatabaseDirectory)).Returns(false);
-        autoMocker.Setup<IFileSystem, bool>(system => system.FileExists(Storage.DatabasePath)).Returns(true); // That's really only a hack to avoid further EF Core code
-        var testee = autoMocker.CreateInstance<Storage>();
+        _fileSystem.DirectoryExists(Storage.DatabaseDirectory).Returns(false);
+        _fileSystem.FileExists(Storage.DatabasePath).Returns(true); // That's really only a hack to avoid further EF Core code
+        var testee = CreateTestee();
 
         var testAction = () => testee.EnsureStorageExistsAsync();
 
         testAction.Should().NotThrowAsync();
-        autoMocker.Verify<IFileSystem>(system => system.CreateDirectory(Storage.DatabaseDirectory), Times.Once);
+        _fileSystem.Received(1).CreateDirectory(Storage.DatabaseDirectory);
     }
 
     [Test]
     public void EnsureStorageExists_CreatesNothing_IfEverythingExists()
     {
-        var autoMocker = CreateAutoMocker();
-        autoMocker.Setup<IFileSystem, bool>(system => system.DirectoryExists(Storage.DatabaseDirectory)).Returns(true);
-        autoMocker.Setup<IFileSystem, bool>(system => system.FileExists(Storage.DatabasePath)).Returns(true);
-        var testee = autoMocker.CreateInstance<Storage>();
+        _fileSystem.DirectoryExists(Storage.DatabaseDirectory).Returns(true);
+        _fileSystem.FileExists(Storage.DatabasePath).Returns(true);
+        var testee = CreateTestee();
 
         var testAction = () => testee.EnsureStorageExistsAsync();
 
         testAction.Should().NotThrowAsync();
-        autoMocker.Verify<IFileSystem>(system => system.CreateDirectory(Storage.DatabaseDirectory), Times.Never);
+        _fileSystem.DidNotReceive().CreateDirectory(Storage.DatabaseDirectory);
     }
 
-    private static CustomAutoMocker CreateAutoMocker()
-    {
-        var autoMocker = new CustomAutoMocker();
-        autoMocker.Use(new DbContextOptionsBuilder<Storage>().Options);
-        return autoMocker;
-    }
+    private Storage CreateTestee() =>
+        new(new DbContextOptionsBuilder<Storage>().Options,
+            Substitute.For<ILogger<Storage>>(),
+            _fileSystem,
+            _imageService);
 }

@@ -4,7 +4,7 @@ using BusinessServices.Services;
 using FluentAssertions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
+using NSubstitute;
 using NUnit.Framework;
 using Tests.Doubles;
 using WebApp.Shared;
@@ -15,6 +15,8 @@ using TestContext = Bunit.TestContext;
 namespace Tests.UnitTests.WebApp.Shared;
 
 [TestFixture]
+[FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+[Category("Unit")]
 public class FilterLifePointsTests
 {
     [Test]
@@ -182,19 +184,19 @@ public class FilterLifePointsTests
         var existingPerson2 = TestExistingPerson.Create("Ulf");
         var existingLocation = TestExistingLocation.Create();
 
-        var lifePointServiceMock = new Mock<ILifePointService>();
-        lifePointServiceMock.Setup(service => service.GetDistinctCreators(null)).Returns(new[] { existingPerson1, existingPerson2 });
-        lifePointServiceMock.Setup(service => service.GetDistinctCreators(1953)).Returns(new[] { existingPerson1 });
-        lifePointServiceMock.Setup(service => service.GetDistinctCreators(1954)).Returns(new[] { existingPerson2 });
-        lifePointServiceMock.Setup(service => service.GetDistinctYears(null)).Returns(new[] { 1953, 1954 });
-        lifePointServiceMock.Setup(service => service.GetDistinctYears(existingPerson1.Id)).Returns(new[] { 1953 });
-        lifePointServiceMock.Setup(service => service.GetDistinctYears(existingPerson2.Id)).Returns(new[] { 1954 });
-        lifePointServiceMock.Setup(service => service.GetAllLocations(null, null)).Returns(new[] { existingLocation });
-        lifePointServiceMock.Setup(service => service.GetAllLocations(1953, null)).Returns(new[] { existingLocation });
-        lifePointServiceMock.Setup(service => service.GetAllLocations(null, existingPerson1.Id)).Returns(new[] { existingLocation });
-        lifePointServiceMock.Setup(service => service.GetAllLocations(1953, existingPerson1.Id)).Returns(new[] { existingLocation });
+        var lifePointServiceMock = Substitute.For<ILifePointService>();
+        lifePointServiceMock.GetDistinctCreators().Returns(new[] { existingPerson1, existingPerson2 });
+        lifePointServiceMock.GetDistinctCreators(1953).Returns(new[] { existingPerson1 });
+        lifePointServiceMock.GetDistinctCreators(1954).Returns(new[] { existingPerson2 });
+        lifePointServiceMock.GetDistinctYears().Returns(new[] { 1953, 1954 });
+        lifePointServiceMock.GetDistinctYears(existingPerson1.Id).Returns(new[] { 1953 });
+        lifePointServiceMock.GetDistinctYears(existingPerson2.Id).Returns(new[] { 1954 });
+        lifePointServiceMock.GetAllLocations().Returns(new[] { existingLocation });
+        lifePointServiceMock.GetAllLocations(1953).Returns(new[] { existingLocation });
+        lifePointServiceMock.GetAllLocations(null, existingPerson1.Id).Returns(new[] { existingLocation });
+        lifePointServiceMock.GetAllLocations(1953, existingPerson1.Id).Returns(new[] { existingLocation });
 
-        testContext.Services.AddSingleton(lifePointServiceMock.Object);
+        testContext.Services.AddSingleton(lifePointServiceMock);
         testContext.Services.AddLocalization();
         var lifePointDetailModule = testContext.JSInterop.SetupModule("./Shared/LifePointDetail.razor.js");
         lifePointDetailModule.SetupVoid("reset").SetVoidResult();

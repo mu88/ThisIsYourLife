@@ -1,9 +1,8 @@
-﻿using System.Data.Common;
-using BusinessServices;
+﻿using BusinessServices;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Moq;
+using NSubstitute;
 using Persistence;
 
 namespace Tests.Doubles;
@@ -13,9 +12,9 @@ public static class TestStorage
     public static IStorage Create(IFileSystem? fileSystem = null, IImageService? imageService = null)
     {
         var storage = new Storage(new DbContextOptionsBuilder<Storage>().UseSqlite(CreateInMemoryDatabase()).Options,
-                                  new Mock<ILogger<Storage>>().Object,
-                                  fileSystem ?? new Mock<IFileSystem>().Object,
-                                  imageService ?? new Mock<IImageService>().Object);
+                                  Substitute.For<ILogger<Storage>>(),
+                                  fileSystem ?? Substitute.For<IFileSystem>(),
+                                  imageService ?? Substitute.For<IImageService>());
         storage.Database.EnsureCreated();
 
         return storage;

@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Moq;
+using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Persistence;
 using Tests.Doubles;
@@ -18,16 +19,20 @@ using TestContext = Bunit.TestContext;
 namespace Tests.UnitTests.WebApp.Shared;
 
 [TestFixture]
+[FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
+[Category("Unit")]
 public class NewLifePointTests
 {
     [Test]
     public async Task CreateNewLifePoint()
     {
         var lifePointToCreate = TestLifePointToCreate.Create();
-        var lifePointServiceMock = new Mock<ILifePointService>();
-        lifePointServiceMock
-            .Setup(service => service.CreateLifePointAsync(It.IsAny<LifePointToCreate>()))
-            .ReturnsAsync(TestExistingLifePoint.From(lifePointToCreate), TimeSpan.FromSeconds(1));
+        var lifePointServiceMock = Substitute.For<ILifePointService>();
+        lifePointServiceMock.CreateLifePointAsync(Arg.Any<LifePointToCreate>()).Returns(async _ =>
+        {
+            await Task.Delay(500);
+            return TestExistingLifePoint.From(lifePointToCreate);
+        });
         using var ctx = new TestContext();
         using var testee = CreateTestee(ctx, lifePointToCreate, lifePointServiceMock);
 
@@ -45,8 +50,8 @@ public class NewLifePointTests
     public async Task CreateNewLifePointWithImage()
     {
         var imageMemoryStream = new MemoryStream(new byte[10]);
-        var browserFileMock = new Mock<IBrowserFile>();
-        browserFileMock.Setup(file => file.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes, default)).Returns(imageMemoryStream);
+        var browserFileMock = Substitute.For<IBrowserFile>();
+        browserFileMock.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes).Returns(imageMemoryStream);
         var lifePointToCreate = TestLifePointToCreate.Create(newImage: TestImageToCreate.Create(imageMemoryStream));
         using var ctx = new TestContext();
         using var testee = CreateTestee(ctx, lifePointToCreate);
@@ -58,14 +63,14 @@ public class NewLifePointTests
         ProposedDateShouldBeCorrect(lifePointToCreate, testee);
         PopupShouldBeRemoved(ctx);
         MarkerShouldBeAdded(ctx);
-        NewLifeWithImagePointShouldHaveBeenCreated(ctx, imageMemoryStream);
+        await NewLifeWithImagePointShouldHaveBeenCreatedAsync(ctx, imageMemoryStream);
     }
 
     [Test]
     public async Task CreateNewLifeWithImage_ShouldShowWarning_IfImageIsTooBig()
     {
-        var browserFileMock = new Mock<IBrowserFile>();
-        browserFileMock.Setup(file => file.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes, default)).Throws<IOException>();
+        var browserFileMock = Substitute.For<IBrowserFile>();
+        browserFileMock.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes).Throws<IOException>();
         var lifePointToCreate = TestLifePointToCreate.Create();
         using var ctx = new TestContext();
         using var testee = CreateTestee(ctx, lifePointToCreate);
@@ -81,10 +86,10 @@ public class NewLifePointTests
     public async Task CreateNewLifeWithImage_ShouldShowWarning_IfInputIsNoImage()
     {
         var imageMemoryStream = new MemoryStream(new byte[10]);
-        var browserFileMock = new Mock<IBrowserFile>();
-        browserFileMock.Setup(file => file.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes, default)).Returns(imageMemoryStream);
-        var lifePointServiceMock = new Mock<ILifePointService>();
-        lifePointServiceMock.Setup(service => service.CreateLifePointAsync(It.IsAny<LifePointToCreate>())).Throws<NoImageException>();
+        var browserFileMock = Substitute.For<IBrowserFile>();
+        browserFileMock.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes).Returns(imageMemoryStream);
+        var lifePointServiceMock = Substitute.For<ILifePointService>();
+        lifePointServiceMock.CreateLifePointAsync(Arg.Any<LifePointToCreate>()).ThrowsAsync<NoImageException>();
         var lifePointToCreate = TestLifePointToCreate.Create();
         using var ctx = new TestContext();
         using var testee = CreateTestee(ctx, lifePointToCreate, lifePointServiceMock);
@@ -98,43 +103,42 @@ public class NewLifePointTests
 
     private static async Task ClickSaveAsync(IRenderedComponent<NewLifePoint> testee) => await testee.Find("button").ClickAsync(new MouseEventArgs());
 
-    private static void NewLifeWithImagePointShouldHaveBeenCreated(TestContextBase testContext, MemoryStream imageMemoryStream)
+    private static async Task NewLifeWithImagePointShouldHaveBeenCreatedAsync(TestContextBase testContext, MemoryStream imageMemoryStream)
     {
-        var lifePointServiceMock = testContext.Services.GetRequiredService<Mock<ILifePointService>>();
-        lifePointServiceMock.Verify(service => service.CreateLifePointAsync(It.Is<LifePointToCreate>(create => create.ImageToCreate!.Stream.Equals(imageMemoryStream))));
+        var lifePointServiceMock = testContext.Services.GetRequiredService<ILifePointService>();
+        await lifePointServiceMock.Received().CreateLifePointAsync(Arg.Is<LifePointToCreate>(create => create.ImageToCreate!.Stream.Equals(imageMemoryStream)));
     }
 
-    private static async Task ClickAndUploadImageAsync(IRenderedComponent<NewLifePoint> testee, IMock<IBrowserFile> browserFile)
+    private static async Task ClickAndUploadImageAsync(IRenderedComponent<NewLifePoint> testee, IBrowserFile browserFile)
     {
-        var filesToUpload = new InputFileChangeEventArgs(new[] { browserFile.Object });
+        var filesToUpload = new InputFileChangeEventArgs(new[] { browserFile });
         var inputComponent = testee.FindComponent<InputFile>().Instance;
         await testee.InvokeAsync(() => inputComponent.OnChange.InvokeAsync(filesToUpload));
     }
 
     private static IRenderedComponent<NewLifePoint> CreateTestee(TestContext testContext,
-                                                          LifePointToCreate lifePointToCreate,
-                                                          Mock<ILifePointService>? lifePointServiceMock = null)
+                                                                 LifePointToCreate lifePointToCreate,
+                                                                 ILifePointService? lifePointServiceMock = null)
     {
-        var newLifePointDateServiceMock = new Mock<INewLifePointDateService>();
-        newLifePointDateServiceMock.SetupProperty(service => service.ProposedCreationDate);
+        var newLifePointDateServiceMock = Substitute.For<INewLifePointDateService>();
+        // newLifePointDateServiceMock.SetupProperty(service => service.ProposedCreationDate);
 
-        var userServiceMock = new Mock<IUserService>();
-        userServiceMock.Setup(service => service.Id).Returns(lifePointToCreate.CreatedBy);
+        var userServiceMock = Substitute.For<IUserService>();
+        userServiceMock.Id.Returns(lifePointToCreate.CreatedBy);
 
         if (lifePointServiceMock == null)
         {
-            lifePointServiceMock = new Mock<ILifePointService>();
-            lifePointServiceMock
-                .Setup(service => service.CreateLifePointAsync(It.Is<LifePointToCreate>(input => input == lifePointToCreate)))
-                .ReturnsAsync(TestExistingLifePoint.From(lifePointToCreate));
+            lifePointServiceMock = Substitute.For<ILifePointService>();
+            lifePointServiceMock.CreateLifePointAsync(Arg.Is<LifePointToCreate>(input => input == lifePointToCreate))
+                .Returns(TestExistingLifePoint.From(lifePointToCreate));
         }
 
         testContext.Services.AddLocalization();
-        testContext.Services.AddSingleton(lifePointServiceMock.Object);
         testContext.Services.AddSingleton(lifePointServiceMock);
-        testContext.Services.AddSingleton(new Mock<ILogger<NewLifePoint>>().Object);
-        testContext.Services.AddSingleton(userServiceMock.Object);
-        testContext.Services.AddSingleton(newLifePointDateServiceMock.Object);
+        testContext.Services.AddSingleton(lifePointServiceMock);
+        testContext.Services.AddSingleton(Substitute.For<ILogger<NewLifePoint>>());
+        testContext.Services.AddSingleton(userServiceMock);
+        testContext.Services.AddSingleton(newLifePointDateServiceMock);
 #pragma warning disable CS0618
         // Best practice according to: https://stackoverflow.com/questions/72077421/test-event-handler-of-inputfile-in-blazor-component-with-bunit
         testContext.Services.AddSingleton(Options.Create(new RemoteBrowserFileStreamOptions()));

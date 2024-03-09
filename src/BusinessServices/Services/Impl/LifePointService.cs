@@ -59,7 +59,8 @@ internal class LifePointService(ILogger<LifePointService> logger, IStorage stora
 
         logger.MethodFinished();
 
-        return mapper.Map<LifePoint, ExistingLifePoint>(createdLifePoint);
+        var existingLifePoint = mapper.Map<LifePoint, ExistingLifePoint>(createdLifePoint);
+        return existingLifePoint;
     }
 
     public async Task DeleteLifePointAsync(Guid id)
