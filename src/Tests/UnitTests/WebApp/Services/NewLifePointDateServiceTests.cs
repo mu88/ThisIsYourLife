@@ -5,7 +5,6 @@ using WebApp.Services;
 namespace Tests.UnitTests.WebApp.Services;
 
 [TestFixture]
-[FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
 [Category("Unit")]
 public class NewLifePointDateServiceTests
 {

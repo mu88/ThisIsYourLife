@@ -9,7 +9,6 @@ using Tests.Doubles;
 namespace Tests.UnitTests.Persistence;
 
 [TestFixture]
-[FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
 [Category("Unit")]
 public class StorageTests
 {

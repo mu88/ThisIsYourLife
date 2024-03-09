@@ -15,7 +15,6 @@ using TestContext = Bunit.TestContext;
 namespace Tests.UnitTests.WebApp.Shared;
 
 [TestFixture]
-[FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
 [Category("Unit")]
 public class LifePointDetailTests
 {

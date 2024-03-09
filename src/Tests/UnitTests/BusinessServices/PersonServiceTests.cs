@@ -11,7 +11,6 @@ using Tests.Doubles;
 namespace Tests.UnitTests.BusinessServices;
 
 [TestFixture]
-[FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
 [Category("Unit")]
 public class PersonServiceTests
 {

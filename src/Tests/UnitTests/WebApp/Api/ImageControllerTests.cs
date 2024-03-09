@@ -9,7 +9,6 @@ using WebApp.Api;
 namespace Tests.UnitTests.WebApp.Api;
 
 [TestFixture]
-[FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
 [Category("Unit")]
 public class ImageControllerTests
 {

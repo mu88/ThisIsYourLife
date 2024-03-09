@@ -10,7 +10,6 @@ using Persistence;
 namespace Tests.UnitTests.Persistence;
 
 [TestFixture]
-[FixtureLifeCycle(LifeCycle.InstancePerTestCase)]
 [Category("Unit")]
 public class UserServiceTests
 {

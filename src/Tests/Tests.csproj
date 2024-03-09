@@ -39,6 +39,10 @@
   </ItemGroup>
   <ItemGroup>
     <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage" />
+    <AssemblyAttribute Include="NUnit.Framework.FixtureLifeCycle">
+      <_Parameter1>NUnit.Framework.LifeCycle.InstancePerTestCase</_Parameter1>
+      <_Parameter1_IsLiteral>true</_Parameter1_IsLiteral>
+    </AssemblyAttribute>
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="TestResults\**" />
