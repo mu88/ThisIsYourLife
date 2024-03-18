@@ -77,7 +77,7 @@ jobs:
         tag: ${{ github.ref_name }}
         excludeTypes: build,docs,other,style,chore(deps)
     - name: Create GitHub Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       if: ${{ env.IS_RELEASE == 'true' }}
       with:
         files: src/WebApp/bin/Release/net8.0/win-x64/publish/ThisIsYourLife*.zip
