@@ -1,6 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 using BusinessServices;
 using Microsoft.AspNetCore.Components.Web;
+using OpenTelemetry;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Persistence;
 using Serilog;
 using WebApp.Services;
@@ -10,13 +14,17 @@ using WebApp.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
+ConfigureOpenTelemetry(builder);
+
 // Configure logging and configuration
 builder.Host.UseSerilog((context, services, configuration) => configuration
                             .ReadFrom.Configuration(context.Configuration)
                             .ReadFrom.Services(services)
                             .Enrich.FromLogContext()
                             .WriteTo.Console()
-                            .WriteTo.File(Path.Combine("/home", "app", "data", "logs", "ThisIsYourLife.log"), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 14));
+                            .WriteTo.File(Path.Combine("/home", "app", "data", "logs", "ThisIsYourLife.log"),
+                                          rollingInterval: RollingInterval.Day,
+                                          retainedFileCountLimit: 14));
 builder.Configuration.AddJsonFile(Path.Combine("/home", "app", "data", "user.json"), true);
 
 // Add services to the container.
@@ -71,6 +79,29 @@ static async Task CreateDbIfNotExistsAsync(IHost host)
         var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "An error occurred creating the DB");
     }
+}
+
+static void ConfigureOpenTelemetry(IHostApplicationBuilder builder)
+{
+    builder.Logging.AddOpenTelemetry(logging =>
+    {
+        logging.IncludeFormattedMessage = true;
+        logging.IncludeScopes = true;
+    });
+
+    builder.Services
+        .AddOpenTelemetry()
+        .ConfigureResource(c => c.AddService("ThisIsYourLife"))
+        .WithMetrics(metrics =>
+        {
+            metrics
+                .AddAspNetCoreInstrumentation()
+                .AddRuntimeInstrumentation();
+        })
+        .WithTracing(tracing => { tracing.AddAspNetCoreInstrumentation(); });
+
+    var useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
+    if (useOtlpExporter) builder.Services.AddOpenTelemetry().UseOtlpExporter();
 }
 
 [ExcludeFromCodeCoverage]
