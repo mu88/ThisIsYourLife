@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="3.1.0"></a>
+## [3.1.0](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v3.1.0) (2024-06-16)
+
+### Features
+
+* add OpenTelemetry ([b0247bc](https://www.github.com/mu88/ThisIsYourLife/commit/b0247bcab61fd0c4050429b6dd0ab61395f6a0c5))
+
 <a name="3.0.5"></a>
 ## [3.0.5](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v3.0.5) (2024-01-31)
 
