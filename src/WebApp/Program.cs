@@ -21,7 +21,7 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
                             .ReadFrom.Configuration(context.Configuration)
                             .ReadFrom.Services(services)
                             .Enrich.FromLogContext()
-                            .WriteTo.Console()
+                            .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.FFFK} {Level:u3}] {Message:lj}{NewLine}{Exception}")
                             .WriteTo.File(Path.Combine("/home", "app", "data", "logs", "ThisIsYourLife.log"),
                                           rollingInterval: RollingInterval.Day,
                                           retainedFileCountLimit: 14));
