@@ -22,8 +22,14 @@ internal class ImageService(ILogger<ImageService> logger, IFileSystem fileSystem
         EnsureImagePathExists(filePathForImage);
 
         Image image;
-        try { image = await Image.LoadAsync(newImage.Stream); }
-        catch (Exception) { throw new NoImageException(); }
+        try
+        {
+            image = await Image.LoadAsync(newImage.Stream);
+        }
+        catch (Exception)
+        {
+            throw new NoImageException();
+        }
 
         ResizeImage(image);
 
@@ -53,17 +59,18 @@ internal class ImageService(ILogger<ImageService> logger, IFileSystem fileSystem
 
     private static void ResizeImage(Image image) => image.Mutate(context => context.Resize(new ResizeOptions { Mode = ResizeMode.Max, Size = new Size(600) }));
 
+    private static string GetFilePathForImage(Person owner, Guid imageId) => GetFilePathForImage(owner.Id, imageId);
+
+    private static string GetFilePathForImage(Guid ownerId, Guid imageId) => Path.Combine(ImageDirectory, ownerId.ToString(), $"{imageId.ToString()}.jpg");
+
     private void EnsureImagePathExists(string filePathForImage)
     {
-        var parentDirectory = Directory.GetParent(filePathForImage) ?? throw new ArgumentNullException(nameof(filePathForImage), $"Could not resolve parent directory from {filePathForImage}");
+        var parentDirectory = Directory.GetParent(filePathForImage) ??
+                              throw new ArgumentNullException(nameof(filePathForImage), $"Could not resolve parent directory from {filePathForImage}");
         if (!fileSystem.DirectoryExists(parentDirectory))
         {
             fileSystem.CreateDirectory(parentDirectory.ToString());
             logger.ImageDirectoryCreated(parentDirectory);
         }
     }
-
-    private static string GetFilePathForImage(Person owner, Guid imageId) => GetFilePathForImage(owner.Id, imageId);
-
-    private static string GetFilePathForImage(Guid ownerId, Guid imageId) => Path.Combine(ImageDirectory, ownerId.ToString(), $"{imageId.ToString()}.jpg");
 }

@@ -1,18 +1,17 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
 using Logging.Extensions;
 using Microsoft.JSInterop;
 
 namespace WebApp.Shared;
 
-public partial class Map
+public sealed partial class Map : IDisposable
 {
     private IJSObjectReference _mapModule = null!;
     private IJSObjectReference _newLifePointModule = null!;
     private IJSObjectReference _lifePointDetailModule = null!;
     private IJSObjectReference _leafletMap = null!;
     private DotNetObjectReference<Map>? _objRef;
+    private bool _disposed;
 
     [JSInvokable]
     public async Task OpenPopupForNewLifePointAsync(double latitude, double longitude)
@@ -26,11 +25,24 @@ public partial class Map
     public async Task AddMarkerAsync(Guid id, double latitude, double longitude)
         => await _lifePointDetailModule.InvokeVoidAsync("createMarkerForExistingLifePoint", id, latitude, longitude);
 
+    public void Dispose()
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _objRef?.Dispose();
+
+        _disposed = true;
+    }
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             Logger.MethodStarted();
+            _objRef?.Dispose();
             _objRef = DotNetObjectReference.Create(this);
             await InitializeMapAsync(_objRef);
             await AddMarkersForExistingLocationsAsync();
@@ -56,7 +68,10 @@ public partial class Map
         await EnableSpinnerAsync();
 
         // TODO mu88: Rethink whether adding all markers at once provides better performance on redraw
-        foreach (var (latitude, longitude, id) in LifePointService.GetAllLocations()) { await AddMarkerAsync(id, latitude, longitude); }
+        foreach (var (latitude, longitude, id) in LifePointService.GetAllLocations())
+        {
+            await AddMarkerAsync(id, latitude, longitude);
+        }
 
         await DisableSpinnerAsync();
 

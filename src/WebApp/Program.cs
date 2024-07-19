@@ -49,7 +49,10 @@ await CreateDbIfNotExistsAsync(app);
 
 app.UsePathBase("/thisIsYourLife");
 
-if (!app.Environment.IsDevelopment()) app.UseExceptionHandler("/Error");
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+}
 
 app.UseStaticFiles();
 app.UseRouting();
@@ -66,14 +69,17 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();
 
 static async Task CreateDbIfNotExistsAsync(IHost host)
 {
-    using var scope = host.Services.CreateScope();
+    await using var scope = host.Services.CreateAsyncScope();
     var services = scope.ServiceProvider;
 
-    try { await services.GetRequiredService<IStorage>().EnsureStorageExistsAsync(); }
+    try
+    {
+        await services.GetRequiredService<IStorage>().EnsureStorageExistsAsync();
+    }
     catch (Exception ex)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
@@ -98,11 +104,18 @@ static void ConfigureOpenTelemetry(IHostApplicationBuilder builder)
                 .AddAspNetCoreInstrumentation()
                 .AddRuntimeInstrumentation();
         })
-        .WithTracing(tracing => { tracing.AddAspNetCoreInstrumentation(); });
+        .WithTracing(tracing =>
+        {
+            tracing.AddAspNetCoreInstrumentation();
+        });
 
     var useOtlpExporter = !string.IsNullOrWhiteSpace(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"]);
-    if (useOtlpExporter) builder.Services.AddOpenTelemetry().UseOtlpExporter();
+    if (useOtlpExporter)
+    {
+        builder.Services.AddOpenTelemetry().UseOtlpExporter();
+    }
 }
 
 [ExcludeFromCodeCoverage]
+[SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1106:Code should not contain empty statements", Justification = "Necessary for code coverage")]
 public partial class Program;

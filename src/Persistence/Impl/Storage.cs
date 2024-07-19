@@ -18,7 +18,6 @@ internal class Storage : DbContext, IStorage
     private readonly IFileSystem _fileSystem;
     private readonly IImageService _imageService;
 
-    /// <inheritdoc />
     public Storage(DbContextOptions<Storage> options, ILogger<Storage> logger, IFileSystem fileSystem, IImageService imageService)
         : base(options)
     {
@@ -61,7 +60,7 @@ internal class Storage : DbContext, IStorage
         where T : class => Set<T>().Remove(itemToDelete);
 
     /// <inheritdoc />
-    public async Task SaveAsync() => await base.SaveChangesAsync();
+    public async Task SaveAsync() => await SaveChangesAsync();
 
     /// <inheritdoc />
     public async Task<Guid> StoreImageAsync(Person owner, ImageToCreate newImage) => await _imageService.ProcessAndStoreImageAsync(owner, newImage);

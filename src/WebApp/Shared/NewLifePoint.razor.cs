@@ -1,4 +1,5 @@
-﻿using DTO.LifePoint;
+﻿using System.Diagnostics.CodeAnalysis;
+using DTO.LifePoint;
 using Logging.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -8,14 +9,15 @@ using WebApp.Models;
 
 namespace WebApp.Shared;
 
+[SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1401:Fields should be private", Justification = "Testing")]
 public partial class NewLifePoint
 {
     internal const long MaxAllowedFileSizeInBytes = MaxAllowedFileSizeInMegaBytes * 1024 * 1024;
-    private const long MaxAllowedFileSizeInMegaBytes = 20;
     internal bool ImageTooBig;
     internal bool InputIsNoImage;
+    private const long MaxAllowedFileSizeInMegaBytes = 20;
     private readonly NewLifePointModel _newLifePoint = new();
-    private IJSObjectReference _newLifePointModule = null!; // is initialized on component construction 
+    private IJSObjectReference _newLifePointModule = null!; // is initialized on component construction
     private IBrowserFile? _file;
     private bool _showModalSpinner;
 
@@ -40,9 +42,13 @@ public partial class NewLifePoint
     {
         await base.OnAfterRenderAsync(firstRender);
 
-        if (!firstRender) await UpdatePopupAsync();
+        if (!firstRender)
+        {
+            await UpdatePopupAsync();
+        }
     }
 
+    [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP004:Don\'t ignore created IDisposable", Justification = "Okay here due to different lifetime")]
     private async Task CreateNewLifePointAsync()
     {
         Logger.MethodStarted();
@@ -138,7 +144,10 @@ public partial class NewLifePoint
     /// </remarks>
     private async Task UpdatePopupAsync()
     {
-        if (_newLifePointModule == null!) return;
+        if (_newLifePointModule == null!)
+        {
+            return;
+        }
 
         await _newLifePointModule.InvokeVoidAsync("updatePopup");
     }

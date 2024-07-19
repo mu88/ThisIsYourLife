@@ -20,7 +20,10 @@ public partial class LifePointDetail
         Logger.MethodStarted();
 
         _lifePoint = await LifePointService.GetLifePointAsync(Guid.Parse(Id));
-        if (_lifePoint.ImageId != null) _imageUri = ConstructImageUri(_lifePoint.ImageId.Value);
+        if (_lifePoint.ImageId != null)
+        {
+            _imageUri = ConstructImageUri(_lifePoint.ImageId.Value);
+        }
 
         await LoadLifePointDetailModuleAsync();
 
@@ -34,7 +37,10 @@ public partial class LifePointDetail
     {
         await base.OnAfterRenderAsync(firstRender);
 
-        if (_imageUri == null && !firstRender) await UpdatePopupAsync();
+        if (_imageUri == null && !firstRender)
+        {
+            await UpdatePopupAsync();
+        }
     }
 
     private Uri ConstructImageUri(Guid imageId) => new(new Uri(Navigator.BaseUri), $"api/images/{_lifePoint.CreatedBy.Id}/{imageId.ToString()}");
@@ -65,7 +71,10 @@ public partial class LifePointDetail
     /// </remarks>
     private async Task UpdatePopupAsync()
     {
-        if (_lifePointDetailModule == null!) return;
+        if (_lifePointDetailModule == null!)
+        {
+            return;
+        }
 
         await _lifePointDetailModule.InvokeVoidAsync("updatePopup", Id);
     }

@@ -22,7 +22,9 @@ internal class UserService : IUserService
         _configuration = configuration.Value;
 
         if (_configuration.Id != null && !_personService.PersonExists(_configuration.Id.Value))
+        {
             throw new ArgumentException($"GUID {_configuration.Id} was provided, but no matching person was found", nameof(configuration));
+        }
     }
 
     public Guid? Id => _configuration.Id;

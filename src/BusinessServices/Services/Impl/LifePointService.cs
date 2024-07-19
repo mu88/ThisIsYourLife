@@ -18,21 +18,29 @@ internal class LifePointService(ILogger<LifePointService> logger, IStorage stora
         if (creatorId != null)
         {
             if (year != null)
+            {
                 searchExpression = point => point.Date.Year == year && point.CreatedBy.Id == creatorId;
+            }
             else
+            {
                 searchExpression = point => point.CreatedBy.Id == creatorId;
+            }
         }
         else
         {
             if (year != null)
+            {
                 searchExpression = point => point.Date.Year == year;
+            }
             else
+            {
                 searchExpression = null;
+            }
         }
 
         return mapper.Map<IQueryable<LifePoint>, IEnumerable<ExistingLocation>>(searchExpression != null
-                                                                                     ? storage.LifePoints.Where(searchExpression)
-                                                                                     : storage.LifePoints);
+                                                                                    ? storage.LifePoints.Where(searchExpression)
+                                                                                    : storage.LifePoints);
     }
 
     public async Task<ExistingLifePoint> GetLifePointAsync(Guid id) => mapper.Map<LifePoint, ExistingLifePoint>(await GetLifePointInternalAsync(id));
@@ -46,11 +54,11 @@ internal class LifePointService(ILogger<LifePointService> logger, IStorage stora
 
         Guid? imageId = lifePointToCreate.ImageToCreate != null ? await storage.StoreImageAsync(existingPerson, lifePointToCreate.ImageToCreate) : null;
         var newLifePoint = mapper.Map<LifePointToCreate, LifePoint>(lifePointToCreate,
-                                                                     options =>
-                                                                     {
-                                                                         options.Items[nameof(LifePoint.CreatedBy)] = existingPerson;
-                                                                         options.Items[nameof(LifePoint.ImageId)] = imageId;
-                                                                     });
+                                                                    options =>
+                                                                    {
+                                                                        options.Items[nameof(LifePoint.CreatedBy)] = existingPerson;
+                                                                        options.Items[nameof(LifePoint.ImageId)] = imageId;
+                                                                    });
         logger.NewLifePointExtracted();
 
         var createdLifePoint = await storage.AddItemAsync(newLifePoint);
@@ -69,7 +77,11 @@ internal class LifePointService(ILogger<LifePointService> logger, IStorage stora
 
         var lifePoint = await GetLifePointInternalAsync(id);
         storage.RemoveItem(lifePoint);
-        if (lifePoint.ImageId != null) storage.DeleteImage(lifePoint.CreatedBy.Id, lifePoint.ImageId.Value);
+        if (lifePoint.ImageId != null)
+        {
+            storage.DeleteImage(lifePoint.CreatedBy.Id, lifePoint.ImageId.Value);
+        }
+
         await storage.SaveAsync();
         logger.LifePointDeleted(id);
 
@@ -77,11 +89,11 @@ internal class LifePointService(ILogger<LifePointService> logger, IStorage stora
     }
 
     public IEnumerable<int> GetDistinctYears(Guid? creatorId = null) => creatorId != null
-                                                                     ? storage.LifePoints.Where(point => point.CreatedBy.Id == creatorId)
-                                                                         .Select(x => x.Date.Year)
-                                                                         .Distinct()
-                                                                         .OrderBy(x => x)
-                                                                     : storage.LifePoints.Select(x => x.Date.Year).Distinct().OrderBy(x => x);
+                                                                            ? storage.LifePoints.Where(point => point.CreatedBy.Id == creatorId)
+                                                                                .Select(x => x.Date.Year)
+                                                                                .Distinct()
+                                                                                .OrderBy(x => x)
+                                                                            : storage.LifePoints.Select(x => x.Date.Year).Distinct().OrderBy(x => x);
 
     public IEnumerable<ExistingPerson> GetDistinctCreators(int? year = null)
     {

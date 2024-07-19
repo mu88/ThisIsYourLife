@@ -10,7 +10,7 @@ namespace Tests.UnitTests.WebApp.Api;
 
 [TestFixture]
 [Category("Unit")]
-public class ImageControllerTests
+public class ImagesControllerTests
 {
     private readonly IStorage _storage = Substitute.For<IStorage>();
 
@@ -28,5 +28,5 @@ public class ImageControllerTests
         image.As<FileStreamResult>().ContentType.Should().Be(MediaTypeNames.Image.Jpeg);
     }
 
-    private ImageController CreateTestee() => new(_storage);
+    private ImagesController CreateTestee() => new(_storage);
 }
