@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="3.2.0"></a>
+## [3.2.0](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v3.2.0) (2024-08-03)
+
+### Features
+
+* replace OpenTelemetry and multi-manifest Docker image logic with NuGet package mu88.Shared ([e355df5](https://www.github.com/mu88/ThisIsYourLife/commit/e355df5bbcf4e885cbd946113401bba47a2078a2))
+
 <a name="3.1.0"></a>
 ## [3.1.0](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v3.1.0) (2024-07-05)
 
