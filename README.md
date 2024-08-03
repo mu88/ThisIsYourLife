@@ -1,6 +1,8 @@
 ﻿# This is your life
-![CI](https://github.com/mu88/ThisIsYourLife/workflows/CI/badge.svg)
-![Release](https://github.com/mu88/ThisIsYourLife/workflows/Release/badge.svg)
+
+![Combined CI / Release](https://github.com/mu88/ThisIsYourLife/actions/workflows/CI_CD.yml/badge.svg)
+![Mutation testing](https://github.com/mu88/ThisIsYourLife/actions/workflows/Mutation%20Testing.yml/badge.svg)
+![Docker Image Version (latest semver)](https://img.shields.io/docker/v/mu88/thisisyourlife?logo=docker&sort=semver)  
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=mu88_Project28&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=mu88_Project28)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=mu88_Project28&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=mu88_Project28)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=mu88_Project28&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=mu88_Project28)
