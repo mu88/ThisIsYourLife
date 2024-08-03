@@ -18,6 +18,17 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solutions Items", "Solutions Items", "{8EA7FDCB-8569-490E-AC06-EC7FBC6B1CE3}"
 	ProjectSection(SolutionItems) = preProject
 		Directory.Build.targets = Directory.Build.targets
+		.editorconfig = .editorconfig
+		CHANGELOG.md = CHANGELOG.md
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		global.json = global.json
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+		renovate.json = renovate.json
+		stryker-config.json = stryker-config.json
+		.github\workflows\CI_CD.yml = .github\workflows\CI_CD.yml
+		.github\workflows\Mutation Testing.yml = .github\workflows\Mutation Testing.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Logging", "src\Logging\Logging.csproj", "{F9EF6D22-1015-4266-BC5A-B15A6369A9DA}"
