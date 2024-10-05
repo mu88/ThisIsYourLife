@@ -13,9 +13,9 @@ namespace WebApp.Shared;
 public partial class NewLifePoint
 {
     internal const long MaxAllowedFileSizeInBytes = MaxAllowedFileSizeInMegaBytes * 1024 * 1024;
-    private const long MaxAllowedFileSizeInMegaBytes = 20;
     internal bool ImageTooBig;
     internal bool InputIsNoImage;
+    private const long MaxAllowedFileSizeInMegaBytes = 20;
     private readonly NewLifePointModel _newLifePoint = new();
     private IBrowserFile? _file;
     private bool _showModalSpinner;
