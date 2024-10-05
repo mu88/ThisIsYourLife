@@ -10,7 +10,6 @@ namespace BusinessServices;
 [ExcludeFromCodeCoverage]
 public class AutoMapperProfile : Profile
 {
-    /// <inheritdoc />
     public AutoMapperProfile()
     {
         CreateMapsForLifePoint();

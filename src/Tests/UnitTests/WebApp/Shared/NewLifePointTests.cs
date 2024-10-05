@@ -27,13 +27,14 @@ public class NewLifePointTests
     {
         var lifePointToCreate = TestLifePointToCreate.Create();
         var lifePointServiceMock = Substitute.For<ILifePointService>();
-        lifePointServiceMock.CreateLifePointAsync(Arg.Any<LifePointToCreate>()).Returns(async _ =>
-        {
-            await Task.Delay(500);
-            return TestExistingLifePoint.From(lifePointToCreate);
-        });
+        lifePointServiceMock.CreateLifePointAsync(Arg.Any<LifePointToCreate>())
+                            .Returns(async _ =>
+                            {
+                                await Task.Delay(500);
+                                return TestExistingLifePoint.From(lifePointToCreate);
+                            });
         using var ctx = new TestContext();
-        using var testee = CreateTestee(ctx, lifePointToCreate, lifePointServiceMock);
+        using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate, lifePointServiceMock);
 
         EnterInput(testee, lifePointToCreate);
         var task = ClickSaveAsync(testee);
@@ -53,7 +54,7 @@ public class NewLifePointTests
         browserFileMock.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes).Returns(imageMemoryStream);
         var lifePointToCreate = TestLifePointToCreate.Create(newImage: TestImageToCreate.Create(imageMemoryStream));
         using var ctx = new TestContext();
-        using var testee = CreateTestee(ctx, lifePointToCreate);
+        using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate);
 
         EnterInput(testee, lifePointToCreate);
         await ClickAndUploadImageAsync(testee, browserFileMock);
@@ -72,7 +73,7 @@ public class NewLifePointTests
         browserFileMock.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes).Throws<IOException>();
         var lifePointToCreate = TestLifePointToCreate.Create();
         using var ctx = new TestContext();
-        using var testee = CreateTestee(ctx, lifePointToCreate);
+        using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate);
 
         EnterInput(testee, lifePointToCreate);
         await ClickAndUploadImageAsync(testee, browserFileMock);
@@ -91,13 +92,31 @@ public class NewLifePointTests
         lifePointServiceMock.CreateLifePointAsync(Arg.Any<LifePointToCreate>()).ThrowsAsync<NoImageException>();
         var lifePointToCreate = TestLifePointToCreate.Create();
         using var ctx = new TestContext();
-        using var testee = CreateTestee(ctx, lifePointToCreate, lifePointServiceMock);
+        using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate, lifePointServiceMock);
 
         EnterInput(testee, lifePointToCreate);
         await ClickAndUploadImageAsync(testee, browserFileMock);
         await ClickSaveAsync(testee);
 
         testee.Instance.InputIsNoImage.Should().BeTrue();
+    }
+
+    [Test]
+    public async Task OnAfterRenderAsync_ShouldNotUpdatePopup_WhenNewLifePointModuleIsNull()
+    {
+        var imageMemoryStream = new MemoryStream(new byte[10]);
+        var browserFileMock = Substitute.For<IBrowserFile>();
+        browserFileMock.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes).Returns(imageMemoryStream);
+        var lifePointServiceMock = Substitute.For<ILifePointService>();
+        lifePointServiceMock.CreateLifePointAsync(Arg.Any<LifePointToCreate>()).ThrowsAsync<NoImageException>();
+        var lifePointToCreate = TestLifePointToCreate.Create();
+        using var ctx = new TestContext();
+        using var testee = CreateTestee<NewLifePointForTest>(ctx, lifePointToCreate, lifePointServiceMock);
+
+        testee.Instance.ResetNewLifePointModule();
+        await testee.Instance.OnAfterRenderForTestAsync(false);
+
+        PopupShouldNotBeUpdated(ctx);
     }
 
     private static async Task ClickSaveAsync(IRenderedComponent<NewLifePoint> testee) => await testee.Find("button").ClickAsync(new MouseEventArgs());
@@ -115,9 +134,10 @@ public class NewLifePointTests
         await testee.InvokeAsync(() => inputComponent.OnChange.InvokeAsync(filesToUpload));
     }
 
-    private static IRenderedComponent<NewLifePoint> CreateTestee(TestContext testContext,
-                                                                 LifePointToCreate lifePointToCreate,
-                                                                 ILifePointService? lifePointServiceMock = null)
+    private static IRenderedComponent<T> CreateTestee<T>(TestContext testContext,
+                                                         LifePointToCreate lifePointToCreate,
+                                                         ILifePointService? lifePointServiceMock = null)
+        where T : NewLifePoint
     {
         var newLifePointDateServiceMock = Substitute.For<INewLifePointDateService>();
         // newLifePointDateServiceMock.SetupProperty(service => service.ProposedCreationDate);
@@ -129,7 +149,7 @@ public class NewLifePointTests
         {
             lifePointServiceMock = Substitute.For<ILifePointService>();
             lifePointServiceMock.CreateLifePointAsync(Arg.Is<LifePointToCreate>(input => input == lifePointToCreate))
-                .Returns(TestExistingLifePoint.From(lifePointToCreate));
+                                .Returns(TestExistingLifePoint.From(lifePointToCreate));
         }
 
         testContext.Services.AddLocalization();
@@ -149,9 +169,9 @@ public class NewLifePointTests
         newLifePointModuleInterop.SetupVoid("updatePopup").SetVoidResult();
         testContext.JSInterop.SetupVoid(invocation => invocation.Identifier == "Blazor._internal.InputFile.init").SetVoidResult();
 
-        var testee = testContext.RenderComponent<NewLifePoint>(parameters => parameters
-                                                                   .Add(detail => detail.Latitude, lifePointToCreate.Latitude)
-                                                                   .Add(detail => detail.Longitude, lifePointToCreate.Longitude));
+        var testee = testContext.RenderComponent<T>(parameters => parameters
+                                                                  .Add(detail => detail.Latitude, lifePointToCreate.Latitude)
+                                                                  .Add(detail => detail.Longitude, lifePointToCreate.Longitude));
 
         return testee;
     }
@@ -161,6 +181,9 @@ public class NewLifePointTests
 
     private static void PopupShouldBeRemoved(TestContext testContext) =>
         testContext.JSInterop.Invocations.Should().ContainSingle(invocation => invocation.Identifier.Equals("removePopupForNewLifePoint"));
+
+    private static void PopupShouldNotBeUpdated(TestContext testContext) =>
+        testContext.JSInterop.Invocations.Should().NotContain(invocation => invocation.Identifier.Equals("updatePopup"));
 
     private static void ProposedDateShouldBeCorrect(LifePointToCreate lifePointToCreate, IRenderedComponent<NewLifePoint> testee) =>
         testee.Services.GetRequiredService<INewLifePointDateService>().ProposedCreationDate.Should().Be(lifePointToCreate.Date);
@@ -173,4 +196,11 @@ public class NewLifePointTests
     }
 
     private static void SpinnerShouldBeDisplayed(IRenderedComponent<NewLifePoint> testee) => testee.Find("[id^=\"spinner\"]").TextContent.Should().Contain("Saving");
+
+    private class NewLifePointForTest : NewLifePoint
+    {
+        public void ResetNewLifePointModule() => NewLifePointModule = null!;
+
+        public async Task OnAfterRenderForTestAsync(bool firstRender) => await base.OnAfterRenderAsync(firstRender);
+    }
 }

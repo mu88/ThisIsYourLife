@@ -8,11 +8,13 @@ namespace WebApp.Shared;
 public partial class LifePointDetail
 {
     private ExistingLifePoint _lifePoint = null!; // is initialized on component construction
-    private IJSObjectReference _lifePointDetailModule = null!; // is initialized on component construction
+
     private Uri? _imageUri;
 
     [Parameter]
     public string Id { get; set; } = null!; // is initialized on component construction
+
+    private protected IJSObjectReference LifePointDetailModule { get; set; } = null!; // is initialized on component construction
 
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
@@ -56,10 +58,10 @@ public partial class LifePointDetail
     }
 
     private async Task RemoveMarkerAsync()
-        => await _lifePointDetailModule.InvokeVoidAsync("removeMarkerOfLifePoint", Id);
+        => await LifePointDetailModule.InvokeVoidAsync("removeMarkerOfLifePoint", Id);
 
     private async Task LoadLifePointDetailModuleAsync() =>
-        _lifePointDetailModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
+        LifePointDetailModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
 
     /// <summary>Updates the underlying Leaflet popup so that size and position are correct and visible.</summary>
     /// <remarks>
@@ -71,11 +73,11 @@ public partial class LifePointDetail
     /// </remarks>
     private async Task UpdatePopupAsync()
     {
-        if (_lifePointDetailModule == null!)
+        if (LifePointDetailModule == null!)
         {
             return;
         }
 
-        await _lifePointDetailModule.InvokeVoidAsync("updatePopup", Id);
+        await LifePointDetailModule.InvokeVoidAsync("updatePopup", Id);
     }
 }

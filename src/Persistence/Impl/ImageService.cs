@@ -1,4 +1,5 @@
-﻿using DTO.LifePoint;
+﻿using System.Diagnostics.CodeAnalysis;
+using DTO.LifePoint;
 using Entities;
 using Logging.Extensions;
 using Microsoft.Extensions.Logging;
@@ -63,10 +64,17 @@ internal class ImageService(ILogger<ImageService> logger, IFileSystem fileSystem
 
     private static string GetFilePathForImage(Guid ownerId, Guid imageId) => Path.Combine(ImageDirectory, ownerId.ToString(), $"{imageId.ToString()}.jpg");
 
-    private void EnsureImagePathExists(string filePathForImage)
+    [ExcludeFromCodeCoverage(Justification = "Found no way to tweak Directory.GetParent into returning null")]
+    private static DirectoryInfo GetParentDirectory(string filePathForImage)
     {
         var parentDirectory = Directory.GetParent(filePathForImage) ??
                               throw new ArgumentNullException(nameof(filePathForImage), $"Could not resolve parent directory from {filePathForImage}");
+        return parentDirectory;
+    }
+
+    private void EnsureImagePathExists(string filePathForImage)
+    {
+        var parentDirectory = GetParentDirectory(filePathForImage);
         if (!fileSystem.DirectoryExists(parentDirectory))
         {
             fileSystem.CreateDirectory(parentDirectory.ToString());

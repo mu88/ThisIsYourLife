@@ -13,11 +13,10 @@ namespace WebApp.Shared;
 public partial class NewLifePoint
 {
     internal const long MaxAllowedFileSizeInBytes = MaxAllowedFileSizeInMegaBytes * 1024 * 1024;
+    private const long MaxAllowedFileSizeInMegaBytes = 20;
     internal bool ImageTooBig;
     internal bool InputIsNoImage;
-    private const long MaxAllowedFileSizeInMegaBytes = 20;
     private readonly NewLifePointModel _newLifePoint = new();
-    private IJSObjectReference _newLifePointModule = null!; // is initialized on component construction
     private IBrowserFile? _file;
     private bool _showModalSpinner;
 
@@ -26,6 +25,8 @@ public partial class NewLifePoint
 
     [Parameter]
     public double Longitude { get; set; }
+
+    private protected IJSObjectReference NewLifePointModule { get; set; } = null!; // is initialized on component construction
 
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
@@ -70,12 +71,12 @@ public partial class NewLifePoint
         }
 
         var lifePointToCreate = new LifePointToCreate(_newLifePoint.Date,
-                                                      _newLifePoint.Caption,
-                                                      _newLifePoint.Description,
-                                                      Latitude,
-                                                      Longitude,
-                                                      UserService.Id ?? throw new ArgumentNullException(Loc["UserHasNotBeenSet"]),
-                                                      imageToCreate);
+            _newLifePoint.Caption,
+            _newLifePoint.Description,
+            Latitude,
+            Longitude,
+            UserService.Id ?? throw new ArgumentNullException(Loc["UserHasNotBeenSet"]),
+            imageToCreate);
 
         ExistingLifePoint createdLifePoint;
         try
@@ -116,7 +117,7 @@ public partial class NewLifePoint
     {
         Logger.MethodStarted();
 
-        await _newLifePointModule.InvokeVoidAsync("removePopupForNewLifePoint");
+        await NewLifePointModule.InvokeVoidAsync("removePopupForNewLifePoint");
 
         Logger.MethodFinished();
     }
@@ -125,12 +126,12 @@ public partial class NewLifePoint
     {
         Logger.MethodStarted();
 
-        await _newLifePointModule.InvokeVoidAsync("addMarkerForCreatedLifePoint", existingLifePoint.Id, existingLifePoint.Latitude, existingLifePoint.Longitude);
+        await NewLifePointModule.InvokeVoidAsync("addMarkerForCreatedLifePoint", existingLifePoint.Id, existingLifePoint.Latitude, existingLifePoint.Longitude);
 
         Logger.MethodFinished();
     }
 
-    private async Task LoadNewLifePointModuleAsync() => _newLifePointModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/NewLifePoint.razor.js");
+    private async Task LoadNewLifePointModuleAsync() => NewLifePointModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/NewLifePoint.razor.js");
 
     private void LoadImage(InputFileChangeEventArgs args) => _file = args.File;
 
@@ -144,11 +145,11 @@ public partial class NewLifePoint
     /// </remarks>
     private async Task UpdatePopupAsync()
     {
-        if (_newLifePointModule == null!)
+        if (NewLifePointModule == null!)
         {
             return;
         }
 
-        await _newLifePointModule.InvokeVoidAsync("updatePopup");
+        await NewLifePointModule.InvokeVoidAsync("updatePopup");
     }
 }

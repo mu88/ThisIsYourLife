@@ -43,11 +43,42 @@ public class LifePointDetailTests
         using var testee = CreateTestee(testContext, id);
 
         await (Task)typeof(LifePointDetail)
-            .GetTypeInfo()
-            .GetMethod("UpdatePopupAsync", BindingFlags.NonPublic | BindingFlags.Instance)!
-            .Invoke(testee.Instance, Array.Empty<object>())!;
+                    .GetTypeInfo()
+                    .GetMethod("UpdatePopupAsync", BindingFlags.NonPublic | BindingFlags.Instance)!
+                    .Invoke(testee.Instance, Array.Empty<object>())!;
 
         PopupShouldBeUpdated(testContext, testee.Instance.Id);
+    }
+
+    [Test]
+    public async Task OnAfterRenderAsync_ShouldUpdatePopup()
+    {
+        var existingLifePoint = TestExistingLifePoint.From(TestLifePointToCreate.Create());
+        var id = existingLifePoint.Id;
+        var lifePointServiceMock = Substitute.For<ILifePointService>();
+        lifePointServiceMock.GetLifePointAsync(id).Returns(existingLifePoint);
+        var testContext = CreateTestContext(lifePointServiceMock, module => module.SetupVoid("updatePopup", _ => true).SetVoidResult());
+        using var testee = testContext.RenderComponent<LifePointDetailForTest>(parameters => parameters.Add(detail => detail.Id, id.ToString()));
+
+        await testee.Instance.OnAfterRenderForTestAsync(false);
+
+        PopupShouldBeUpdated(testContext, testee.Instance.Id);
+    }
+
+    [Test]
+    public async Task OnAfterRenderAsync_ShouldNotUpdatePopup_WhenLifePointDetailModuleIsNull()
+    {
+        var existingLifePoint = TestExistingLifePoint.From(TestLifePointToCreate.Create());
+        var id = existingLifePoint.Id;
+        var lifePointServiceMock = Substitute.For<ILifePointService>();
+        lifePointServiceMock.GetLifePointAsync(id).Returns(existingLifePoint);
+        var testContext = CreateTestContext(lifePointServiceMock, module => module.SetupVoid("updatePopup", _ => true).SetVoidResult());
+        using var testee = testContext.RenderComponent<LifePointDetailForTest>(parameters => parameters.Add(detail => detail.Id, id.ToString()));
+
+        testee.Instance.ResetLifePointDetailModule();
+        await testee.Instance.OnAfterRenderForTestAsync(false);
+
+        PopupShouldNotBeUpdated(testContext, testee.Instance.Id);
     }
 
     [Test]
@@ -70,13 +101,18 @@ public class LifePointDetailTests
 
     private static void MarkerShouldBeRemoved(TestContext testContext, Guid id) =>
         testContext.JSInterop.Invocations.Should()
-            .ContainSingle(invocation => invocation.Identifier.Equals("removeMarkerOfLifePoint")
-                                         && Equals(id.ToString(), invocation.Arguments[0]));
+                   .ContainSingle(invocation => invocation.Identifier.Equals("removeMarkerOfLifePoint")
+                                                && Equals(id.ToString(), invocation.Arguments[0]));
 
     private static void PopupShouldBeUpdated(TestContext testContext, string id) =>
         testContext.JSInterop.Invocations.Should()
-            .ContainSingle(invocation => invocation.Identifier.Equals("updatePopup")
-                                         && Equals(id, invocation.Arguments[0]));
+                   .ContainSingle(invocation => invocation.Identifier.Equals("updatePopup")
+                                                && Equals(id, invocation.Arguments[0]));
+
+    private static void PopupShouldNotBeUpdated(TestContext testContext, string id) =>
+        testContext.JSInterop.Invocations.Should()
+                   .NotContain(invocation => invocation.Identifier.Equals("updatePopup")
+                                             && Equals(id, invocation.Arguments[0]));
 
     private static async Task LifePointShouldBeDeletedAsync(ILifePointService lifePointServiceMock, Guid id) =>
         await lifePointServiceMock.Received(1).DeleteLifePointAsync(id);
@@ -109,5 +145,12 @@ public class LifePointDetailTests
         testContext.Services.AddSingleton(configurationMock);
 
         return testContext;
+    }
+
+    private class LifePointDetailForTest : LifePointDetail
+    {
+        public void ResetLifePointDetailModule() => LifePointDetailModule = null!;
+
+        public async Task OnAfterRenderForTestAsync(bool firstRender) => await base.OnAfterRenderAsync(firstRender);
     }
 }

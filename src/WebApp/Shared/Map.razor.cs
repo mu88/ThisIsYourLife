@@ -25,6 +25,7 @@ public sealed partial class Map : IDisposable
     public async Task AddMarkerAsync(Guid id, double latitude, double longitude)
         => await _lifePointDetailModule.InvokeVoidAsync("createMarkerForExistingLifePoint", id, latitude, longitude);
 
+    [ExcludeFromCodeCoverage(Justification = "Testing the disposal offers no real value")]
     public void Dispose()
     {
         if (_disposed)
