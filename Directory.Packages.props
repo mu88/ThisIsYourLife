@@ -8,7 +8,7 @@
     <PackageVersion Include="AutoMapper" Version="13.0.1" />
     <PackageVersion Include="bunit" Version="1.34.0" />
     <PackageVersion Include="coverlet.msbuild" Version="6.0.2" />
-    <PackageVersion Include="FluentAssertions" Version="6.12.1" />
+    <PackageVersion Include="FluentAssertions" Version="6.12.2" />
     <PackageVersion Include="IDisposableAnalyzers" Version="4.0.8" />
     <PackageVersion Include="Meziantou.Analyzer" Version="2.0.177" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.CustomElements" Version="8.0.10" />
