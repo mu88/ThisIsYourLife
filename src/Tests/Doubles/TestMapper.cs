@@ -7,7 +7,7 @@ public static class TestMapper
 {
     public static IMapper Create()
     {
-        var mapperConfiguration = new MapperConfiguration(config => config.AddProfile(typeof(AutoMapperProfile)));
+        var mapperConfiguration = new MapperConfiguration(config => config.AddProfile<AutoMapperProfile>());
         mapperConfiguration.AssertConfigurationIsValid();
         var mapper = mapperConfiguration.CreateMapper();
         return mapper;

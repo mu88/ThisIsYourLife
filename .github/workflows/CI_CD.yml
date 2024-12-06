@@ -51,12 +51,12 @@ jobs:
       if: ${{ env.IS_RELEASE != 'true' }}
       run: |
         dotnet publish src/WebApp/WebApp.csproj /t:MultiArchPublish '-p:ContainerImageTags="dev"' -p:ContainerRegistry=registry.hub.docker.com
-        dotnet publish src/WebApp/WebApp.csproj /t:MultiArchPublish '-p:ContainerImageTags="dev-chiseled"' -p:ContainerFamily=jammy-chiseled-extra -p:ContainerRegistry=registry.hub.docker.com
+        dotnet publish src/WebApp/WebApp.csproj /t:MultiArchPublish '-p:ContainerImageTags="dev-chiseled"' -p:ContainerFamily=noble-chiseled-extra -p:ContainerRegistry=registry.hub.docker.com
     - name: Build and push Docker release
       if: ${{ env.IS_RELEASE == 'true' }}
       run: |
         dotnet publish src/WebApp/WebApp.csproj /t:MultiArchPublish '-p:ContainerImageTags="${{ env.VERSION }};latest"' -p:ContainerRegistry=registry.hub.docker.com
-        dotnet publish src/WebApp/WebApp.csproj /t:MultiArchPublish '-p:ContainerImageTags="${{ env.VERSION }}-chiseled;latest-chiseled"' -p:ContainerFamily=jammy-chiseled-extra -p:ContainerRegistry=registry.hub.docker.com
+        dotnet publish src/WebApp/WebApp.csproj /t:MultiArchPublish '-p:ContainerImageTags="${{ env.VERSION }}-chiseled;latest-chiseled"' -p:ContainerFamily=noble-chiseled-extra -p:ContainerRegistry=registry.hub.docker.com
     - name: Build single-file EXE
       run: dotnet publish src/WebApp/WebApp.csproj -r win-x64 -p:PublishSingleFile=true --self-contained true
     - name: Create ZIP for release
@@ -65,7 +65,7 @@ jobs:
       with:
         type: 'zip'
         filename: ThisIsYourLife.${{ env.VERSION }}.zip
-        directory: 'src/WebApp/bin/Release/net8.0/win-x64/publish'
+        directory: 'src/WebApp/bin/Release/net9.0/win-x64/publish'
     - name: Create CHANGELOG
       id: changelog
       uses: Requarks/changelog-action@v1
@@ -78,6 +78,6 @@ jobs:
       uses: softprops/action-gh-release@v2
       if: ${{ env.IS_RELEASE == 'true' }}
       with:
-        files: src/WebApp/bin/Release/net8.0/win-x64/publish/ThisIsYourLife*.zip
+        files: src/WebApp/bin/Release/net9.0/win-x64/publish/ThisIsYourLife*.zip
         tag_name: ${{ github.ref_name }}
         body: ${{ steps.changelog.outputs.changes }}

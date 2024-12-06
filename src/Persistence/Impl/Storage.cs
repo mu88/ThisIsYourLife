@@ -110,11 +110,11 @@ internal class Storage : DbContext, IStorage
 
         var person = (await AddAsync(new Person("Ultras Dynamo"))).Entity;
         await AddAsync(new LifePoint(new DateOnly(1953, 4, 12),
-                                     "Nur die SGD!",
-                                     "Wahre Liebe kennt keine Liga",
-                                     51.0405849,
-                                     13.7478431,
-                                     person));
+            "Nur die SGD!",
+            "Wahre Liebe kennt keine Liga",
+            51.0405849,
+            13.7478431,
+            person));
         await SaveChangesAsync();
     }
 
@@ -123,7 +123,6 @@ internal class Storage : DbContext, IStorage
         _logger.CreatingDatabase(DatabasePath);
 
         await Database.EnsureCreatedAsync();
-        await Database.MigrateAsync();
 
         _logger.DatabaseCreated(DatabasePath);
     }

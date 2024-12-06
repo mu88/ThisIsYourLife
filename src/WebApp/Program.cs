@@ -37,7 +37,7 @@ builder.Services.AddServerSideBlazor(options =>
 builder.Services.AddPersistence();
 builder.Services.AddBusinessServices();
 builder.Services.AddSingleton<INewLifePointDateService, NewLifePointDateService>();
-builder.Services.AddAutoMapper(config => config.AddProfile(typeof(AutoMapperProfile)));
+builder.Services.AddAutoMapper(config => config.AddProfile<AutoMapperProfile>());
 builder.Services.AddOptions<UserConfig>().Bind(builder.Configuration);
 builder.Services.AddLocalization();
 
