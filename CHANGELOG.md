@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="4.0.0"></a>
+## [4.0.0](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v4.0.0) (2024-12-06)
+
+### Features
+
+* **deps:** upgrade to .NET 9 ([30a5991](https://www.github.com/mu88/ThisIsYourLife/commit/30a59917e0d19261fe45de41c890d2894290c232))
+
+### Breaking Changes
+
+* **deps:** upgrade to .NET 9 ([30a5991](https://www.github.com/mu88/ThisIsYourLife/commit/30a59917e0d19261fe45de41c890d2894290c232))
+
 <a name="3.2.0"></a>
 ## [3.2.0](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v3.2.0) (2024-08-03)
 
