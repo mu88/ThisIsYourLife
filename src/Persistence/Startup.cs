@@ -15,5 +15,7 @@ public static class Startup
         services.AddSingleton<IFileSystem, FileSystem>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IImageService, ImageService>();
+
+        services.AddHealthChecks().AddDbContextCheck<Storage>();
     }
 }

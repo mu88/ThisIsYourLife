@@ -34,6 +34,7 @@ builder.Services.AddServerSideBlazor(options =>
     options.RootComponents.RegisterCustomElement<FilterLifePoints>("filter-life-points");
 });
 
+builder.Services.AddHealthChecks();
 builder.Services.AddPersistence();
 builder.Services.AddBusinessServices();
 builder.Services.AddSingleton<INewLifePointDateService, NewLifePointDateService>();
@@ -66,6 +67,7 @@ app.UseRequestLocalization(localizationOptions =>
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 app.MapControllers();
+app.MapHealthChecks("/healthz");
 
 await app.RunAsync();
 
