@@ -15,15 +15,18 @@ public class SystemTests
     {
         // Arrange
         await BuildDockerImageOfAppAsync();
-        IContainer container = await StartAppInContainersAsync();
+        var container = await StartAppInContainersAsync();
         var httpClient = new HttpClient { BaseAddress = GetAppBaseAddress(container) };
+
         // Act
-        HttpResponseMessage healthCheckResponse = await httpClient.GetAsync("healthz");
-        HttpResponseMessage appResponse = await httpClient.GetAsync("/");
+        var healthCheckResponse = await httpClient.GetAsync("healthz");
+        var appResponse = await httpClient.GetAsync("/");
+
         // Assert
         (string Stdout, string Stderr) logValues = await container.GetLogsAsync();
         Console.WriteLine($"Stderr:{Environment.NewLine}{logValues.Stderr}");
         Console.WriteLine($"Stdout:{Environment.NewLine}{logValues.Stdout}");
+        logValues.Stdout.Should().NotContain("warn:");
         healthCheckResponse.Should().BeSuccessful();
         (await healthCheckResponse.Content.ReadAsStringAsync()).Should().Be("Healthy");
         appResponse.Should().BeSuccessful();
@@ -32,7 +35,7 @@ public class SystemTests
 
     private static async Task BuildDockerImageOfAppAsync()
     {
-        DirectoryInfo rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
+        var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
         var projectFile = Path.Join(rootDirectory.FullName, "WebApp", "WebApp.csproj");
         var process = new Process
         {
@@ -46,7 +49,11 @@ public class SystemTests
             }
         };
         process.Start();
-        while (!process.StandardOutput.EndOfStream) Console.WriteLine(await process.StandardOutput.ReadLineAsync());
+        while (!process.StandardOutput.EndOfStream)
+        {
+            Console.WriteLine(await process.StandardOutput.ReadLineAsync());
+        }
+
         await process.WaitForExitAsync();
         process.ExitCode.Should().Be(0);
     }
@@ -54,11 +61,11 @@ public class SystemTests
     private static async Task<IContainer> StartAppInContainersAsync()
     {
         Console.WriteLine("Building and starting network");
-        INetwork? network = new NetworkBuilder().Build();
+        var network = new NetworkBuilder().Build();
         await network.CreateAsync();
         Console.WriteLine("Network started");
         Console.WriteLine("Building and starting app container");
-        IContainer container = BuildAppContainer(network);
+        var container = BuildAppContainer(network);
         await container.StartAsync();
         Console.WriteLine("App container started");
         return container;
