@@ -6,7 +6,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Tests.Doubles;
 
-namespace Tests.IntegrationTests.BusinessServices;
+namespace Tests.Integration.BusinessServices;
 
 [TestFixture]
 [Category("Integration")]
@@ -25,10 +25,10 @@ public class LifePointServiceTests
 
         results.Should().HaveCount(2);
         results.Should()
-            .BeEquivalentTo(storage.LifePoints,
-                            options => options.Including(x => x.Id)
-                                .Including(x => x.Latitude)
-                                .Including(x => x.Longitude));
+               .BeEquivalentTo(storage.LifePoints,
+                   options => options.Including(x => x.Id)
+                                     .Including(x => x.Latitude)
+                                     .Including(x => x.Longitude));
     }
 
     [Test]

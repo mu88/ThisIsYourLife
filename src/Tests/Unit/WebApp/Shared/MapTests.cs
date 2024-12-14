@@ -12,7 +12,7 @@ using Tests.Doubles;
 using WebApp.Shared;
 using TestContext = Bunit.TestContext;
 
-namespace Tests.UnitTests.WebApp.Shared;
+namespace Tests.Unit.WebApp.Shared;
 
 [TestFixture]
 [Category("Unit")]
@@ -23,14 +23,14 @@ public class MapTests
     {
         var existingLocations = new[] { TestExistingLocation.Create(), TestExistingLocation.Create() };
         var testContext = CreateTestContext(existingLocations,
-                                            configureMapModule: mapModule => mapModule.SetupModule("initializeMap", _ => true),
-                                            configureLifePointDetailModule: lifePointDetailModule =>
-                                            {
-                                                lifePointDetailModule.SetupVoid("initialize", _ => true).SetVoidResult();
-                                                lifePointDetailModule.SetupVoid("enableSpinner").SetVoidResult();
-                                                lifePointDetailModule.SetupVoid("disableSpinner").SetVoidResult();
-                                                lifePointDetailModule.SetupVoid("createMarkerForExistingLifePoint", _ => true).SetVoidResult();
-                                            });
+            configureMapModule: mapModule => mapModule.SetupModule("initializeMap", _ => true),
+            configureLifePointDetailModule: lifePointDetailModule =>
+            {
+                lifePointDetailModule.SetupVoid("initialize", _ => true).SetVoidResult();
+                lifePointDetailModule.SetupVoid("enableSpinner").SetVoidResult();
+                lifePointDetailModule.SetupVoid("disableSpinner").SetVoidResult();
+                lifePointDetailModule.SetupVoid("createMarkerForExistingLifePoint", _ => true).SetVoidResult();
+            });
 
         using var testee = CreateTestee(testContext);
 
@@ -43,16 +43,16 @@ public class MapTests
     {
         const double latitude = 19;
         const double longitude = 19;
-        var testContext = CreateTestContext(new []{TestExistingLocation.Create()},
-                                            lifePointDetailModule =>
-                                            {
-                                                lifePointDetailModule.SetupVoid("initialize", _ => true).SetVoidResult();
-                                                lifePointDetailModule.SetupVoid("enableSpinner").SetVoidResult();
-                                                lifePointDetailModule.SetupVoid("disableSpinner").SetVoidResult();
-                                                lifePointDetailModule.SetupVoid("createMarkerForExistingLifePoint", _ => true).SetVoidResult();
-                                            },
-                                            newLifePointModule => newLifePointModule.SetupVoid("createPopupForNewLifePoint", _ => true).SetVoidResult(),
-                                            mapModule => mapModule.SetupModule("initializeMap", _ => true));
+        var testContext = CreateTestContext(new[] { TestExistingLocation.Create() },
+            lifePointDetailModule =>
+            {
+                lifePointDetailModule.SetupVoid("initialize", _ => true).SetVoidResult();
+                lifePointDetailModule.SetupVoid("enableSpinner").SetVoidResult();
+                lifePointDetailModule.SetupVoid("disableSpinner").SetVoidResult();
+                lifePointDetailModule.SetupVoid("createMarkerForExistingLifePoint", _ => true).SetVoidResult();
+            },
+            newLifePointModule => newLifePointModule.SetupVoid("createPopupForNewLifePoint", _ => true).SetVoidResult(),
+            mapModule => mapModule.SetupModule("initializeMap", _ => true));
         using var testee = CreateTestee(testContext);
 
         await testee.Instance.OpenPopupForNewLifePointAsync(latitude, longitude);
@@ -102,11 +102,11 @@ public class MapTests
                                                            TestContext testContext,
                                                            IRenderedComponent<Map> testee) =>
         testContext.JSInterop.Invocations.Should()
-            .ContainSingle(invocation => invocation.Identifier.Equals("createPopupForNewLifePoint")
-                                         && Equals(GetDotNetObjectReference(testee), invocation.Arguments[0])
-                                         && Equals(GetLeafletMap(testee), invocation.Arguments[1])
-                                         && Equals(latitude, invocation.Arguments[2])
-                                         && Equals(longitude, invocation.Arguments[3]));
+                   .ContainSingle(invocation => invocation.Identifier.Equals("createPopupForNewLifePoint")
+                                                && Equals(GetDotNetObjectReference(testee), invocation.Arguments[0])
+                                                && Equals(GetLeafletMap(testee), invocation.Arguments[1])
+                                                && Equals(latitude, invocation.Arguments[2])
+                                                && Equals(longitude, invocation.Arguments[3]));
 
     private static void MarkersForExistingLifePointsShouldBeAdded(IEnumerable<ExistingLocation> existingLocations,
                                                                   TestContext testContext)
@@ -114,18 +114,18 @@ public class MapTests
         foreach (var existingLocation in existingLocations)
         {
             testContext.JSInterop.Invocations.Should()
-                .ContainSingle(invocation => invocation.Identifier.Equals("createMarkerForExistingLifePoint")
-                                             && invocation.Arguments[0].As<Guid>().Equals(existingLocation.Id)
-                                             && invocation.Arguments[1].As<double>().Equals(existingLocation.Latitude)
-                                             && invocation.Arguments[2].As<double>().Equals(existingLocation.Longitude));
+                       .ContainSingle(invocation => invocation.Identifier.Equals("createMarkerForExistingLifePoint")
+                                                    && invocation.Arguments[0].As<Guid>().Equals(existingLocation.Id)
+                                                    && invocation.Arguments[1].As<double>().Equals(existingLocation.Latitude)
+                                                    && invocation.Arguments[2].As<double>().Equals(existingLocation.Longitude));
         }
     }
 
     private static void ShouldBeCenteredInDresden(TestContext testContext, IRenderedComponent<Map> testee) =>
         testContext.JSInterop.Invocations.Should()
-            .ContainSingle(invocation => invocation.Identifier.Equals("initializeMap")
-                                         && invocation.Arguments[0].As<double>().Equals(51.0405849)
-                                         && invocation.Arguments[1].As<double>().Equals(13.7478431)
-                                         && invocation.Arguments[2].As<int>().Equals(20)
-                                         && invocation.Arguments[3].As<object>().Equals(GetDotNetObjectReference(testee)));
+                   .ContainSingle(invocation => invocation.Identifier.Equals("initializeMap")
+                                                && invocation.Arguments[0].As<double>().Equals(51.0405849)
+                                                && invocation.Arguments[1].As<double>().Equals(13.7478431)
+                                                && invocation.Arguments[2].As<int>().Equals(20)
+                                                && invocation.Arguments[3].As<object>().Equals(GetDotNetObjectReference(testee)));
 }

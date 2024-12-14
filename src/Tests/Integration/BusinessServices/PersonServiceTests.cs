@@ -5,7 +5,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Tests.Doubles;
 
-namespace Tests.IntegrationTests.BusinessServices;
+namespace Tests.Integration.BusinessServices;
 
 [TestFixture]
 [Category("Integration")]

@@ -16,7 +16,7 @@ using WebApp.Services;
 using WebApp.Shared;
 using TestContext = Bunit.TestContext;
 
-namespace Tests.UnitTests.WebApp.Shared;
+namespace Tests.Unit.WebApp.Shared;
 
 [TestFixture]
 [Category("Unit")]

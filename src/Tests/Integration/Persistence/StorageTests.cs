@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Persistence;
 using Tests.Doubles;
 
-namespace Tests.IntegrationTests.Persistence;
+namespace Tests.Integration.Persistence;
 
 [TestFixture]
 [Category("Integration")]
@@ -24,7 +24,7 @@ public class StorageTests
         testee.LifePoints.Should().ContainSingle(point => point.Caption.Equals("Nur die SGD!"));
         testee.Persons.Should().ContainSingle(point => point.Name.Equals("Ultras Dynamo"));
     }
-    
+
     [Test]
     public async Task FindEntity()
     {

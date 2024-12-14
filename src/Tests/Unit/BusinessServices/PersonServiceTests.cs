@@ -8,7 +8,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Tests.Doubles;
 
-namespace Tests.UnitTests.BusinessServices;
+namespace Tests.Unit.BusinessServices;
 
 [TestFixture]
 [Category("Unit")]

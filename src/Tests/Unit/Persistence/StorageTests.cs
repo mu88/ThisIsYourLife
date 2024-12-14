@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Persistence;
 using Tests.Doubles;
 
-namespace Tests.UnitTests.Persistence;
+namespace Tests.Unit.Persistence;
 
 [TestFixture]
 [Category("Unit")]

@@ -7,7 +7,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Persistence;
 
-namespace Tests.UnitTests.Persistence;
+namespace Tests.Unit.Persistence;
 
 [TestFixture]
 [Category("Unit")]
@@ -27,8 +27,9 @@ public class UserServiceTests
 
         testee.UserAlreadySet.Should().BeTrue();
         testee.Id.Should().NotBeNull();
-        fileSystemMock.Received(1).WriteAllText(Arg.Is<string>(s => s.Contains("user.json")),
-                                                            Arg.Is<string>(s => s.Contains(existingPerson.Name) && s.Contains(existingPerson.Id.ToString())));
+        fileSystemMock.Received(1)
+                      .WriteAllText(Arg.Is<string>(s => s.Contains("user.json")),
+                          Arg.Is<string>(s => s.Contains(existingPerson.Name) && s.Contains(existingPerson.Id.ToString())));
     }
 
     [Test]

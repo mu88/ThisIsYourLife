@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using WebApp.Services;
 
-namespace Tests.UnitTests.WebApp.Services;
+namespace Tests.Unit.WebApp.Services;
 
 [TestFixture]
 [Category("Unit")]

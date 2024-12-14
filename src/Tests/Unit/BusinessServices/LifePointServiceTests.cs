@@ -9,7 +9,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Tests.Doubles;
 
-namespace Tests.UnitTests.BusinessServices;
+namespace Tests.Unit.BusinessServices;
 
 [TestFixture]
 [Category("Unit")]
@@ -29,10 +29,10 @@ public class LifePointServiceTests
 
         results.Should().HaveCount(2);
         results.Should()
-            .BeEquivalentTo(lifePoints,
-                            options => options.Including(x => x.Id)
-                                .Including(x => x.Latitude)
-                                .Including(x => x.Longitude));
+               .BeEquivalentTo(lifePoints,
+                   options => options.Including(x => x.Id)
+                                     .Including(x => x.Latitude)
+                                     .Including(x => x.Longitude));
     }
 
     [TestCase(1953, 1953, 1)]
@@ -321,11 +321,11 @@ public class LifePointServiceTests
     private LifePoint MapToLifePoint(LifePointToCreate lifePointToCreate, Person person, Guid? imageId = null)
     {
         return _mapper.Map<LifePointToCreate, LifePoint>(lifePointToCreate,
-                                                         options =>
-                                                         {
-                                                             options.Items[nameof(LifePoint.CreatedBy)] = person;
-                                                             options.Items[nameof(LifePoint.ImageId)] = imageId;
-                                                         });
+            options =>
+            {
+                options.Items[nameof(LifePoint.CreatedBy)] = person;
+                options.Items[nameof(LifePoint.ImageId)] = imageId;
+            });
     }
 
     private LifePointService CreateTestee() => new(Substitute.For<ILogger<LifePointService>>(), _storage, _mapper);

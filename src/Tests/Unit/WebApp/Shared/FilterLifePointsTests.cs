@@ -12,7 +12,7 @@ using TestContext = Bunit.TestContext;
 
 #pragma warning disable CA1861
 
-namespace Tests.UnitTests.WebApp.Shared;
+namespace Tests.Unit.WebApp.Shared;
 
 [TestFixture]
 [Category("Unit")]
@@ -202,7 +202,7 @@ public class FilterLifePointsTests
         lifePointDetailModule.SetupVoid("enableSpinner").SetVoidResult();
         lifePointDetailModule.SetupVoid("disableSpinner").SetVoidResult();
         lifePointDetailModule.SetupVoid("createMarkerForExistingLifePoint", existingLocation.Id, existingLocation.Latitude, existingLocation.Longitude)
-            .SetVoidResult();
+                             .SetVoidResult();
 
         var testee = testContext.RenderComponent<FilterLifePoints>();
 
@@ -245,8 +245,8 @@ public class FilterLifePointsTests
 
         var (latitude, longitude, id) = testContext.Services.GetRequiredService<ILifePointService>().GetAllLocations().First();
         testContext.JSInterop.VerifyInvoke("createMarkerForExistingLifePoint", numberOfCalls)
-            .Should()
-            .AllSatisfy(invocation => invocation.Arguments.Should().BeEquivalentTo(new object[] { id, latitude, longitude }));
+                   .Should()
+                   .AllSatisfy(invocation => invocation.Arguments.Should().BeEquivalentTo(new object[] { id, latitude, longitude }));
     }
 
     private static async Task FilterByYearAsync(IRenderedComponent<FilterLifePoints> testee, int year) => await ChangeYearSelectElementAsync(testee, year);
@@ -256,9 +256,9 @@ public class FilterLifePointsTests
     private static async Task FilterByCreatorAsync(IRenderedComponent<FilterLifePoints> testee, TestContext testContext, string name)
     {
         var idForName = testContext.Services.GetRequiredService<ILifePointService>()
-            .GetDistinctCreators()
-            .Single(person => person.Name.Equals(name))
-            .Id;
+                                   .GetDistinctCreators()
+                                   .Single(person => person.Name.Equals(name))
+                                   .Id;
 
         await ChangeCreatorSelectElementAsync(testee, idForName);
     }

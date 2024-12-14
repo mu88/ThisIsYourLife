@@ -6,7 +6,7 @@ using NSubstitute;
 using NUnit.Framework;
 using WebApp.Api;
 
-namespace Tests.UnitTests.WebApp.Api;
+namespace Tests.Unit.WebApp.Api;
 
 [TestFixture]
 [Category("Unit")]
