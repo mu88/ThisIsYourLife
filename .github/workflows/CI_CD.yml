@@ -45,12 +45,12 @@ jobs:
       if: ${{ needs.shared_ci_cd.outputs.is-release == 'true' }}
       with:
         token: ${{ github.token }}
-        tag: ${{ needs.shared_ci_cd.outputs.release-version }}
+        tag: ${{ github.ref_name }}
         excludeTypes: build,docs,other,style,chore(deps)
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
       if: ${{ needs.shared_ci_cd.outputs.is-release == 'true' }}
       with:
         files: src/WebApp/bin/Release/net9.0/win-x64/publish/ThisIsYourLife*.zip
-        tag_name: ${{ needs.shared_ci_cd.outputs.release-version }}
+        tag_name: ${{ github.ref_name }}
         body: ${{ steps.changelog.outputs.changes }}
