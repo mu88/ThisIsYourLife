@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="4.1.1"></a>
+## [4.1.1](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v4.1.1) (2024-12-20)
+
 <a name="4.1.0"></a>
 ## [4.1.0](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v4.1.0) (2024-12-20)
 
