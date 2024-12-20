@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="4.1.0"></a>
+## [4.1.0](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v4.1.0) (2024-12-20)
+
+### Features
+
+* add health check ([36bcf17](https://www.github.com/mu88/ThisIsYourLife/commit/36bcf1797b27bbc23901e813dddaf63240518916))
+* add reusable workflow ([fafb6b1](https://www.github.com/mu88/ThisIsYourLife/commit/fafb6b1de46c1940c4e8c6a8698881ac615c2f13))
+* embed health check tool ([5ae26ec](https://www.github.com/mu88/ThisIsYourLife/commit/5ae26ece4da8b0a190438f3d6d4620d8d7f43808))
+
 <a name="4.0.0"></a>
 ## [4.0.0](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v4.0.0) (2024-12-06)
 
