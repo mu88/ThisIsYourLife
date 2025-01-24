@@ -11,6 +11,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="FluentAssertions.Web.v8"/>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="NSubstitute.Analyzers.CSharp">
