@@ -5,7 +5,7 @@ let _dotNetMapReference;
 
 export function createPopupForNewLifePoint(dotNetMapReference, leafletMap, latitude, longitude) {
     _dotNetMapReference = dotNetMapReference;
-    _popup = L.popup({minWidth: _calculateMinWidth(), closeOnEscapeKey: false, closeOnClick: false})
+  _popup = L.popup({minWidth: calculateTooltipWidth(), closeOnEscapeKey: false, closeOnClick: false})
         .setLatLng([latitude, longitude])
         .setContent("<new-life-point latitude='" + latitude + "' longitude='" + longitude + "'></new-life-point>");
     _popup.openOn(leafletMap);
@@ -31,9 +31,4 @@ export function updatePopup() {
     _popup._updateLayout();
     _popup._updatePosition();
     _popup._adjustPan();
-}
-
-// TODO mu88: Merge with LifePointDetail.razor.js
-function _calculateMinWidth() {
-    return (window.devicePixelRatio > 1 ? 300 : 500);
 }

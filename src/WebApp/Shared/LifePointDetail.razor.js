@@ -22,7 +22,7 @@ export function reset() {
 export function createMarkerForExistingLifePoint(id, latitude, longitude) {
     let marker = L.marker([latitude, longitude]);
     marker._id = id;
-    marker.bindPopup("<life-point-detail id='" + id + "'></life-point-detail>", {maxWidth: _calculateMaxWidth()});
+  marker.bindPopup("<life-point-detail id='" + id + "'></life-point-detail>", {maxWidth: calculateTooltipWidth()});
     _markerClusterGroup.addLayer(marker);
     _markers.push(marker);
 }
@@ -65,8 +65,4 @@ export function enableSpinner() {
 
 export function disableSpinner() {
     _leafletMap.spin(false);
-}
-
-function _calculateMaxWidth() {
-    return (window.devicePixelRatio > 1 ? 300 : 500);
 }
