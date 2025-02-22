@@ -68,7 +68,6 @@ public sealed partial class Map : IDisposable
 
         await EnableSpinnerAsync();
 
-        // TODO mu88: Rethink whether adding all markers at once provides better performance on redraw
         foreach (var (latitude, longitude, id) in LifePointService.GetAllLocations())
         {
             await AddMarkerAsync(id, latitude, longitude);

@@ -14,9 +14,7 @@ public interface ILifePointService
 
     Task DeleteLifePointAsync(Guid id);
 
-    // TODO mu88: Write tests
     IEnumerable<int> GetDistinctYears(Guid? creatorId = null);
 
-    // TODO mu88: Write tests
     IEnumerable<ExistingPerson> GetDistinctCreators(int? year = null);
 }
