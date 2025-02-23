@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <SonarQubeAnalysisProperties  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
-  <Property Name="sonar.coverage.exclusions">**/WebApp/Program.cs,**/App.razor,**/WebApp/Shared/*.razor.js</Property>
+  <Property Name="sonar.coverage.exclusions">**/WebApp/Program.cs,**/App.razor,**/WebApp/Shared/*.razor.js,**/WebApp/wwwroot/js/Shared.js</Property>
   <Property Name="sonar.exclusions">**/WebApp/wwwroot/leaflet/**/*.*</Property>
 </SonarQubeAnalysisProperties>

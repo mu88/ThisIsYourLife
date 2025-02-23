@@ -65,14 +65,15 @@ public class FilterLifePointsTests
         MarkersShouldBeDisplayed(testContext, 2);
     }
 
-    [Test]
-    public async Task FilterByYear_ShouldNotFail_WhenInputIsNoYear()
+    [TestCase("tralala")]
+    [TestCase(null)]
+    public async Task FilterByYear_ShouldNotFail_WhenInputIsNoYear(object? changedValue)
     {
         using var testContext = new TestContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
-        var testAction = async () => await ChangeYearSelectElementAsync(testee, "tralala");
+        var testAction = async () => await ChangeYearSelectElementAsync(testee, changedValue);
 
         await testAction.Should().NotThrowAsync();
     }
@@ -114,14 +115,27 @@ public class FilterLifePointsTests
         YearFilteringShouldBeDisabled(testee);
     }
 
-    [Test]
-    public async Task FilterByCreator_ShouldNotFail_WhenInputIsNoCreator()
+    [TestCase(1953)]
+    [TestCase(null)]
+    public async Task FilterByCreator_ShouldNotFail_WhenInputIsNoCreator(object? changedValue)
     {
         using var testContext = new TestContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
-        var testAction = async () => await ChangeCreatorSelectElementAsync(testee, 1953);
+        var testAction = async () => await ChangeCreatorSelectElementAsync(testee, changedValue);
+
+        await testAction.Should().NotThrowAsync();
+    }
+
+    [Test]
+    public async Task FilterByCreator_ShouldDoNothing_WhenGuidsMatch()
+    {
+        using var testContext = new TestContext();
+        using var testee = CreateTestee(testContext);
+        ClickFilterButton(testee);
+
+        var testAction = async () => await ChangeCreatorSelectElementAsync(testee, Guid.Empty);
 
         await testAction.Should().NotThrowAsync();
     }
@@ -184,16 +198,16 @@ public class FilterLifePointsTests
         var existingLocation = TestExistingLocation.Create();
 
         var lifePointServiceMock = Substitute.For<ILifePointService>();
-        lifePointServiceMock.GetDistinctCreators().Returns(new[] { existingPerson1, existingPerson2 });
-        lifePointServiceMock.GetDistinctCreators(1953).Returns(new[] { existingPerson1 });
-        lifePointServiceMock.GetDistinctCreators(1954).Returns(new[] { existingPerson2 });
-        lifePointServiceMock.GetDistinctYears().Returns(new[] { 1953, 1954 });
-        lifePointServiceMock.GetDistinctYears(existingPerson1.Id).Returns(new[] { 1953 });
-        lifePointServiceMock.GetDistinctYears(existingPerson2.Id).Returns(new[] { 1954 });
-        lifePointServiceMock.GetAllLocations().Returns(new[] { existingLocation });
-        lifePointServiceMock.GetAllLocations(1953).Returns(new[] { existingLocation });
-        lifePointServiceMock.GetAllLocations(null, existingPerson1.Id).Returns(new[] { existingLocation });
-        lifePointServiceMock.GetAllLocations(1953, existingPerson1.Id).Returns(new[] { existingLocation });
+        lifePointServiceMock.GetDistinctCreators().Returns([existingPerson1, existingPerson2]);
+        lifePointServiceMock.GetDistinctCreators(1953).Returns([existingPerson1]);
+        lifePointServiceMock.GetDistinctCreators(1954).Returns([existingPerson2]);
+        lifePointServiceMock.GetDistinctYears().Returns([1953, 1954]);
+        lifePointServiceMock.GetDistinctYears(existingPerson1.Id).Returns([1953]);
+        lifePointServiceMock.GetDistinctYears(existingPerson2.Id).Returns([1954]);
+        lifePointServiceMock.GetAllLocations().Returns([existingLocation]);
+        lifePointServiceMock.GetAllLocations(1953).Returns([existingLocation]);
+        lifePointServiceMock.GetAllLocations(null, existingPerson1.Id).Returns([existingLocation]);
+        lifePointServiceMock.GetAllLocations(1953, existingPerson1.Id).Returns([existingLocation]);
 
         testContext.Services.AddSingleton(lifePointServiceMock);
         testContext.Services.AddLocalization();
@@ -209,10 +223,10 @@ public class FilterLifePointsTests
         return testee;
     }
 
-    private static async Task ChangeYearSelectElementAsync(IRenderedComponent<FilterLifePoints> testee, object value) =>
+    private static async Task ChangeYearSelectElementAsync(IRenderedComponent<FilterLifePoints> testee, object? value) =>
         await testee.Find("[id^=\"distinctYear\"]").ChangeAsync(new ChangeEventArgs { Value = value });
 
-    private static async Task ChangeCreatorSelectElementAsync(IRenderedComponent<FilterLifePoints> testee, object value) =>
+    private static async Task ChangeCreatorSelectElementAsync(IRenderedComponent<FilterLifePoints> testee, object? value) =>
         await testee.Find("[id^=\"distinctCreator\"]").ChangeAsync(new ChangeEventArgs { Value = value });
 
     private static void DistinctCreatorsShouldBeDisplayed(IRenderedComponent<FilterLifePoints> testee)
