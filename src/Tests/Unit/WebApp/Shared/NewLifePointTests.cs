@@ -63,11 +63,11 @@ public class NewLifePointTests
         ProposedDateShouldBeCorrect(lifePointToCreate, testee);
         PopupShouldBeRemoved(ctx);
         MarkerShouldBeAdded(ctx);
-        await NewLifeWithImagePointShouldHaveBeenCreatedAsync(ctx, imageMemoryStream);
+        await NewLifePointWithImagePointShouldHaveBeenCreatedAsync(ctx, imageMemoryStream);
     }
 
     [Test]
-    public async Task CreateNewLifeWithImage_ShouldShowWarning_IfImageIsTooBig()
+    public async Task CreateNewLifePointWithImage_ShouldShowWarning_IfImageIsTooBig()
     {
         var browserFileMock = Substitute.For<IBrowserFile>();
         browserFileMock.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes).Throws<IOException>();
@@ -83,7 +83,29 @@ public class NewLifePointTests
     }
 
     [Test]
-    public async Task CreateNewLifeWithImage_ShouldShowWarning_IfInputIsNoImage()
+    public async Task CreateNewLifePointWithImage_ShouldShowWarning_IfUserIsNotSet()
+    {
+        var userServiceMock = Substitute.For<IUserService>();
+        userServiceMock.Id.Returns(null as Guid?);
+        var lifePointToCreate = TestLifePointToCreate.Create();
+        var lifePointServiceMock = Substitute.For<ILifePointService>();
+        lifePointServiceMock.CreateLifePointAsync(Arg.Any<LifePointToCreate>())
+                            .Returns(async _ =>
+                            {
+                                await Task.Delay(500);
+                                return TestExistingLifePoint.From(lifePointToCreate);
+                            });
+        using var ctx = new TestContext();
+        using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate, lifePointServiceMock, userServiceMock);
+
+        EnterInput(testee, lifePointToCreate);
+        var clickSaveAsync = async () => await ClickSaveAsync(testee);
+
+        await clickSaveAsync.Should().ThrowAsync<ArgumentNullException>().WithMessage("Value cannot be null. (Parameter 'User has not been set')");
+    }
+
+    [Test]
+    public async Task CreateNewLifePointWithImage_ShouldShowWarning_IfInputIsNoImage()
     {
         var imageMemoryStream = new MemoryStream(new byte[10]);
         var browserFileMock = Substitute.For<IBrowserFile>();
@@ -121,7 +143,7 @@ public class NewLifePointTests
 
     private static async Task ClickSaveAsync(IRenderedComponent<NewLifePoint> testee) => await testee.Find("button").ClickAsync(new MouseEventArgs());
 
-    private static async Task NewLifeWithImagePointShouldHaveBeenCreatedAsync(TestContextBase testContext, MemoryStream imageMemoryStream)
+    private static async Task NewLifePointWithImagePointShouldHaveBeenCreatedAsync(TestContextBase testContext, MemoryStream imageMemoryStream)
     {
         var lifePointServiceMock = testContext.Services.GetRequiredService<ILifePointService>();
         await lifePointServiceMock.Received().CreateLifePointAsync(Arg.Is<LifePointToCreate>(create => create.ImageToCreate!.Stream.Equals(imageMemoryStream)));
@@ -136,14 +158,17 @@ public class NewLifePointTests
 
     private static IRenderedComponent<T> CreateTestee<T>(TestContext testContext,
                                                          LifePointToCreate lifePointToCreate,
-                                                         ILifePointService? lifePointServiceMock = null)
+                                                         ILifePointService? lifePointServiceMock = null,
+                                                         IUserService? userServiceMock = null)
         where T : NewLifePoint
     {
         var newLifePointDateServiceMock = Substitute.For<INewLifePointDateService>();
-        // newLifePointDateServiceMock.SetupProperty(service => service.ProposedCreationDate);
 
-        var userServiceMock = Substitute.For<IUserService>();
-        userServiceMock.Id.Returns(lifePointToCreate.CreatedBy);
+        if (userServiceMock == null)
+        {
+            userServiceMock = Substitute.For<IUserService>();
+            userServiceMock.Id.Returns(lifePointToCreate.CreatedBy);
+        }
 
         if (lifePointServiceMock == null)
         {

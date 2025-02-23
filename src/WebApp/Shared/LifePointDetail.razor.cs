@@ -17,22 +17,19 @@ public partial class LifePointDetail
     private protected IJSObjectReference LifePointDetailModule { get; set; } = null!; // is initialized on component construction
 
     /// <inheritdoc />
-    protected override async Task OnInitializedAsync()
-    {
-        Logger.MethodStarted();
-
-        _lifePoint = await LifePointService.GetLifePointAsync(Guid.Parse(Id));
-        if (_lifePoint.ImageId != null)
+    protected override async Task OnInitializedAsync() =>
+        await Logger.LogMethodStartAndEndAsync(async () =>
         {
-            _imageUri = ConstructImageUri(_lifePoint.ImageId.Value);
-        }
+            _lifePoint = await LifePointService.GetLifePointAsync(Guid.Parse(Id));
+            if (_lifePoint.ImageId != null)
+            {
+                _imageUri = ConstructImageUri(_lifePoint.ImageId.Value);
+            }
 
-        await LoadLifePointDetailModuleAsync();
+            await LoadLifePointDetailModuleAsync();
 
-        await base.OnInitializedAsync();
-
-        Logger.MethodFinished();
-    }
+            await base.OnInitializedAsync();
+        });
 
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -47,15 +44,12 @@ public partial class LifePointDetail
 
     private Uri ConstructImageUri(Guid imageId) => new(new Uri(Navigator.BaseUri), $"api/images/{_lifePoint.CreatedBy.Id}/{imageId.ToString()}");
 
-    private async void OnDeleteClicked()
-    {
-        Logger.MethodStarted();
-
-        await LifePointService.DeleteLifePointAsync(Guid.Parse(Id));
-        await RemoveMarkerAsync();
-
-        Logger.MethodFinished();
-    }
+    private async void OnDeleteClicked() =>
+        await Logger.LogMethodStartAndEndAsync(async () =>
+        {
+            await LifePointService.DeleteLifePointAsync(Guid.Parse(Id));
+            await RemoveMarkerAsync();
+        });
 
     private async Task RemoveMarkerAsync()
         => await LifePointDetailModule.InvokeVoidAsync("removeMarkerOfLifePoint", Id);

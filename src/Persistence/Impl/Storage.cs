@@ -73,21 +73,20 @@ internal class Storage : DbContext, IStorage
 
     public async Task EnsureStorageExistsAsync()
     {
-        _logger.MethodStarted();
-
-        if (!_fileSystem.DirectoryExists(DatabaseDirectory))
+        await _logger.LogMethodStartAndEndAsync(async () =>
         {
-            _logger.CreatingDatabaseDirectory(DatabaseDirectory);
-            _fileSystem.CreateDirectory(DatabaseDirectory);
-        }
+            if (!_fileSystem.DirectoryExists(DatabaseDirectory))
+            {
+                _logger.CreatingDatabaseDirectory(DatabaseDirectory);
+                _fileSystem.CreateDirectory(DatabaseDirectory);
+            }
 
-        if (!_fileSystem.FileExists(DatabasePath))
-        {
-            await CreateDatabase();
-            await SeedData();
-        }
-
-        _logger.MethodFinished();
+            if (!_fileSystem.FileExists(DatabasePath))
+            {
+                await CreateDatabase();
+                await SeedData();
+            }
+        });
     }
 
     /// <inheritdoc />

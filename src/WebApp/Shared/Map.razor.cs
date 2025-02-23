@@ -14,12 +14,9 @@ public sealed partial class Map : IDisposable
     private bool _disposed;
 
     [JSInvokable]
-    public async Task OpenPopupForNewLifePointAsync(double latitude, double longitude)
-    {
-        Logger.MethodStarted();
-        await _newLifePointModule.InvokeVoidAsync("createPopupForNewLifePoint", _objRef, _leafletMap, latitude, longitude);
-        Logger.MethodFinished();
-    }
+    public async Task OpenPopupForNewLifePointAsync(double latitude, double longitude) =>
+        await Logger.LogMethodStartAndEndAsync(async () =>
+            await _newLifePointModule.InvokeVoidAsync("createPopupForNewLifePoint", _objRef, _leafletMap, latitude, longitude));
 
     [JSInvokable]
     public async Task AddMarkerAsync(Guid id, double latitude, double longitude)
@@ -38,17 +35,25 @@ public sealed partial class Map : IDisposable
         _disposed = true;
     }
 
+    [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP003:Dispose previous before re-assigning", Justification = "Done in separate method")]
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            Logger.MethodStarted();
-            _objRef?.Dispose();
-            _objRef = DotNetObjectReference.Create(this);
-            await InitializeMapAsync(_objRef);
-            await AddMarkersForExistingLocationsAsync();
-            Logger.MethodFinished();
+            await Logger.LogMethodStartAndEndAsync(async () =>
+            {
+                _objRef = RecreateReference();
+                await InitializeMapAsync(_objRef);
+                await AddMarkersForExistingLocationsAsync();
+            });
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private DotNetObjectReference<Map> RecreateReference()
+    {
+        _objRef?.Dispose();
+        return DotNetObjectReference.Create(this);
     }
 
     private async Task InitializeMapAsync(DotNetObjectReference<Map> dotNetObjectReference)
@@ -62,21 +67,18 @@ public sealed partial class Map : IDisposable
         await _lifePointDetailModule.InvokeVoidAsync("initialize", _leafletMap);
     }
 
-    private async Task AddMarkersForExistingLocationsAsync()
-    {
-        Logger.MethodStarted();
-
-        await EnableSpinnerAsync();
-
-        foreach (var (latitude, longitude, id) in LifePointService.GetAllLocations())
+    private async Task AddMarkersForExistingLocationsAsync() =>
+        await Logger.LogMethodStartAndEndAsync(async () =>
         {
-            await AddMarkerAsync(id, latitude, longitude);
-        }
+            await EnableSpinnerAsync();
 
-        await DisableSpinnerAsync();
+            foreach (var (latitude, longitude, id) in LifePointService.GetAllLocations())
+            {
+                await AddMarkerAsync(id, latitude, longitude);
+            }
 
-        Logger.MethodFinished();
-    }
+            await DisableSpinnerAsync();
+        });
 
     private async Task EnableSpinnerAsync() => await _lifePointDetailModule.InvokeVoidAsync("enableSpinner");
 

@@ -45,54 +45,48 @@ internal class LifePointService(ILogger<LifePointService> logger, IStorage stora
 
     public async Task<ExistingLifePoint> GetLifePointAsync(Guid id) => mapper.Map<LifePoint, ExistingLifePoint>(await GetLifePointInternalAsync(id));
 
-    public async Task<ExistingLifePoint> CreateLifePointAsync(LifePointToCreate lifePointToCreate)
-    {
-        logger.MethodStarted();
-
-        var existingPerson = await storage.FindAsync<Person>(lifePointToCreate.CreatedBy) ??
-                             throw new ArgumentNullException(nameof(lifePointToCreate), $"Could not find any existing Person with ID {lifePointToCreate.CreatedBy}");
-
-        Guid? imageId = lifePointToCreate.ImageToCreate != null ? await storage.StoreImageAsync(existingPerson, lifePointToCreate.ImageToCreate) : null;
-        var newLifePoint = mapper.Map<LifePointToCreate, LifePoint>(lifePointToCreate,
-                                                                    options =>
-                                                                    {
-                                                                        options.Items[nameof(LifePoint.CreatedBy)] = existingPerson;
-                                                                        options.Items[nameof(LifePoint.ImageId)] = imageId;
-                                                                    });
-        logger.NewLifePointExtracted();
-
-        var createdLifePoint = await storage.AddItemAsync(newLifePoint);
-        await storage.SaveAsync();
-        logger.NewLifePointCreated(createdLifePoint.Id);
-
-        logger.MethodFinished();
-
-        var existingLifePoint = mapper.Map<LifePoint, ExistingLifePoint>(createdLifePoint);
-        return existingLifePoint;
-    }
-
-    public async Task DeleteLifePointAsync(Guid id)
-    {
-        logger.MethodStarted();
-
-        var lifePoint = await GetLifePointInternalAsync(id);
-        storage.RemoveItem(lifePoint);
-        if (lifePoint.ImageId != null)
+    public async Task<ExistingLifePoint> CreateLifePointAsync(LifePointToCreate lifePointToCreate) =>
+        await logger.LogMethodStartAndEndAsync(async () =>
         {
-            storage.DeleteImage(lifePoint.CreatedBy.Id, lifePoint.ImageId.Value);
-        }
+            var existingPerson = await storage.FindAsync<Person>(lifePointToCreate.CreatedBy) ??
+                                 throw new ArgumentNullException(nameof(lifePointToCreate), $"Could not find any existing Person with ID {lifePointToCreate.CreatedBy}");
 
-        await storage.SaveAsync();
-        logger.LifePointDeleted(id);
+            Guid? imageId = lifePointToCreate.ImageToCreate != null ? await storage.StoreImageAsync(existingPerson, lifePointToCreate.ImageToCreate) : null;
+            var newLifePoint = mapper.Map<LifePointToCreate, LifePoint>(lifePointToCreate,
+                options =>
+                {
+                    options.Items[nameof(LifePoint.CreatedBy)] = existingPerson;
+                    options.Items[nameof(LifePoint.ImageId)] = imageId;
+                });
+            logger.NewLifePointExtracted();
 
-        logger.MethodFinished();
-    }
+            var createdLifePoint = await storage.AddItemAsync(newLifePoint);
+            await storage.SaveAsync();
+            logger.NewLifePointCreated(createdLifePoint.Id);
+
+            var existingLifePoint = mapper.Map<LifePoint, ExistingLifePoint>(createdLifePoint);
+            return existingLifePoint;
+        });
+
+    public async Task DeleteLifePointAsync(Guid id) =>
+        await logger.LogMethodStartAndEndAsync(async () =>
+        {
+            var lifePoint = await GetLifePointInternalAsync(id);
+            storage.RemoveItem(lifePoint);
+            if (lifePoint.ImageId != null)
+            {
+                storage.DeleteImage(lifePoint.CreatedBy.Id, lifePoint.ImageId.Value);
+            }
+
+            await storage.SaveAsync();
+            logger.LifePointDeleted(id);
+        });
 
     public IEnumerable<int> GetDistinctYears(Guid? creatorId = null) => creatorId != null
                                                                             ? storage.LifePoints.Where(point => point.CreatedBy.Id == creatorId)
-                                                                                .Select(x => x.Date.Year)
-                                                                                .Distinct()
-                                                                                .OrderBy(x => x)
+                                                                                     .Select(x => x.Date.Year)
+                                                                                     .Distinct()
+                                                                                     .OrderBy(x => x)
                                                                             : storage.LifePoints.Select(x => x.Date.Year).Distinct().OrderBy(x => x);
 
     public IEnumerable<ExistingPerson> GetDistinctCreators(int? year = null)

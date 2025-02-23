@@ -21,18 +21,15 @@ public partial class FilterLifePoints
 
     /// <inheritdoc />
     [SuppressMessage("Design", "MA0119:JSRuntime must not be used in OnInitialized or OnInitializedAsync", Justification = "It works, so I'm fine")]
-    protected override async Task OnInitializedAsync()
-    {
-        Logger.MethodStarted();
+    protected override async Task OnInitializedAsync() =>
+        await Logger.LogMethodStartAndEndAsync(async () =>
+        {
+            await base.OnInitializedAsync();
 
-        await base.OnInitializedAsync();
-
-        ReloadDistinctCreators();
-        ReloadDistinctYears();
-        _lifePointDetailModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
-
-        Logger.MethodFinished();
-    }
+            ReloadDistinctCreators();
+            ReloadDistinctYears();
+            _lifePointDetailModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
+        });
 
     private void ReloadDistinctYears(Guid? creatorId = null) => _distinctYears = LifePointService.GetDistinctYears(creatorId);
 

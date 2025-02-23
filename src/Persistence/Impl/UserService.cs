@@ -33,14 +33,13 @@ internal class UserService : IUserService
     public bool UserAlreadySet => Id != null;
 
     /// <inheritdoc />
-    public async Task SetUserAsync(string name)
-    {
-        _logger.MethodStarted();
-
-        await SetNameAndIdAsync(name);
-        PersistConfigInFile();
-        _logger.UserSet(name);
-    }
+    public async Task SetUserAsync(string name) =>
+        await _logger.LogMethodStartAndEndAsync(async () =>
+        {
+            await SetNameAndIdAsync(name);
+            PersistConfigInFile();
+            _logger.UserSet(name);
+        });
 
     private void PersistConfigInFile()
     {

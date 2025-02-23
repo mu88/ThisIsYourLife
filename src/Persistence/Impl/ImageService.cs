@@ -14,49 +14,44 @@ internal class ImageService(ILogger<ImageService> logger, IFileSystem fileSystem
     private static readonly string ImageDirectory = Path.Combine(Storage.UserDirectory, "images");
 
     /// <inheritdoc />
-    public async Task<Guid> ProcessAndStoreImageAsync(Person owner, ImageToCreate newImage)
-    {
-        logger.MethodStarted();
-
-        var imageId = Guid.NewGuid();
-        var filePathForImage = GetFilePathForImage(owner, imageId);
-        EnsureImagePathExists(filePathForImage);
-
-        Image image;
-        try
+    public async Task<Guid> ProcessAndStoreImageAsync(Person owner, ImageToCreate newImage) =>
+        await logger.LogMethodStartAndEndAsync(async () =>
         {
-            image = await Image.LoadAsync(newImage.Stream);
-        }
-        catch (Exception)
-        {
-            throw new NoImageException();
-        }
+            var imageId = Guid.NewGuid();
+            var filePathForImage = GetFilePathForImage(owner, imageId);
+            EnsureImagePathExists(filePathForImage);
 
-        ResizeImage(image);
+            Image image;
+            try
+            {
+                image = await Image.LoadAsync(newImage.Stream);
+            }
+            catch (Exception)
+            {
+                throw new NoImageException();
+            }
 
-        await using var fileStream = fileSystem.CreateFile(filePathForImage);
-        await image.SaveAsync(fileStream, new JpegEncoder());
-        image.Dispose();
-        logger.ImageResizedAndSaved(imageId);
+            ResizeImage(image);
 
-        logger.MethodFinished();
-        return imageId;
-    }
+            await using var fileStream = fileSystem.CreateFile(filePathForImage);
+            await image.SaveAsync(fileStream, new JpegEncoder());
+            image.Dispose();
+            logger.ImageResizedAndSaved(imageId);
+
+            logger.MethodFinished();
+            return imageId;
+        });
 
     /// <inheritdoc />
-    public Stream GetImage(Guid ownerId, Guid imageId)
-    {
-        logger.MethodStarted();
-        return fileSystem.OpenRead(GetFilePathForImage(ownerId, imageId));
-    }
+    public Stream GetImage(Guid ownerId, Guid imageId) => logger.LogMethodStartAndEnd(() => fileSystem.OpenRead(GetFilePathForImage(ownerId, imageId)));
 
     /// <inheritdoc />
-    public void DeleteImage(Guid ownerId, Guid imageId)
-    {
-        logger.MethodStarted();
-        fileSystem.DeleteFile(GetFilePathForImage(ownerId, imageId));
-        logger.ImageDeleted(ownerId, imageId);
-    }
+    public void DeleteImage(Guid ownerId, Guid imageId) =>
+        logger.LogMethodStartAndEnd(() =>
+        {
+            fileSystem.DeleteFile(GetFilePathForImage(ownerId, imageId));
+            logger.ImageDeleted(ownerId, imageId);
+        });
 
     private static void ResizeImage(Image image) => image.Mutate(context => context.Resize(new ResizeOptions { Mode = ResizeMode.Max, Size = new Size(600) }));
 

@@ -52,53 +52,52 @@ public partial class NewLifePoint
     [SuppressMessage("IDisposableAnalyzers.Correctness", "IDISP004:Don\'t ignore created IDisposable", Justification = "Okay here due to different lifetime")]
     private async Task CreateNewLifePointAsync()
     {
-        Logger.MethodStarted();
-
-        EnableSpinner();
-
-        ImageToCreate? imageToCreate;
-        try
+        await Logger.LogMethodStartAndEndAsync(async () =>
         {
-            ImageTooBig = false;
-            imageToCreate = _file != null ? new ImageToCreate(_file.OpenReadStream(MaxAllowedFileSizeInBytes)) : null;
-        }
-        catch (IOException)
-        {
-            Logger.ImageTooBig();
+            EnableSpinner();
+
+            ImageToCreate? imageToCreate;
+            try
+            {
+                ImageTooBig = false;
+                imageToCreate = _file != null ? new ImageToCreate(_file.OpenReadStream(MaxAllowedFileSizeInBytes)) : null;
+            }
+            catch (IOException)
+            {
+                Logger.ImageTooBig();
+                DisableSpinner();
+                ImageTooBig = true;
+                return;
+            }
+
+            var lifePointToCreate = new LifePointToCreate(_newLifePoint.Date,
+                _newLifePoint.Caption,
+                _newLifePoint.Description,
+                Latitude,
+                Longitude,
+                UserService.Id ?? throw new ArgumentNullException(Loc["UserHasNotBeenSet"]),
+                imageToCreate);
+
+            ExistingLifePoint createdLifePoint;
+            try
+            {
+                createdLifePoint = await LifePointService.CreateLifePointAsync(lifePointToCreate);
+                InputIsNoImage = false;
+            }
+            catch (NoImageException)
+            {
+                DisableSpinner();
+                InputIsNoImage = true;
+                return;
+            }
+
+            NewLifePointDateService.ProposedCreationDate = _newLifePoint.Date;
+
             DisableSpinner();
-            ImageTooBig = true;
-            return;
-        }
 
-        var lifePointToCreate = new LifePointToCreate(_newLifePoint.Date,
-            _newLifePoint.Caption,
-            _newLifePoint.Description,
-            Latitude,
-            Longitude,
-            UserService.Id ?? throw new ArgumentNullException(Loc["UserHasNotBeenSet"]),
-            imageToCreate);
-
-        ExistingLifePoint createdLifePoint;
-        try
-        {
-            createdLifePoint = await LifePointService.CreateLifePointAsync(lifePointToCreate);
-            InputIsNoImage = false;
-        }
-        catch (NoImageException)
-        {
-            DisableSpinner();
-            InputIsNoImage = true;
-            return;
-        }
-
-        NewLifePointDateService.ProposedCreationDate = _newLifePoint.Date;
-
-        DisableSpinner();
-
-        await RemovePopupAsync();
-        await AddMarkerAsync(createdLifePoint);
-
-        Logger.MethodFinished();
+            await RemovePopupAsync();
+            await AddMarkerAsync(createdLifePoint);
+        });
     }
 
     private void EnableSpinner()
@@ -113,23 +112,14 @@ public partial class NewLifePoint
         StateHasChanged();
     }
 
-    private async Task RemovePopupAsync()
-    {
-        Logger.MethodStarted();
+    private async Task RemovePopupAsync() =>
+        await Logger.LogMethodStartAndEndAsync(async () => await NewLifePointModule.InvokeVoidAsync("removePopupForNewLifePoint"));
 
-        await NewLifePointModule.InvokeVoidAsync("removePopupForNewLifePoint");
-
-        Logger.MethodFinished();
-    }
-
-    private async Task AddMarkerAsync(ExistingLifePoint existingLifePoint)
-    {
-        Logger.MethodStarted();
-
-        await NewLifePointModule.InvokeVoidAsync("addMarkerForCreatedLifePoint", existingLifePoint.Id, existingLifePoint.Latitude, existingLifePoint.Longitude);
-
-        Logger.MethodFinished();
-    }
+    private async Task AddMarkerAsync(ExistingLifePoint existingLifePoint) => await Logger.LogMethodStartAndEndAsync(async () =>
+                                                                                  await NewLifePointModule.InvokeVoidAsync("addMarkerForCreatedLifePoint",
+                                                                                      existingLifePoint.Id,
+                                                                                      existingLifePoint.Latitude,
+                                                                                      existingLifePoint.Longitude));
 
     private async Task LoadNewLifePointModuleAsync() => NewLifePointModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/NewLifePoint.razor.js");
 
