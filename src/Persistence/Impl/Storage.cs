@@ -40,7 +40,7 @@ internal class Storage : DbContext, IStorage
 
     internal static string DatabasePath => Path.Combine(DatabaseDirectory, "ThisIsYourLife.db");
 
-    internal static string UserDirectory => Path.Combine("/home", "app", "data");
+    internal static string UserDirectory => Path.Combine(Environment.GetEnvironmentVariable("HOME") ?? string.Empty, "data");
 
     /// <inheritdoc />
     public async Task<T?> FindAsync<T>(Guid id)
