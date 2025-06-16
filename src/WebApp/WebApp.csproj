@@ -4,7 +4,7 @@
     <NoWarn>NU1603</NoWarn>
     <ContainerRepository>mu88/thisisyourlife</ContainerRepository>
     <RuntimeIdentifiers>linux-x64;linux-arm64</RuntimeIdentifiers>
-    <ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:9.0.5</ContainerBaseImage>
+    <ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:9.0.6</ContainerBaseImage>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\BusinessServices\BusinessServices.csproj" />
