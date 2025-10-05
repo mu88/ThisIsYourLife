@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="5.0.0"></a>
+## [5.0.0](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v5.0.0) (2025-10-05)
+
+### Bug Fixes
+
+* dynamically determine user's home directory by using the corresponding environment variable ([d268e48](https://www.github.com/mu88/ThisIsYourLife/commit/d268e48e9989a54bd85a78c41a7a32ae9fbf68fa))
+
+### Breaking Changes
+
+* use GitHub Container Registry instead of Docker Hub ([03a4793](https://www.github.com/mu88/ThisIsYourLife/commit/03a479309bd784c1dc2b5124bdebd95b6e7136a6))
+
 <a name="4.1.1"></a>
 ## [4.1.1](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v4.1.1) (2024-12-20)
 
