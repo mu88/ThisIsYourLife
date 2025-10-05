@@ -112,4 +112,4 @@ Big thanks to [@SteveSandersonMS](https://github.com/SteveSandersonMS), [@danrot
 ## Nerd Stuff 🤓
 Es handelt sich um eine [Blazor Server App](https://docs.microsoft.com/en-us/aspnet/core/blazor/?view=aspnetcore-6.0#blazor-server). Die Kartenbestandteile wurden mit [Leaflet](https://leafletjs.com/) implementiert.
 
-Die App kann auch unter Docker auf einem Raspberry Pi betrieben werden. Das Docker Image befindet sich [hier](https://hub.docker.com/repository/docker/mu88/thisisyourlife).
+Die App kann auch unter Docker auf einem Raspberry Pi betrieben werden. Das Docker Image befindet sich [hier](https:/ghcr.io/mu88/thisisyourlife).

@@ -2,7 +2,6 @@
 
 ![Combined CI / Release](https://github.com/mu88/ThisIsYourLife/actions/workflows/CI_CD.yml/badge.svg)
 ![Mutation testing](https://github.com/mu88/ThisIsYourLife/actions/workflows/Mutation%20Testing.yml/badge.svg)
-![Docker Image Version (latest semver)](https://img.shields.io/docker/v/mu88/thisisyourlife?logo=docker&sort=semver)  
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=mu88_Project28&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=mu88_Project28)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=mu88_Project28&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=mu88_Project28)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=mu88_Project28&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=mu88_Project28)
@@ -37,7 +36,7 @@ As mentioned before, all data are stored locally in an application's subfolder `
 Since it is a regular .NET application, it can be run via `dotnet run` or using an IDE. The SQLite database will be created automatically in the application directory.
 
 ## Deployment
-The app is deployed both as a [self-contained executable](https://docs.microsoft.com/en-us/dotnet/core/deploying/#publish-self-contained) and the Docker image [`mu88/thisisyourlife`](https://hub.docker.com/repository/docker/mu88/thisisyourlife).
+The app is deployed both as a [self-contained executable](https://docs.microsoft.com/en-us/dotnet/core/deploying/#publish-self-contained) and the Docker image [`ghcr.io/mu88/thisisyourlife`](https://ghcr.io/mu88/thisisyourlife).
 
 The application's URL is http://localhost:5000/thisIsYourLife.
 
