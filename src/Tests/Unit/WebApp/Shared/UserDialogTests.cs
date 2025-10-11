@@ -25,14 +25,14 @@ public class UserDialogTests
     }
 
     [Test]
-    public void ClickingOk_ShouldNotSetUsername_IfNothingHasBeenEntered()
+    public async Task ClickingOk_ShouldNotSetUsername_IfNothingHasBeenEntered()
     {
         var userServiceMock = Substitute.For<IUserService>();
         using var testee = CreateTestee(userServiceMock);
 
         ClickSubmit(testee);
 
-        userServiceMock.DidNotReceive().SetUserAsync(Arg.Any<string>());
+        await userServiceMock.DidNotReceive().SetUserAsync(Arg.Any<string>());
     }
 
     private static void ClickSubmit(IRenderedComponent<UserDialog> testee) => testee.Find("button").Click();

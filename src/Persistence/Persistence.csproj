@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+    <PackageReference Include="mu88.Shared"/>
   </ItemGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />

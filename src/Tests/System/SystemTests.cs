@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using System.Net;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
@@ -15,7 +14,7 @@ public class SystemTests
     public async Task AppRunningInDocker_ShouldBeHealthy()
     {
         // Arrange
-        CancellationToken cancellationToken = CreateCancellationToken(TimeSpan.FromMinutes(1));
+        var cancellationToken = CreateCancellationToken(TimeSpan.FromMinutes(1));
         await BuildDockerImageOfAppAsync(cancellationToken);
         var container = await StartAppInContainersAsync(cancellationToken);
         var httpClient = new HttpClient { BaseAddress = GetAppBaseAddress(container) };
@@ -23,7 +22,7 @@ public class SystemTests
         // Act
         var healthCheckResponse = await httpClient.GetAsync("healthz", cancellationToken);
         var appResponse = await httpClient.GetAsync("/", cancellationToken);
-        ExecResult healthCheckToolResult = await container.ExecAsync(["dotnet", "/app/mu88.HealthCheck.dll", "http://localhost:8080/thisIsYourLife/healthz"], cancellationToken);
+        var healthCheckToolResult = await container.ExecAsync(["dotnet", "/app/mu88.HealthCheck.dll", "http://localhost:8080/thisIsYourLife/healthz"], cancellationToken);
 
         // Assert
         await LogsShouldNotContainWarningsAsync(container, cancellationToken);
@@ -31,12 +30,13 @@ public class SystemTests
         await AppShouldRunAsync(appResponse, cancellationToken);
         healthCheckToolResult.ExitCode.Should().Be(0);
     }
+
     private static CancellationToken CreateCancellationToken(TimeSpan timeout)
     {
         var timeoutCts = new CancellationTokenSource();
         timeoutCts.CancelAfter(timeout);
-        CancellationToken cancellationToken = timeoutCts.Token;
-        
+        var cancellationToken = timeoutCts.Token;
+
         return cancellationToken;
     }
 
@@ -49,7 +49,8 @@ public class SystemTests
             StartInfo = new ProcessStartInfo
             {
                 FileName = "dotnet",
-                Arguments = $"publish {projectFile} --os linux --arch amd64 /t:PublishContainer -p:ContainerFamily=noble-chiseled-extra -p:ContainerImageTags=local-system-test-chiseled",
+                Arguments =
+                    $"publish {projectFile} --os linux --arch amd64 /t:PublishContainer -p:ContainerFamily=noble-chiseled-extra -p:ContainerImageTags=local-system-test-chiseled",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 CreateNoWindow = true
@@ -68,12 +69,12 @@ public class SystemTests
     private static async Task<IContainer> StartAppInContainersAsync(CancellationToken cancellationToken)
     {
         Console.WriteLine("Building and starting network");
-        INetwork? network = new NetworkBuilder().Build();
+        var network = new NetworkBuilder().Build();
         await network.CreateAsync(cancellationToken);
         Console.WriteLine("Network started");
 
         Console.WriteLine("Building and starting app container");
-        IContainer container = BuildAppContainer(network);
+        var container = BuildAppContainer(network);
         await container.StartAsync(cancellationToken);
         Console.WriteLine("App container started");
 
@@ -85,13 +86,13 @@ public class SystemTests
             .WithImage("mu88/thisisyourlife:local-system-test-chiseled")
             .WithNetwork(network)
             .WithPortBinding(8080, true)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilMessageIsLogged(
-                "Content root path: /app",
-                strategy => strategy.WithTimeout(TimeSpan.FromSeconds(30)))) // as it's a chiseled container, waiting for the port does not work
+            .WithWaitStrategy(Wait.ForUnixContainer()
+                                  .UntilMessageIsLogged("Content root path: /app",
+                                      strategy => strategy.WithTimeout(TimeSpan.FromSeconds(30)))) // as it's a chiseled container, waiting for the port does not work
             .Build();
 
     private static Uri GetAppBaseAddress(IContainer container) => new($"http://{container.Hostname}:{container.GetMappedPublicPort(8080)}/thisIsYourLife");
-    
+
     private static async Task AppShouldRunAsync(HttpResponseMessage appResponse, CancellationToken cancellationToken)
     {
         appResponse.Should().Be200Ok();
