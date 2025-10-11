@@ -1,0 +1,28 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Solutions Items/">
+    <File Path=".editorconfig" />
+    <File Path=".github/workflows/CI_CD.yml" />
+    <File Path=".github/workflows/Mutation Testing.yml" />
+    <File Path="CHANGELOG.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="LICENSE.md" />
+    <File Path="README.md" />
+    <File Path="renovate.json" />
+    <File Path="stryker-config.json" />
+  </Folder>
+  <Project Path="src/BusinessServices/BusinessServices.csproj" />
+  <Project Path="src/DTO/DTO.csproj" />
+  <Project Path="src/Entities/Entities.csproj" />
+  <Project Path="src/Logging/Logging.csproj" />
+  <Project Path="src/Persistence/Persistence.csproj" />
+  <Project Path="src/Tests/Tests.csproj" />
+  <Project Path="src/WebApp/WebApp.csproj" />
+</Solution>

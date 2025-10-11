@@ -1,7 +1,8 @@
 {
     "stryker-config":
     {
-        "project": "BusinessServices",
+        "project": "BusinessServices.csproj",
+        "test-projects": ["../Tests/Tests.csproj"],
         "reporters": [
             "html",
             "progress",
