@@ -192,7 +192,7 @@ public class NewLifePointTests
         newLifePointModuleInterop.SetupVoid("addMarkerForCreatedLifePoint", Guid.Empty, lifePointToCreate.Latitude, lifePointToCreate.Longitude).SetVoidResult();
         newLifePointModuleInterop.SetupVoid("removePopupForNewLifePoint").SetVoidResult();
         newLifePointModuleInterop.SetupVoid("updatePopup").SetVoidResult();
-        testContext.JSInterop.SetupVoid(invocation => invocation.Identifier == "Blazor._internal.InputFile.init").SetVoidResult();
+        testContext.JSInterop.SetupVoid(invocation => string.Equals(invocation.Identifier, "Blazor._internal.InputFile.init", StringComparison.Ordinal)).SetVoidResult();
 
         var testee = testContext.RenderComponent<T>(parameters => parameters
                                                                   .Add(detail => detail.Latitude, lifePointToCreate.Latitude)
@@ -226,6 +226,6 @@ public class NewLifePointTests
     {
         public void ResetNewLifePointModule() => NewLifePointModule = null!;
 
-        public async Task OnAfterRenderForTestAsync(bool firstRender) => await base.OnAfterRenderAsync(firstRender);
+        public async Task OnAfterRenderForTestAsync(bool firstRender) => await OnAfterRenderAsync(firstRender);
     }
 }

@@ -2,8 +2,9 @@
   <PropertyGroup>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <NoWarn>NU1603</NoWarn>
+    <RuntimeIdentifiers>linux-arm64;linux-x64;win-x64</RuntimeIdentifiers>
     <ContainerRepository>mu88/thisisyourlife</ContainerRepository>
-    <RuntimeIdentifiers>linux-x64;linux-arm64</RuntimeIdentifiers>
+    <ContainerRuntimeIdentifiers>linux-arm64;linux-x64</ContainerRuntimeIdentifiers>
     <ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:9.0.9</ContainerBaseImage>
   </PropertyGroup>
   <ItemGroup>
@@ -13,9 +14,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" />
-    <PackageReference Include="mu88.Shared"/>
     <PackageReference Include="Microsoft.AspNetCore.Components.CustomElements" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+    <PackageReference Include="mu88.Shared"/>
     <PackageReference Include="Serilog.AspNetCore" />
     <PackageReference Include="Serilog.Sinks.File" />
   </ItemGroup>

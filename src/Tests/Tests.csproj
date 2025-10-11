@@ -2,7 +2,7 @@
   <PropertyGroup>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <NoWarn>NU1603</NoWarn>
+    <NoWarn>$(NoWarn);IDISP001;IDISP004;IDISP005;MA0012;NU1603</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="bunit" />
@@ -13,6 +13,7 @@
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="FluentAssertions.Web.v8"/>
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="mu88.Shared"/>
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="NSubstitute.Analyzers.CSharp">
       <PrivateAssets>all</PrivateAssets>

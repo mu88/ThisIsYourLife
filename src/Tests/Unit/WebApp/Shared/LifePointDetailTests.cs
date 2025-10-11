@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using Bunit;
 using BusinessServices.Services;
 using DTO.LifePoint;
@@ -117,6 +118,7 @@ public class LifePointDetailTests
     private static async Task LifePointShouldBeDeletedAsync(ILifePointService lifePointServiceMock, Guid id) =>
         await lifePointServiceMock.Received(1).DeleteLifePointAsync(id);
 
+    [SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1011:Closing square brackets should be spaced correctly", Justification = "Okay here")]
     private static void ShouldBeRenderedProperly(IRenderedFragment testee, ExistingLifePoint existingLifePoint)
     {
         testee.Find("img").Attributes["src"].Should().NotBeNull();
@@ -151,6 +153,6 @@ public class LifePointDetailTests
     {
         public void ResetLifePointDetailModule() => LifePointDetailModule = null!;
 
-        public async Task OnAfterRenderForTestAsync(bool firstRender) => await base.OnAfterRenderAsync(firstRender);
+        public async Task OnAfterRenderForTestAsync(bool firstRender) => await OnAfterRenderAsync(firstRender);
     }
 }

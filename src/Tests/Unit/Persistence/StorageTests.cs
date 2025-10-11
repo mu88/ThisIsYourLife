@@ -52,7 +52,7 @@ public class StorageTests
     }
 
     [Test]
-    public void EnsureStorageExists_CreatesDirectory_IfItDoesNotExist()
+    public async Task EnsureStorageExists_CreatesDirectory_IfItDoesNotExist()
     {
         _fileSystem.DirectoryExists(Storage.DatabaseDirectory).Returns(false);
         _fileSystem.FileExists(Storage.DatabasePath).Returns(true); // That's really only a hack to avoid further EF Core code
@@ -60,12 +60,12 @@ public class StorageTests
 
         var testAction = () => testee.EnsureStorageExistsAsync();
 
-        testAction.Should().NotThrowAsync();
+        await testAction.Should().NotThrowAsync();
         _fileSystem.Received(1).CreateDirectory(Storage.DatabaseDirectory);
     }
 
     [Test]
-    public void EnsureStorageExists_CreatesNothing_IfEverythingExists()
+    public async Task EnsureStorageExists_CreatesNothing_IfEverythingExists()
     {
         _fileSystem.DirectoryExists(Storage.DatabaseDirectory).Returns(true);
         _fileSystem.FileExists(Storage.DatabasePath).Returns(true);
@@ -73,7 +73,7 @@ public class StorageTests
 
         var testAction = () => testee.EnsureStorageExistsAsync();
 
-        testAction.Should().NotThrowAsync();
+        await testAction.Should().NotThrowAsync();
         _fileSystem.DidNotReceive().CreateDirectory(Storage.DatabaseDirectory);
     }
 

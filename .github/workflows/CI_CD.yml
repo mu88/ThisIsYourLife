@@ -3,8 +3,6 @@ name: Combined CI / Release
 on:
   workflow_dispatch:
   push:
-    tags:
-      - '*'
     branches:
       - '**'
 
@@ -16,14 +14,13 @@ jobs:
       attestations: write
       id-token: write
 
-    uses: mu88/github-actions/.github/workflows/ci-cd.yml@26dd40f4b32f300fc5d95ed070d45fe847808a84
+    uses: mu88/github-actions/.github/workflows/ci-cd.yml@f252e7d1c94652b5e51996174f6e2977ef88f1a5
     with:
-      github-ref-name: ${{ github.ref }}
-      sonar-key: 'mu88_Project28'
-      sonar-additional-params: '/d:sonar.cs.opencover.reportsPaths=src/Tests/coverage.opencover.xml /s:$GITHUB_WORKSPACE/SonarQube.Analysis.xml'
       docker-publish-mode: regular_and_chiseled_extra
-      docker-publish-project: 'src/WebApp/WebApp.csproj'
+      docker-publish-project: src/WebApp/WebApp.csproj
       requires-docker-login: true
+      sonar-additional-params: '/d:sonar.cs.opencover.reportsPaths=src/Tests/coverage.opencover.xml /s:$GITHUB_WORKSPACE/SonarQube.Analysis.xml'
+      sonar-key: mu88_Project28
     secrets:
       sonar-token: ${{ secrets.SONAR_TOKEN }}
 
@@ -33,33 +30,43 @@ jobs:
     needs: shared_ci_cd
 
     steps:
-    - uses: actions/checkout@v5
+      - name: Check out code
+        uses: actions/checkout@v5
 
-    - name: Set up .NET
-      uses: actions/setup-dotnet@v5
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
+          global-json-file: global.json
 
-    - name: Build single-file EXE
-      run: dotnet publish src/WebApp/WebApp.csproj -o ${{ runner.temp }}/Release/ -r win-x64 -p:PublishSingleFile=true --self-contained true
+      - name: Build .NET single-file EXE
+        run: |
+          dotnet publish src/WebApp/WebApp.csproj \
+            --output ${{ runner.temp }}/Release/ \
+            --runtime win-x64 \
+            --self-contained \
+            /p:PublishSingleFile=true
 
-    - name: Create ZIP for release
-      if: ${{ needs.shared_ci_cd.outputs.is-release == 'true' }}
-      run: |
+      - name: Create ZIP for release
+        if: ${{ needs.shared_ci_cd.outputs.is-release == 'true' }}
+        run: |
           cd ${{ runner.temp }}/Release/
           zip -r ThisIsYourLife.${{ needs.shared_ci_cd.outputs.release-version }}.zip *
 
-    - name: Create CHANGELOG
-      id: changelog
-      uses: Requarks/changelog-action@v1
-      if: ${{ needs.shared_ci_cd.outputs.is-release == 'true' }}
-      with:
-        token: ${{ github.token }}
-        tag: ${{ github.ref_name }}
-        excludeTypes: build,chore,ci,docs,other,style
+      - name: Create CHANGELOG
+        id: changelog
+        uses: Requarks/changelog-action@v1
+        if: ${{ needs.shared_ci_cd.outputs.is-release == 'true' }}
+        with:
+          token: ${{ github.token }}
+          tag: ${{ github.ref_name }}
+          excludeTypes: build,chore,ci,docs,other,style
 
-    - name: Create GitHub Release
-      uses: softprops/action-gh-release@v2
-      if: ${{ needs.shared_ci_cd.outputs.is-release == 'true' }}
-      with:
-        files: ${{ runner.temp }}/Release/ThisIsYourLife*.zip
-        tag_name: ${{ github.ref_name }}
-        body: ${{ steps.changelog.outputs.changes }}
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: ${{ needs.shared_ci_cd.outputs.is-release == 'true' }}
+        with:
+          files: ${{ runner.temp }}/Release/ThisIsYourLife*.zip
+          tag_name: ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.changes }}
