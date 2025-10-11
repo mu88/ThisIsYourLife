@@ -39,15 +39,13 @@ jobs:
       uses: actions/setup-dotnet@v5
 
     - name: Build single-file EXE
-      run: dotnet publish src/WebApp/WebApp.csproj -r win-x64 -p:PublishSingleFile=true --self-contained true
+      run: dotnet publish src/WebApp/WebApp.csproj -o ${{ runner.temp }}/Release/ -r win-x64 -p:PublishSingleFile=true --self-contained true
 
     - name: Create ZIP for release
-      uses: thedoctor0/zip-release@master
       if: ${{ needs.shared_ci_cd.outputs.is-release == 'true' }}
-      with:
-        type: 'zip'
-        filename: ThisIsYourLife.${{ needs.shared_ci_cd.outputs.release-version }}.zip
-        directory: 'src/WebApp/bin/Release/net9.0/win-x64/publish'
+      run: |
+          cd ${{ runner.temp }}/Release/
+          zip -r ThisIsYourLife.${{ needs.shared_ci_cd.outputs.release-version }}.zip *
 
     - name: Create CHANGELOG
       id: changelog
@@ -56,12 +54,12 @@ jobs:
       with:
         token: ${{ github.token }}
         tag: ${{ github.ref_name }}
-        excludeTypes: build,docs,other,style,chore(deps)
+        excludeTypes: build,chore,ci,docs,other,style
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v2
       if: ${{ needs.shared_ci_cd.outputs.is-release == 'true' }}
       with:
-        files: src/WebApp/bin/Release/net9.0/win-x64/publish/ThisIsYourLife*.zip
+        files: ${{ runner.temp }}/Release/ThisIsYourLife*.zip
         tag_name: ${{ github.ref_name }}
         body: ${{ steps.changelog.outputs.changes }}
