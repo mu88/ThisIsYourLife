@@ -54,6 +54,12 @@ jobs:
           cd ${{ runner.temp }}/Release/
           zip -r ThisIsYourLife.${{ needs.shared_ci_cd.outputs.release_version }}.zip *
 
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v3
+        if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' }}
+        with:
+          subject-path: ${{ runner.temp }}/Release/ThisIsYourLife*.zip
+
       - name: Determine release notes
         id: changelog
         if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' }}
