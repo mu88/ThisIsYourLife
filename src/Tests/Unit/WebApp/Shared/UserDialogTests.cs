@@ -4,7 +4,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Persistence;
 using WebApp.Shared;
-using TestContext = Bunit.TestContext;
+using BunitContext = Bunit.BunitContext;
 
 namespace Tests.Unit.WebApp.Shared;
 
@@ -41,10 +41,10 @@ public class UserDialogTests
 
     private static IRenderedComponent<UserDialog> CreateTestee(IUserService userServiceMock)
     {
-        var ctx = new TestContext();
+        var ctx = new BunitContext();
         ctx.Services.AddLocalization();
         ctx.Services.AddSingleton(userServiceMock);
-        var testee = ctx.RenderComponent<UserDialog>();
+        var testee = ctx.Render<UserDialog>();
         return testee;
     }
 }

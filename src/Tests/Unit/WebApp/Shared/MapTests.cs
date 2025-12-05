@@ -10,7 +10,7 @@ using NUnit.Framework;
 using Persistence;
 using Tests.Doubles;
 using WebApp.Shared;
-using TestContext = Bunit.TestContext;
+using BunitContext = Bunit.BunitContext;
 
 namespace Tests.Unit.WebApp.Shared;
 
@@ -22,7 +22,7 @@ public class MapTests
     public void MapShouldBeInitializedCorrectly()
     {
         var existingLocations = new[] { TestExistingLocation.Create(), TestExistingLocation.Create() };
-        var testContext = CreateTestContext(existingLocations,
+        var testContext = CreateBunitContext(existingLocations,
             configureMapModule: mapModule => mapModule.SetupModule("initializeMap", _ => true),
             configureLifePointDetailModule: lifePointDetailModule =>
             {
@@ -43,7 +43,7 @@ public class MapTests
     {
         const double latitude = 19;
         const double longitude = 19;
-        var testContext = CreateTestContext(new[] { TestExistingLocation.Create() },
+        var testContext = CreateBunitContext(new[] { TestExistingLocation.Create() },
             lifePointDetailModule =>
             {
                 lifePointDetailModule.SetupVoid("initialize", _ => true).SetVoidResult();
@@ -60,14 +60,14 @@ public class MapTests
         MarkerForNewLifePointShouldBeAdded(latitude, longitude, testContext, testee);
     }
 
-    private static IRenderedComponent<Map> CreateTestee(TestContext testContext) => testContext.RenderComponent<Map>();
+    private static IRenderedComponent<Map> CreateTestee(BunitContext testContext) => testContext.Render<Map>();
 
-    private static TestContext CreateTestContext(IEnumerable<ExistingLocation> existingLocations,
+    private static BunitContext CreateBunitContext(IEnumerable<ExistingLocation> existingLocations,
                                                  Action<BunitJSModuleInterop>? configureLifePointDetailModule = null,
                                                  Action<BunitJSModuleInterop>? configureNewLifePointModule = null,
                                                  Action<BunitJSModuleInterop>? configureMapModule = null)
     {
-        var testContext = new TestContext();
+        var testContext = new BunitContext();
         var lifePointDetailModule = testContext.JSInterop.SetupModule("./Shared/LifePointDetail.razor.js");
         configureLifePointDetailModule?.Invoke(lifePointDetailModule);
         var mapModule = testContext.JSInterop.SetupModule("./Shared/Map.razor.js");
@@ -99,7 +99,7 @@ public class MapTests
 
     private static void MarkerForNewLifePointShouldBeAdded(double latitude,
                                                            double longitude,
-                                                           TestContext testContext,
+                                                           BunitContext testContext,
                                                            IRenderedComponent<Map> testee) =>
         testContext.JSInterop.Invocations.Should()
                    .ContainSingle(invocation => invocation.Identifier.Equals("createPopupForNewLifePoint")
@@ -109,7 +109,7 @@ public class MapTests
                                                 && Equals(longitude, invocation.Arguments[3]));
 
     private static void MarkersForExistingLifePointsShouldBeAdded(IEnumerable<ExistingLocation> existingLocations,
-                                                                  TestContext testContext)
+                                                                  BunitContext testContext)
     {
         foreach (var existingLocation in existingLocations)
         {
@@ -121,7 +121,7 @@ public class MapTests
         }
     }
 
-    private static void ShouldBeCenteredInDresden(TestContext testContext, IRenderedComponent<Map> testee) =>
+    private static void ShouldBeCenteredInDresden(BunitContext testContext, IRenderedComponent<Map> testee) =>
         testContext.JSInterop.Invocations.Should()
                    .ContainSingle(invocation => invocation.Identifier.Equals("initializeMap")
                                                 && invocation.Arguments[0].As<double>().Equals(51.0405849)

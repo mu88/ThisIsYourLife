@@ -8,7 +8,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Tests.Doubles;
 using WebApp.Shared;
-using TestContext = Bunit.TestContext;
+using BunitContext = Bunit.BunitContext;
 
 #pragma warning disable CA1861
 
@@ -21,7 +21,7 @@ public class FilterLifePointsTests
     [Test]
     public void EnableFiltering_ShouldLoadCreators()
     {
-        using var testContext = new TestContext();
+        using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
 
         ClickFilterButton(testee);
@@ -32,7 +32,7 @@ public class FilterLifePointsTests
     [Test]
     public void EnableFiltering_ShouldLoadYears()
     {
-        using var testContext = new TestContext();
+        using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
 
         ClickFilterButton(testee);
@@ -43,7 +43,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByYear_ShouldFilterMarkers()
     {
-        using var testContext = new TestContext();
+        using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -55,7 +55,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByYear_ShouldShowAllMarkers_WhenChoosingDefaultYear()
     {
-        using var testContext = new TestContext();
+        using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -69,7 +69,7 @@ public class FilterLifePointsTests
     [TestCase(null)]
     public async Task FilterByYear_ShouldNotFail_WhenInputIsNoYear(object? changedValue)
     {
-        using var testContext = new TestContext();
+        using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -81,7 +81,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByCreator_ShouldFilterMarkers()
     {
-        using var testContext = new TestContext();
+        using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -93,7 +93,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByCreator_ShouldShowAllMarkers_WhenChoosingDefaultCreator()
     {
-        using var testContext = new TestContext();
+        using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -106,7 +106,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByCreator_ShouldDisableYearFiltering()
     {
-        using var testContext = new TestContext();
+        using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -119,7 +119,7 @@ public class FilterLifePointsTests
     [TestCase(null)]
     public async Task FilterByCreator_ShouldNotFail_WhenInputIsNoCreator(object? changedValue)
     {
-        using var testContext = new TestContext();
+        using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -131,7 +131,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByCreator_ShouldDoNothing_WhenGuidsMatch()
     {
-        using var testContext = new TestContext();
+        using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -143,7 +143,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByYear_ShouldNotReloadMarkers_WhenSameYearHasBeenChosen()
     {
-        using var testContext = new TestContext();
+        using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
         await FilterByYearAsync(testee, 1953);
@@ -156,7 +156,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByYear_ShouldDisableCreatorFiltering()
     {
-        using var testContext = new TestContext();
+        using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -168,7 +168,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByCreator_ShouldNotReloadMarkers_WhenSameCreatorHasBeenChosen()
     {
-        using var testContext = new TestContext();
+        using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
         await FilterByCreatorAsync(testee, testContext, "Dixie");
@@ -181,7 +181,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task DisableFiltering_ShouldReloadAllMarkers()
     {
-        using var testContext = new TestContext();
+        using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee); // enables filtering
         await FilterByYearAsync(testee, 1953);
@@ -191,7 +191,7 @@ public class FilterLifePointsTests
         MarkersShouldBeDisplayed(testContext, 2);
     }
 
-    private static IRenderedComponent<FilterLifePoints> CreateTestee(TestContext testContext)
+    private static IRenderedComponent<FilterLifePoints> CreateTestee(BunitContext testContext)
     {
         var existingPerson1 = TestExistingPerson.Create("Dixie");
         var existingPerson2 = TestExistingPerson.Create("Ulf");
@@ -218,7 +218,7 @@ public class FilterLifePointsTests
         lifePointDetailModule.SetupVoid("createMarkerForExistingLifePoint", existingLocation.Id, existingLocation.Latitude, existingLocation.Longitude)
                              .SetVoidResult();
 
-        var testee = testContext.RenderComponent<FilterLifePoints>();
+        var testee = testContext.Render<FilterLifePoints>();
 
         return testee;
     }
@@ -253,7 +253,7 @@ public class FilterLifePointsTests
     private static void YearFilteringShouldBeDisabled(IRenderedComponent<FilterLifePoints> testee) =>
         testee.Find("[id^=\"distinctYear\"]").HasAttribute("disabled").Should().BeTrue();
 
-    private static void MarkersShouldBeDisplayed(TestContext testContext, int numberOfCalls = 1)
+    private static void MarkersShouldBeDisplayed(BunitContext testContext, int numberOfCalls = 1)
     {
         testContext.JSInterop.VerifyInvoke("reset", numberOfCalls);
 
@@ -267,7 +267,7 @@ public class FilterLifePointsTests
 
     private static async Task ResetYearFilterToDefaultAsync(IRenderedComponent<FilterLifePoints> testee) => await ChangeYearSelectElementAsync(testee, -1);
 
-    private static async Task FilterByCreatorAsync(IRenderedComponent<FilterLifePoints> testee, TestContext testContext, string name)
+    private static async Task FilterByCreatorAsync(IRenderedComponent<FilterLifePoints> testee, BunitContext testContext, string name)
     {
         var idForName = testContext.Services.GetRequiredService<ILifePointService>()
                                    .GetDistinctCreators()

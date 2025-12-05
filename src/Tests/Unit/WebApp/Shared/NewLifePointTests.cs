@@ -14,7 +14,7 @@ using Persistence;
 using Tests.Doubles;
 using WebApp.Services;
 using WebApp.Shared;
-using TestContext = Bunit.TestContext;
+using BunitContext = Bunit.BunitContext;
 
 namespace Tests.Unit.WebApp.Shared;
 
@@ -33,7 +33,7 @@ public class NewLifePointTests
                                 await Task.Delay(500);
                                 return TestExistingLifePoint.From(lifePointToCreate);
                             });
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate, lifePointServiceMock);
 
         EnterInput(testee, lifePointToCreate);
@@ -53,7 +53,7 @@ public class NewLifePointTests
         var browserFileMock = Substitute.For<IBrowserFile>();
         browserFileMock.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes).Returns(imageMemoryStream);
         var lifePointToCreate = TestLifePointToCreate.Create(newImage: TestImageToCreate.Create(imageMemoryStream));
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate);
 
         EnterInput(testee, lifePointToCreate);
@@ -72,7 +72,7 @@ public class NewLifePointTests
         var browserFileMock = Substitute.For<IBrowserFile>();
         browserFileMock.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes).Throws<IOException>();
         var lifePointToCreate = TestLifePointToCreate.Create();
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate);
 
         EnterInput(testee, lifePointToCreate);
@@ -95,7 +95,7 @@ public class NewLifePointTests
                                 await Task.Delay(500);
                                 return TestExistingLifePoint.From(lifePointToCreate);
                             });
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate, lifePointServiceMock, userServiceMock);
 
         EnterInput(testee, lifePointToCreate);
@@ -113,7 +113,7 @@ public class NewLifePointTests
         var lifePointServiceMock = Substitute.For<ILifePointService>();
         lifePointServiceMock.CreateLifePointAsync(Arg.Any<LifePointToCreate>()).ThrowsAsync<NoImageException>();
         var lifePointToCreate = TestLifePointToCreate.Create();
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate, lifePointServiceMock);
 
         EnterInput(testee, lifePointToCreate);
@@ -132,7 +132,7 @@ public class NewLifePointTests
         var lifePointServiceMock = Substitute.For<ILifePointService>();
         lifePointServiceMock.CreateLifePointAsync(Arg.Any<LifePointToCreate>()).ThrowsAsync<NoImageException>();
         var lifePointToCreate = TestLifePointToCreate.Create();
-        using var ctx = new TestContext();
+        using var ctx = new BunitContext();
         using var testee = CreateTestee<NewLifePointForTest>(ctx, lifePointToCreate, lifePointServiceMock);
 
         testee.Instance.ResetNewLifePointModule();
@@ -143,7 +143,7 @@ public class NewLifePointTests
 
     private static async Task ClickSaveAsync(IRenderedComponent<NewLifePoint> testee) => await testee.Find("button").ClickAsync(new MouseEventArgs());
 
-    private static async Task NewLifePointWithImagePointShouldHaveBeenCreatedAsync(TestContextBase testContext, MemoryStream imageMemoryStream)
+    private static async Task NewLifePointWithImagePointShouldHaveBeenCreatedAsync(BunitContext testContext, MemoryStream imageMemoryStream)
     {
         var lifePointServiceMock = testContext.Services.GetRequiredService<ILifePointService>();
         await lifePointServiceMock.Received().CreateLifePointAsync(Arg.Is<LifePointToCreate>(create => create.ImageToCreate!.Stream.Equals(imageMemoryStream)));
@@ -151,12 +151,12 @@ public class NewLifePointTests
 
     private static async Task ClickAndUploadImageAsync(IRenderedComponent<NewLifePoint> testee, IBrowserFile browserFile)
     {
-        var filesToUpload = new InputFileChangeEventArgs(new[] { browserFile });
+        var filesToUpload = new InputFileChangeEventArgs([browserFile]);
         var inputComponent = testee.FindComponent<InputFile>().Instance;
         await testee.InvokeAsync(() => inputComponent.OnChange.InvokeAsync(filesToUpload));
     }
 
-    private static IRenderedComponent<T> CreateTestee<T>(TestContext testContext,
+    private static IRenderedComponent<T> CreateTestee<T>(BunitContext testContext,
                                                          LifePointToCreate lifePointToCreate,
                                                          ILifePointService? lifePointServiceMock = null,
                                                          IUserService? userServiceMock = null)
@@ -194,20 +194,20 @@ public class NewLifePointTests
         newLifePointModuleInterop.SetupVoid("updatePopup").SetVoidResult();
         testContext.JSInterop.SetupVoid(invocation => string.Equals(invocation.Identifier, "Blazor._internal.InputFile.init", StringComparison.Ordinal)).SetVoidResult();
 
-        var testee = testContext.RenderComponent<T>(parameters => parameters
+        var testee = testContext.Render<T>(parameters => parameters
                                                                   .Add(detail => detail.Latitude, lifePointToCreate.Latitude)
                                                                   .Add(detail => detail.Longitude, lifePointToCreate.Longitude));
 
         return testee;
     }
 
-    private static void MarkerShouldBeAdded(TestContext testContext) =>
+    private static void MarkerShouldBeAdded(BunitContext testContext) =>
         testContext.JSInterop.Invocations.Should().ContainSingle(invocation => invocation.Identifier.Equals("addMarkerForCreatedLifePoint"));
 
-    private static void PopupShouldBeRemoved(TestContext testContext) =>
+    private static void PopupShouldBeRemoved(BunitContext testContext) =>
         testContext.JSInterop.Invocations.Should().ContainSingle(invocation => invocation.Identifier.Equals("removePopupForNewLifePoint"));
 
-    private static void PopupShouldNotBeUpdated(TestContext testContext) =>
+    private static void PopupShouldNotBeUpdated(BunitContext testContext) =>
         testContext.JSInterop.Invocations.Should().NotContain(invocation => invocation.Identifier.Equals("updatePopup"));
 
     private static void ProposedDateShouldBeCorrect(LifePointToCreate lifePointToCreate, IRenderedComponent<NewLifePoint> testee) =>
