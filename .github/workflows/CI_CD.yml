@@ -31,7 +31,7 @@ jobs:
 
     permissions:
       attestations: write
-      contents: read
+      contents: write # Needed to create GitHub Release
       id-token: write
 
     steps:
@@ -62,14 +62,7 @@ jobs:
         id: changelog
         if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' }}
         run: |
-          dotnet tool restore
-
-          $release_notes = dotnet tool versionize changelog -v ${{ needs.shared_ci_cd.outputs.release_version }}
-          if [ -z "$release_notes" ]; then
-            echo "No release notes generated, something went wrong."
-            exit 1
-          fi
-
+          release_notes="I'm currently broken, fix me"
           echo "changes=$release_notes" >> $GITHUB_OUTPUT
 
       - name: Attest build provenance
