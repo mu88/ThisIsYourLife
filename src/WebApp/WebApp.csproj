@@ -3,9 +3,11 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <NoWarn>NU1603</NoWarn>
     <RuntimeIdentifiers>linux-arm64;linux-x64;win-x64</RuntimeIdentifiers>
-    <ContainerRepository>mu88/thisisyourlife</ContainerRepository>
     <ContainerRuntimeIdentifiers>linux-arm64;linux-x64</ContainerRuntimeIdentifiers>
     <ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:10.0.0</ContainerBaseImage>
+    <PublishRegularContainer>true</PublishRegularContainer>
+    <PublishChiseledContainer>true</PublishChiseledContainer>
+    <InvariantGlobalization>false</InvariantGlobalization>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\BusinessServices\BusinessServices.csproj" />

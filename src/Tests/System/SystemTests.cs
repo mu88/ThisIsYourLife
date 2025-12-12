@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
@@ -14,9 +15,10 @@ public class SystemTests
     public async Task AppRunningInDocker_ShouldBeHealthy()
     {
         // Arrange
+        var containerImageTag = GenerateContainerImageTag();
         var cancellationToken = CreateCancellationToken(TimeSpan.FromMinutes(1));
-        await BuildDockerImageOfAppAsync(cancellationToken);
-        var container = await StartAppInContainersAsync(cancellationToken);
+        await BuildDockerImageOfAppAsync(containerImageTag, cancellationToken);
+        var container = await StartAppInContainersAsync(containerImageTag, cancellationToken);
         var httpClient = new HttpClient { BaseAddress = GetAppBaseAddress(container) };
 
         // Act
@@ -40,7 +42,7 @@ public class SystemTests
         return cancellationToken;
     }
 
-    private static async Task BuildDockerImageOfAppAsync(CancellationToken cancellationToken)
+    private static async Task BuildDockerImageOfAppAsync(string containerImageTag, CancellationToken cancellationToken)
     {
         var rootDirectory = Directory.GetParent(Environment.CurrentDirectory)?.Parent?.Parent?.Parent ?? throw new NullReferenceException();
         var projectFile = Path.Join(rootDirectory.FullName, "WebApp", "WebApp.csproj");
@@ -50,7 +52,12 @@ public class SystemTests
             {
                 FileName = "dotnet",
                 Arguments =
-                    $"publish {projectFile} --os linux --arch amd64 /t:PublishContainer -p:ContainerFamily=noble-chiseled-extra -p:ContainerImageTags=local-system-test-chiseled",
+                    $"publish {projectFile} --os linux --arch amd64 " +
+                    $"/t:PublishContainersForMultipleFamilies " +
+                    $"-p:ReleaseVersion={containerImageTag} " +
+                    "-p:IsRelease=false " +
+                    "-p:ContainerRegistry=\"\" " + // image shall not be pushed
+                    "-p:ContainerRepository=\"me/thisisyourlife\" ",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 CreateNoWindow = true
@@ -66,7 +73,7 @@ public class SystemTests
         process.ExitCode.Should().Be(0);
     }
 
-    private static async Task<IContainer> StartAppInContainersAsync(CancellationToken cancellationToken)
+    private static async Task<IContainer> StartAppInContainersAsync(string containerImageTag, CancellationToken cancellationToken)
     {
         Console.WriteLine("Building and starting network");
         var network = new NetworkBuilder().Build();
@@ -74,16 +81,16 @@ public class SystemTests
         Console.WriteLine("Network started");
 
         Console.WriteLine("Building and starting app container");
-        var container = BuildAppContainer(network);
+        var container = BuildAppContainer(network, containerImageTag);
         await container.StartAsync(cancellationToken);
         Console.WriteLine("App container started");
 
         return container;
     }
 
-    private static IContainer BuildAppContainer(INetwork network) =>
+    private static IContainer BuildAppContainer(INetwork network, string containerImageTag) =>
         new ContainerBuilder()
-            .WithImage("mu88/thisisyourlife:local-system-test-chiseled")
+            .WithImage($"me/thisisyourlife:{containerImageTag}-chiseled")
             .WithNetwork(network)
             .WithPortBinding(8080, true)
             .WithWaitStrategy(Wait.ForUnixContainer()
@@ -112,4 +119,7 @@ public class SystemTests
         Console.WriteLine($"Stdout:{Environment.NewLine}{logValues.Stdout}");
         logValues.Stdout.Should().NotContain("warn:");
     }
+
+    [SuppressMessage("Design", "MA0076:Do not use implicit culture-sensitive ToString in interpolated strings", Justification = "Okay for me")]
+    private static string GenerateContainerImageTag() => $"system-test-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}";
 }
