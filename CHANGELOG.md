@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [versionize](https://github.com/versionize/versionize) for commit guidelines.
 
+<a name="6.0.0"></a>
+## [6.0.0](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v6.0.0) (2025-12-12)
+
+### ✨ Features
+
+* upgrade to .NET 10 ([cee91b7](https://www.github.com/mu88/ThisIsYourLife/commit/cee91b7ceadc6a476c93c4f0fc774446b04ac865))
+
+### 🔧 Chores
+
+* switch to new SLNX format ([6a5ef6e](https://www.github.com/mu88/ThisIsYourLife/commit/6a5ef6e5f582fec062b6640be4d8cad2e3863707))
+* **deps:** update all dependencies ([5f32b79](https://www.github.com/mu88/ThisIsYourLife/commit/5f32b7938a1ee95d65c40aca5276fa5f6683d396))
+* **deps:** update all dependencies ([76f75ae](https://www.github.com/mu88/ThisIsYourLife/commit/76f75ae4520e53d6f588a9f268d8eca88e1313f6))
+* **deps:** update all dependencies ([48261c6](https://www.github.com/mu88/ThisIsYourLife/commit/48261c63c93caecedb1543966a1a167a0f3d2ef5))
+* **deps:** update package lock file ([6ed176e](https://www.github.com/mu88/ThisIsYourLife/commit/6ed176e9682488657598cc99f6d97ebed80c0896))
+
+### Breaking Changes
+
+* upgrade to .NET 10 ([cee91b7](https://www.github.com/mu88/ThisIsYourLife/commit/cee91b7ceadc6a476c93c4f0fc774446b04ac865))
+
 <a name="5.0.0"></a>
 ## [5.0.0](https://www.github.com/mu88/ThisIsYourLife/releases/tag/v5.0.0) (2025-10-05)
 
