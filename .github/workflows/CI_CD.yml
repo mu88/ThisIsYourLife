@@ -62,8 +62,28 @@ jobs:
         id: changelog
         if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' }}
         run: |
-          release_notes="I'm currently broken, fix me"
-          echo "changes=$release_notes" >> $GITHUB_OUTPUT
+          dotnet tool restore
+
+          # See https://github.com/dotnet/sdk/issues/39697: "dotnet publish" modifies the packages.lock.json file, restore it to avoid versionize errors
+          git restore src/WebApp/packages.lock.json
+          
+          # See https://github.com/versionize/versionize/issues/189: Versionize requires git user config to be set
+          git config user.name "John Doe"
+          git config user.email "johndoe@example.com"
+
+          dotnet tool run versionize changelog -v ${{ needs.shared_ci_cd.outputs.release_version }} >> ${{ runner.temp }}/release_notes.md || true
+          release_notes=$(cat ${{ runner.temp }}/release_notes.md)
+          echo "Determined release notes:"
+          echo "$release_notes"
+          if [ -z "$release_notes" ]; then
+            echo "No release notes determined, something went wrong."
+            exit 1
+          fi
+
+          # Use GitHub Actions multiline output syntax to safely pass release notes (they may contain newlines and lines starting with '*')
+          echo "changes<<EOF" >> $GITHUB_OUTPUT
+          cat ${{ runner.temp }}/release_notes.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Attest build provenance
         uses: actions/attest-build-provenance@v3
