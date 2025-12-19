@@ -54,10 +54,9 @@ public class SystemTests
                 Arguments =
                     $"publish {projectFile} --os linux --arch amd64 " +
                     $"/t:PublishContainersForMultipleFamilies " +
-                    $"-p:ReleaseVersion={containerImageTag} " +
-                    "-p:IsRelease=false " +
-                    "-p:ContainerRegistry=\"\" " + // image shall not be pushed
-                    "-p:ContainerRepository=\"me/thisisyourlife\" ",
+                    $"/p:ReleaseVersion={containerImageTag} " +
+                    "/p:IsRelease=false " +
+                    "/p:DoNotApplyGitHubScope=true", // ensures same behavior when run locally or in GitHub Actions
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 CreateNoWindow = true
@@ -90,7 +89,7 @@ public class SystemTests
 
     private static IContainer BuildAppContainer(INetwork network, string containerImageTag) =>
         new ContainerBuilder()
-            .WithImage($"me/thisisyourlife:{containerImageTag}-chiseled")
+            .WithImage($"webapp:{containerImageTag}-chiseled")
             .WithNetwork(network)
             .WithPortBinding(8080, true)
             .WithWaitStrategy(Wait.ForUnixContainer()

@@ -37,9 +37,9 @@
       },
       "mu88.Shared": {
         "type": "Direct",
-        "requested": "[4.1.0, )",
-        "resolved": "4.1.0",
-        "contentHash": "cyb58m/5zspmN0a6TpSR29VSFNB4xlPEcni16QOw3cQMcNGEG/5g4ls3hpvSL1AWBZ2HfZuj6aOPYyRS2Kk8DA==",
+        "requested": "[4.3.0, )",
+        "resolved": "4.3.0",
+        "contentHash": "2EBDoign1Y7fnqUXHYMgMVJx+o8VPMSe/rFk1g8dtT7EYM8TJpC0Lyw17SpFOdumxan0r4Galufjo0FAHNKftA==",
         "dependencies": {
           "IDisposableAnalyzers": "4.0.8",
           "Meziantou.Analyzer": "2.0.257",
@@ -314,43 +314,43 @@
         "type": "Project",
         "dependencies": {
           "AutoMapper": "[16.0.0, )",
-          "DTO": "[5.0.0, )",
-          "Entities": "[5.0.0, )",
-          "Logging": "[5.0.0, )",
-          "mu88.Shared": "[4.1.0, )"
+          "DTO": "[6.0.1, )",
+          "Entities": "[6.0.1, )",
+          "Logging": "[6.0.1, )",
+          "mu88.Shared": "[4.3.0-alpha-301-1.0, )"
         }
       },
       "dto": {
         "type": "Project",
         "dependencies": {
-          "mu88.Shared": "[4.1.0, )"
+          "mu88.Shared": "[4.3.0-alpha-301-1.0, )"
         }
       },
       "entities": {
         "type": "Project",
         "dependencies": {
-          "mu88.Shared": "[4.1.0, )"
+          "mu88.Shared": "[4.3.0-alpha-301-1.0, )"
         }
       },
       "logging": {
         "type": "Project",
         "dependencies": {
-          "mu88.Shared": "[4.1.0, )"
+          "mu88.Shared": "[4.3.0-alpha-301-1.0, )"
         }
       },
       "persistence": {
         "type": "Project",
         "dependencies": {
-          "BusinessServices": "[5.0.0, )",
-          "Entities": "[5.0.0, )",
-          "Logging": "[5.0.0, )",
+          "BusinessServices": "[6.0.1, )",
+          "Entities": "[6.0.1, )",
+          "Logging": "[6.0.1, )",
           "Microsoft.EntityFrameworkCore": "[10.0.0, )",
           "Microsoft.EntityFrameworkCore.Proxies": "[10.0.0, )",
           "Microsoft.EntityFrameworkCore.Relational": "[10.0.0, )",
           "Microsoft.EntityFrameworkCore.Sqlite": "[10.0.0, )",
           "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": "[10.0.0, )",
           "SixLabors.ImageSharp": "[3.1.12, )",
-          "mu88.Shared": "[4.1.0, )"
+          "mu88.Shared": "[4.3.0-alpha-301-1.0, )"
         }
       },
       "Microsoft.EntityFrameworkCore": {
