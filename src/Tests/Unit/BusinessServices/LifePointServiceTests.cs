@@ -114,23 +114,23 @@ public class LifePointServiceTests
     public async Task GetLifePoint()
     {
         var lifePoints = new[] { TestLifePoint.Create(), TestLifePoint.Create() };
-        _storage.FindAsync<LifePoint>(lifePoints.First().Id).Returns(lifePoints.First());
+        _storage.FindAsync<LifePoint>(lifePoints[0].Id).Returns(lifePoints[0]);
         var testee = CreateTestee();
 
-        var result = await testee.GetLifePointAsync(lifePoints.First().Id);
+        var result = await testee.GetLifePointAsync(lifePoints[0].Id);
 
-        result.Should().BeEquivalentTo(lifePoints.First(), options => options.Excluding(x => x.CreatedBy));
-        result.CreatedBy.Name.Should().Be(lifePoints.First().CreatedBy.Name);
+        result.Should().BeEquivalentTo(lifePoints[0], options => options.Excluding(x => x.CreatedBy));
+        result.CreatedBy.Name.Should().Be(lifePoints[0].CreatedBy.Name);
     }
 
     [Test]
     public async Task GetLifePoint_ThrowsException_IfLifePointDoesNotExist()
     {
         var lifePoints = new[] { TestLifePoint.Create(), TestLifePoint.Create() };
-        _storage.FindAsync<LifePoint>(lifePoints.First().Id).Returns((LifePoint?)null);
+        _storage.FindAsync<LifePoint>(lifePoints[0].Id).Returns((LifePoint?)null);
         var testee = CreateTestee();
 
-        var testAction = () => testee.GetLifePointAsync(lifePoints.First().Id);
+        var testAction = () => testee.GetLifePointAsync(lifePoints[0].Id);
 
         await testAction.Should().ThrowAsync<ArgumentNullException>();
     }
@@ -187,12 +187,12 @@ public class LifePointServiceTests
     public async Task DeleteLifePoint()
     {
         var lifePoints = new[] { TestLifePoint.Create(), TestLifePoint.Create() };
-        _storage.FindAsync<LifePoint>(lifePoints.First().Id).Returns(lifePoints.First());
+        _storage.FindAsync<LifePoint>(lifePoints[0].Id).Returns(lifePoints[0]);
         var testee = CreateTestee();
 
-        await testee.DeleteLifePointAsync(lifePoints.First().Id);
+        await testee.DeleteLifePointAsync(lifePoints[0].Id);
 
-        _storage.Received(1).RemoveItem(lifePoints.First());
+        _storage.Received(1).RemoveItem(lifePoints[0]);
         await _storage.Received(1).SaveAsync();
     }
 
@@ -200,13 +200,13 @@ public class LifePointServiceTests
     public async Task DeleteLifePoint_IfImageExists()
     {
         var lifePoints = new[] { TestLifePoint.Create(imageId: Guid.NewGuid()), TestLifePoint.Create() };
-        _storage.FindAsync<LifePoint>(lifePoints.First().Id).Returns(lifePoints.First());
+        _storage.FindAsync<LifePoint>(lifePoints[0].Id).Returns(lifePoints[0]);
         var testee = CreateTestee();
 
-        await testee.DeleteLifePointAsync(lifePoints.First().Id);
+        await testee.DeleteLifePointAsync(lifePoints[0].Id);
 
-        _storage.Received(1).RemoveItem(lifePoints.First());
-        _storage.Received(1).DeleteImage(lifePoints.First().CreatedBy.Id, lifePoints.First().ImageId!.Value);
+        _storage.Received(1).RemoveItem(lifePoints[0]);
+        _storage.Received(1).DeleteImage(lifePoints[0].CreatedBy.Id, lifePoints[0].ImageId!.Value);
         await _storage.Received(1).SaveAsync();
     }
 
@@ -214,12 +214,12 @@ public class LifePointServiceTests
     public async Task DeleteLifePoint_ThrowsException_IfLifePointDoesNotExist()
     {
         var lifePoints = new[] { TestLifePoint.Create(), TestLifePoint.Create() };
-        _storage.FindAsync<LifePoint>(lifePoints.First().Id).Returns((LifePoint?)null);
+        _storage.FindAsync<LifePoint>(lifePoints[0].Id).Returns((LifePoint?)null);
         var testee = CreateTestee();
 
-        var testAction = () => testee.DeleteLifePointAsync(lifePoints.First().Id);
+        var testAction = () => testee.DeleteLifePointAsync(lifePoints[0].Id);
 
-        await testAction.Should().ThrowAsync<ArgumentNullException>().WithMessage($"Could not find*{lifePoints.First().Id}*");
+        await testAction.Should().ThrowAsync<ArgumentNullException>().WithMessage($"Could not find*{lifePoints[0].Id}*");
     }
 
     [Test]

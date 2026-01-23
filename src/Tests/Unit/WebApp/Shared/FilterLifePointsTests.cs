@@ -43,7 +43,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByYear_ShouldFilterMarkers()
     {
-        using var testContext = new BunitContext();
+        await using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -55,7 +55,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByYear_ShouldShowAllMarkers_WhenChoosingDefaultYear()
     {
-        using var testContext = new BunitContext();
+        await using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -69,7 +69,7 @@ public class FilterLifePointsTests
     [TestCase(null)]
     public async Task FilterByYear_ShouldNotFail_WhenInputIsNoYear(object? changedValue)
     {
-        using var testContext = new BunitContext();
+        await using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -81,7 +81,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByCreator_ShouldFilterMarkers()
     {
-        using var testContext = new BunitContext();
+        await using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -93,7 +93,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByCreator_ShouldShowAllMarkers_WhenChoosingDefaultCreator()
     {
-        using var testContext = new BunitContext();
+        await using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -106,7 +106,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByCreator_ShouldDisableYearFiltering()
     {
-        using var testContext = new BunitContext();
+        await using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -119,7 +119,7 @@ public class FilterLifePointsTests
     [TestCase(null)]
     public async Task FilterByCreator_ShouldNotFail_WhenInputIsNoCreator(object? changedValue)
     {
-        using var testContext = new BunitContext();
+        await using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -131,7 +131,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByCreator_ShouldDoNothing_WhenGuidsMatch()
     {
-        using var testContext = new BunitContext();
+        await using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -143,7 +143,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByYear_ShouldNotReloadMarkers_WhenSameYearHasBeenChosen()
     {
-        using var testContext = new BunitContext();
+        await using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
         await FilterByYearAsync(testee, 1953);
@@ -156,7 +156,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByYear_ShouldDisableCreatorFiltering()
     {
-        using var testContext = new BunitContext();
+        await using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
 
@@ -168,7 +168,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task FilterByCreator_ShouldNotReloadMarkers_WhenSameCreatorHasBeenChosen()
     {
-        using var testContext = new BunitContext();
+        await using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee);
         await FilterByCreatorAsync(testee, testContext, "Dixie");
@@ -181,7 +181,7 @@ public class FilterLifePointsTests
     [Test]
     public async Task DisableFiltering_ShouldReloadAllMarkers()
     {
-        using var testContext = new BunitContext();
+        await using var testContext = new BunitContext();
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee); // enables filtering
         await FilterByYearAsync(testee, 1953);

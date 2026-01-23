@@ -32,7 +32,7 @@ public class StorageTests
         var testee = TestStorage.Create();
         await testee.AddItemAsync(person);
 
-        var result = testee.Find<Person>(person.Id);
+        var result = await testee.FindAsync<Person>(person.Id);
 
         result.Should().Be(person);
     }

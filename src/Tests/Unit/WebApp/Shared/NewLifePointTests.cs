@@ -33,7 +33,7 @@ public class NewLifePointTests
                                 await Task.Delay(500);
                                 return TestExistingLifePoint.From(lifePointToCreate);
                             });
-        using var ctx = new BunitContext();
+        await using var ctx = new BunitContext();
         using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate, lifePointServiceMock);
 
         EnterInput(testee, lifePointToCreate);
@@ -53,7 +53,7 @@ public class NewLifePointTests
         var browserFileMock = Substitute.For<IBrowserFile>();
         browserFileMock.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes).Returns(imageMemoryStream);
         var lifePointToCreate = TestLifePointToCreate.Create(newImage: TestImageToCreate.Create(imageMemoryStream));
-        using var ctx = new BunitContext();
+        await using var ctx = new BunitContext();
         using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate);
 
         EnterInput(testee, lifePointToCreate);
@@ -72,7 +72,7 @@ public class NewLifePointTests
         var browserFileMock = Substitute.For<IBrowserFile>();
         browserFileMock.OpenReadStream(NewLifePoint.MaxAllowedFileSizeInBytes).Throws<IOException>();
         var lifePointToCreate = TestLifePointToCreate.Create();
-        using var ctx = new BunitContext();
+        await using var ctx = new BunitContext();
         using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate);
 
         EnterInput(testee, lifePointToCreate);
@@ -95,7 +95,7 @@ public class NewLifePointTests
                                 await Task.Delay(500);
                                 return TestExistingLifePoint.From(lifePointToCreate);
                             });
-        using var ctx = new BunitContext();
+        await using var ctx = new BunitContext();
         using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate, lifePointServiceMock, userServiceMock);
 
         EnterInput(testee, lifePointToCreate);
@@ -113,7 +113,7 @@ public class NewLifePointTests
         var lifePointServiceMock = Substitute.For<ILifePointService>();
         lifePointServiceMock.CreateLifePointAsync(Arg.Any<LifePointToCreate>()).ThrowsAsync<NoImageException>();
         var lifePointToCreate = TestLifePointToCreate.Create();
-        using var ctx = new BunitContext();
+        await using var ctx = new BunitContext();
         using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate, lifePointServiceMock);
 
         EnterInput(testee, lifePointToCreate);
@@ -132,7 +132,7 @@ public class NewLifePointTests
         var lifePointServiceMock = Substitute.For<ILifePointService>();
         lifePointServiceMock.CreateLifePointAsync(Arg.Any<LifePointToCreate>()).ThrowsAsync<NoImageException>();
         var lifePointToCreate = TestLifePointToCreate.Create();
-        using var ctx = new BunitContext();
+        await using var ctx = new BunitContext();
         using var testee = CreateTestee<NewLifePointForTest>(ctx, lifePointToCreate, lifePointServiceMock);
 
         testee.Instance.ResetNewLifePointModule();
