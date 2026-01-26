@@ -37,9 +37,9 @@
       },
       "mu88.Shared": {
         "type": "Direct",
-        "requested": "[4.3.0, )",
-        "resolved": "4.3.0",
-        "contentHash": "2EBDoign1Y7fnqUXHYMgMVJx+o8VPMSe/rFk1g8dtT7EYM8TJpC0Lyw17SpFOdumxan0r4Galufjo0FAHNKftA==",
+        "requested": "[5.0.0, )",
+        "resolved": "5.0.0",
+        "contentHash": "HUDM+l17WVaFymkZ4vciETWiGdaIg1CgBuIs9XKTY7sJe+P8gSxdftLnzuEJv3UFzKYTIPQTZywOvVD7X0J34w==",
         "dependencies": {
           "IDisposableAnalyzers": "4.0.8",
           "Meziantou.Analyzer": "2.0.257",
@@ -317,25 +317,25 @@
           "DTO": "[6.0.1, )",
           "Entities": "[6.0.1, )",
           "Logging": "[6.0.1, )",
-          "mu88.Shared": "[4.3.0-alpha-301-1.0, )"
+          "mu88.Shared": "[5.0.0, )"
         }
       },
       "dto": {
         "type": "Project",
         "dependencies": {
-          "mu88.Shared": "[4.3.0-alpha-301-1.0, )"
+          "mu88.Shared": "[5.0.0, )"
         }
       },
       "entities": {
         "type": "Project",
         "dependencies": {
-          "mu88.Shared": "[4.3.0-alpha-301-1.0, )"
+          "mu88.Shared": "[5.0.0, )"
         }
       },
       "logging": {
         "type": "Project",
         "dependencies": {
-          "mu88.Shared": "[4.3.0-alpha-301-1.0, )"
+          "mu88.Shared": "[5.0.0, )"
         }
       },
       "persistence": {
@@ -350,7 +350,7 @@
           "Microsoft.EntityFrameworkCore.Sqlite": "[10.0.0, )",
           "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": "[10.0.0, )",
           "SixLabors.ImageSharp": "[3.1.12, )",
-          "mu88.Shared": "[4.3.0-alpha-301-1.0, )"
+          "mu88.Shared": "[5.0.0, )"
         }
       },
       "Microsoft.EntityFrameworkCore": {
