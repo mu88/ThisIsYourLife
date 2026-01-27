@@ -4,7 +4,7 @@
     <NoWarn>NU1603</NoWarn>
     <RuntimeIdentifiers>linux-arm64;linux-x64;win-x64</RuntimeIdentifiers>
     <ContainerRuntimeIdentifiers>linux-arm64;linux-x64</ContainerRuntimeIdentifiers>
-    <CustomContainerBaseImageVersion>10.0.0</CustomContainerBaseImageVersion>
+    <CustomContainerBaseImageVersion>10.0.2</CustomContainerBaseImageVersion>
     <PublishRegularContainer>true</PublishRegularContainer>
     <PublishChiseledContainer>true</PublishChiseledContainer>
     <InvariantGlobalization>false</InvariantGlobalization>
