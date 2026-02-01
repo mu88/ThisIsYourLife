@@ -13,9 +13,9 @@
       },
       "Microsoft.AspNetCore.App.Internal.Assets": {
         "type": "Direct",
-        "requested": "[10.0.1, )",
-        "resolved": "10.0.1",
-        "contentHash": "rafnWkNfJPA0nCZ5u9bFLiIhCv+aGDWBPJMejuROFMHEpsNhTdv8Cvhv+2jIH+b5485FhndbiwOQJUBMeBa6BQ=="
+        "requested": "[10.0.2, )",
+        "resolved": "10.0.2",
+        "contentHash": "fMAqrUm+aspxRAsCJ6Hlgs96XSHwNIr9HBNt7wyBAzQkPlfE7w+0C4NzDoJnso5YZyDI0VcRtEXxG9odt3KiZA=="
       },
       "Microsoft.AspNetCore.Components.CustomElements": {
         "type": "Direct",
@@ -37,12 +37,12 @@
       },
       "mu88.Shared": {
         "type": "Direct",
-        "requested": "[5.0.0, )",
-        "resolved": "5.0.0",
-        "contentHash": "HUDM+l17WVaFymkZ4vciETWiGdaIg1CgBuIs9XKTY7sJe+P8gSxdftLnzuEJv3UFzKYTIPQTZywOvVD7X0J34w==",
+        "requested": "[6.0.0, )",
+        "resolved": "6.0.0",
+        "contentHash": "xvb+32IUuUPCBlNCyPON6sa9FkCoiRRaEX9psEbg+OMJBJ4dsVNNJnpqHS3MYYOjrm//xLY70dkaRQzT+Qs29g==",
         "dependencies": {
           "IDisposableAnalyzers": "4.0.8",
-          "Meziantou.Analyzer": "2.0.257",
+          "Meziantou.Analyzer": "2.0.277",
           "OpenTelemetry.Exporter.OpenTelemetryProtocol": "1.14.0",
           "OpenTelemetry.Extensions.Hosting": "1.14.0",
           "OpenTelemetry.Instrumentation.AspNetCore": "1.14.0",
@@ -88,8 +88,8 @@
       },
       "Meziantou.Analyzer": {
         "type": "Transitive",
-        "resolved": "2.0.257",
-        "contentHash": "HADbzZ4rto3boQpWyXIFFc9bxDPviscCXiSQWOTICKD1OJ4gwa9aMfANoQngOk/2en3I9YAHwQ0WXxVMzCTJ+A=="
+        "resolved": "2.0.277",
+        "contentHash": "aqSJLLRr68eHxTLBYkWSC2Gr8KcJ/LaiC2Q7tdi8HnQhUp++dQ6ceJ5/jAmB7P6DAifPs7K7wenNQRQx1n+1ZQ=="
       },
       "Microsoft.Data.Sqlite.Core": {
         "type": "Transitive",
@@ -317,25 +317,25 @@
           "DTO": "[6.0.1, )",
           "Entities": "[6.0.1, )",
           "Logging": "[6.0.1, )",
-          "mu88.Shared": "[5.0.0, )"
+          "mu88.Shared": "[6.0.0, )"
         }
       },
       "dto": {
         "type": "Project",
         "dependencies": {
-          "mu88.Shared": "[5.0.0, )"
+          "mu88.Shared": "[6.0.0, )"
         }
       },
       "entities": {
         "type": "Project",
         "dependencies": {
-          "mu88.Shared": "[5.0.0, )"
+          "mu88.Shared": "[6.0.0, )"
         }
       },
       "logging": {
         "type": "Project",
         "dependencies": {
-          "mu88.Shared": "[5.0.0, )"
+          "mu88.Shared": "[6.0.0, )"
         }
       },
       "persistence": {
@@ -350,7 +350,7 @@
           "Microsoft.EntityFrameworkCore.Sqlite": "[10.0.2, )",
           "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": "[10.0.2, )",
           "SixLabors.ImageSharp": "[3.1.12, )",
-          "mu88.Shared": "[5.0.0, )"
+          "mu88.Shared": "[6.0.0, )"
         }
       },
       "Microsoft.EntityFrameworkCore": {

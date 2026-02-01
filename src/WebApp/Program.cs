@@ -11,7 +11,7 @@ using WebApp.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.ConfigureOpenTelemetryMetrics("thisisyourlife");
+builder.ConfigureOpenTelemetry("thisisyourlife");
 
 // Configure logging and configuration
 builder.Host.UseSerilog((context, services, configuration) => configuration
