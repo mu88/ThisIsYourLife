@@ -72,9 +72,9 @@
       },
       "mu88.Shared": {
         "type": "Direct",
-        "requested": "[6.0.0, )",
-        "resolved": "6.0.0",
-        "contentHash": "xvb+32IUuUPCBlNCyPON6sa9FkCoiRRaEX9psEbg+OMJBJ4dsVNNJnpqHS3MYYOjrm//xLY70dkaRQzT+Qs29g==",
+        "requested": "[7.0.0, )",
+        "resolved": "7.0.0",
+        "contentHash": "eXGSYxD4n2wMx2OCgYH32bKJHD3/i5GCk5qVpI47/dbc6Mj1TGKDqZ1PAPdYpA7Nda/scB8ELn7Px5qxi3h8hQ==",
         "dependencies": {
           "IDisposableAnalyzers": "4.0.8",
           "Meziantou.Analyzer": "2.0.277",
@@ -845,26 +845,26 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "[10.0.2, )",
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.2, )",
           "Microsoft.Extensions.Options": "[10.0.2, )",
-          "mu88.Shared": "[6.0.0, )"
+          "mu88.Shared": "[7.0.0, )"
         }
       },
       "dto": {
         "type": "Project",
         "dependencies": {
-          "mu88.Shared": "[6.0.0, )"
+          "mu88.Shared": "[7.0.0, )"
         }
       },
       "entities": {
         "type": "Project",
         "dependencies": {
-          "mu88.Shared": "[6.0.0, )"
+          "mu88.Shared": "[7.0.0, )"
         }
       },
       "logging": {
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.2, )",
-          "mu88.Shared": "[6.0.0, )"
+          "mu88.Shared": "[7.0.0, )"
         }
       },
       "persistence": {
@@ -879,7 +879,7 @@
           "Microsoft.EntityFrameworkCore.Sqlite": "[10.0.2, )",
           "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": "[10.0.2, )",
           "SixLabors.ImageSharp": "[3.1.12, )",
-          "mu88.Shared": "[6.0.0, )"
+          "mu88.Shared": "[7.0.0, )"
         }
       },
       "webapp": {
@@ -893,7 +893,7 @@
           "Persistence": "[6.0.1, )",
           "Serilog.AspNetCore": "[10.0.0, )",
           "Serilog.Sinks.File": "[7.0.0, )",
-          "mu88.Shared": "[6.0.0, )"
+          "mu88.Shared": "[7.0.0, )"
         }
       },
       "AutoMapper": {
