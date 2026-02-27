@@ -29,10 +29,10 @@ public class LifePointServiceTests
 
         results.Should().HaveCount(2);
         results.Should()
-               .BeEquivalentTo(lifePoints,
-                   options => options.Including(x => x.Id)
-                                     .Including(x => x.Latitude)
-                                     .Including(x => x.Longitude));
+            .BeEquivalentTo(lifePoints,
+                options => options.Including(x => x.Id)
+                    .Including(x => x.Latitude)
+                    .Including(x => x.Longitude));
     }
 
     [TestCase(1953, 1953, 1)]
@@ -227,9 +227,7 @@ public class LifePointServiceTests
     {
         var lifePoints = new[]
         {
-            TestLifePoint.Create(date: new DateOnly(1953, 4, 12)),
-            TestLifePoint.Create(date: new DateOnly(1952, 4, 12)),
-            TestLifePoint.Create(date: new DateOnly(1952, 4, 12))
+            TestLifePoint.Create(date: new DateOnly(1953, 4, 12)), TestLifePoint.Create(date: new DateOnly(1952, 4, 12)), TestLifePoint.Create(date: new DateOnly(1952, 4, 12))
         };
         _storage.LifePoints.Returns(lifePoints.AsQueryable());
         var testee = CreateTestee();

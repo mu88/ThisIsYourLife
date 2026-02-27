@@ -8,8 +8,8 @@ namespace BusinessServices.Services;
 
 public class PersonService(ILogger<PersonService> logger, IStorage storage, IMapper mapper) : IPersonService
 {
-    public async Task<ExistingPerson> CreatePersonAsync(PersonToCreate personToCreate) =>
-        await logger.LogMethodStartAndEndAsync(async () =>
+    public async Task<ExistingPerson> CreatePersonAsync(PersonToCreate personToCreate)
+        => await logger.LogMethodStartAndEndAsync(async () =>
         {
             var newPerson = mapper.Map<Person>(personToCreate);
             var createdPerson = await storage.AddItemAsync(newPerson);

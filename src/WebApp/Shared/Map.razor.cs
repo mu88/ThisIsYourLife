@@ -14,8 +14,8 @@ public sealed partial class Map : IDisposable
     private bool _disposed;
 
     [JSInvokable]
-    public async Task OpenPopupForNewLifePointAsync(double latitude, double longitude) =>
-        await Logger.LogMethodStartAndEndAsync(async () =>
+    public async Task OpenPopupForNewLifePointAsync(double latitude, double longitude)
+        => await Logger.LogMethodStartAndEndAsync(async () =>
             await _newLifePointModule.InvokeVoidAsync("createPopupForNewLifePoint", _objRef, _leafletMap, latitude, longitude));
 
     [JSInvokable]
@@ -67,8 +67,8 @@ public sealed partial class Map : IDisposable
         await _lifePointDetailModule.InvokeVoidAsync("initialize", _leafletMap);
     }
 
-    private async Task AddMarkersForExistingLocationsAsync() =>
-        await Logger.LogMethodStartAndEndAsync(async () =>
+    private async Task AddMarkersForExistingLocationsAsync()
+        => await Logger.LogMethodStartAndEndAsync(async () =>
         {
             await EnableSpinnerAsync();
 

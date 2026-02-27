@@ -1,19 +1,20 @@
 {
-    "stryker-config":
-    {
-        "project": "BusinessServices.csproj",
-        "test-projects": ["../Tests/Tests.csproj"],
-        "reporters": [
-            "html",
-            "progress",
-            "dashboard"
-        ],
-        "project-info": {
-            "name": "github.com/mu88/ThisIsYourLife"
-        },
-        "ignore-methods": [
-            "_logger.*",
-            "logger.*"
-        ]
-    }
+  "stryker-config": {
+    "project": "BusinessServices.csproj",
+    "test-projects": [
+      "../Tests/Tests.csproj"
+    ],
+    "reporters": [
+      "html",
+      "progress",
+      "dashboard"
+    ],
+    "project-info": {
+      "name": "github.com/mu88/ThisIsYourLife"
+    },
+    "ignore-methods": [
+      "_logger.*",
+      "logger.*"
+    ]
+  }
 }

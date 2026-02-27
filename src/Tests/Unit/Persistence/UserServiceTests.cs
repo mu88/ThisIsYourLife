@@ -28,8 +28,8 @@ public class UserServiceTests
         testee.UserAlreadySet.Should().BeTrue();
         testee.Id.Should().NotBeNull();
         fileSystemMock.Received(1)
-                      .WriteAllText(Arg.Is<string>(s => s.Contains("user.json")),
-                          Arg.Is<string>(s => s.Contains(existingPerson.Name) && s.Contains(existingPerson.Id.ToString())));
+            .WriteAllText(Arg.Is<string>(s => s.Contains("user.json")),
+                Arg.Is<string>(s => s.Contains(existingPerson.Name) && s.Contains(existingPerson.Id.ToString())));
     }
 
     [Test]

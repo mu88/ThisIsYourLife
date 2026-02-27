@@ -1,7 +1,6 @@
 ﻿@using BusinessServices.Services
 @using Persistence
 @using WebApp.Services
-@using Microsoft.Extensions.Logging
 @inject ILifePointService LifePointService
 @inject IJSRuntime JsRuntime
 @inject IUserService UserService
@@ -42,7 +41,8 @@ else
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="date">@Loc["Date"]</span>
-            <InputDate class="form-control" id="input-date" aria-describedby="date" @bind-Value="_newLifePoint.Date" min="1980-01-01" max="@DateTime.Now.AddYears(10).ToString("yyyy-MM-dd")"/>
+            <InputDate class="form-control" id="input-date" aria-describedby="date" @bind-Value="_newLifePoint.Date" min="1980-01-01"
+                       max="@DateTime.Now.AddYears(10).ToString("yyyy-MM-dd")"/>
         </div>
         <div class="input-group mb-3">
             <span class="input-group-text" id="description">@Loc["Description"]</span>

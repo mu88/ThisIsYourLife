@@ -62,10 +62,11 @@ public class MapTests
 
     private static IRenderedComponent<Map> CreateTestee(BunitContext testContext) => testContext.Render<Map>();
 
-    private static BunitContext CreateBunitContext(IEnumerable<ExistingLocation> existingLocations,
-                                                 Action<BunitJSModuleInterop>? configureLifePointDetailModule = null,
-                                                 Action<BunitJSModuleInterop>? configureNewLifePointModule = null,
-                                                 Action<BunitJSModuleInterop>? configureMapModule = null)
+    private static BunitContext CreateBunitContext(
+        IEnumerable<ExistingLocation> existingLocations,
+        Action<BunitJSModuleInterop>? configureLifePointDetailModule = null,
+        Action<BunitJSModuleInterop>? configureNewLifePointModule = null,
+        Action<BunitJSModuleInterop>? configureMapModule = null)
     {
         var testContext = new BunitContext();
         var lifePointDetailModule = testContext.JSInterop.SetupModule("./Shared/LifePointDetail.razor.js");
@@ -97,35 +98,37 @@ public class MapTests
 
     private static object? GetDotNetObjectReference(IRenderedComponent<Map> testee) => GetPrivateFieldFromTestee(testee, "_objRef");
 
-    private static void MarkerForNewLifePointShouldBeAdded(double latitude,
-                                                           double longitude,
-                                                           BunitContext testContext,
-                                                           IRenderedComponent<Map> testee) =>
-        testContext.JSInterop.Invocations.Should()
-                   .ContainSingle(invocation => invocation.Identifier.Equals("createPopupForNewLifePoint")
-                                                && Equals(GetDotNetObjectReference(testee), invocation.Arguments[0])
-                                                && Equals(GetLeafletMap(testee), invocation.Arguments[1])
-                                                && Equals(latitude, invocation.Arguments[2])
-                                                && Equals(longitude, invocation.Arguments[3]));
+    private static void MarkerForNewLifePointShouldBeAdded(
+        double latitude,
+        double longitude,
+        BunitContext testContext,
+        IRenderedComponent<Map> testee)
+        => testContext.JSInterop.Invocations.Should()
+            .ContainSingle(invocation => invocation.Identifier.Equals("createPopupForNewLifePoint")
+                && Equals(GetDotNetObjectReference(testee), invocation.Arguments[0])
+                && Equals(GetLeafletMap(testee), invocation.Arguments[1])
+                && Equals(latitude, invocation.Arguments[2])
+                && Equals(longitude, invocation.Arguments[3]));
 
-    private static void MarkersForExistingLifePointsShouldBeAdded(IEnumerable<ExistingLocation> existingLocations,
-                                                                  BunitContext testContext)
+    private static void MarkersForExistingLifePointsShouldBeAdded(
+        IEnumerable<ExistingLocation> existingLocations,
+        BunitContext testContext)
     {
         foreach (var existingLocation in existingLocations)
         {
             testContext.JSInterop.Invocations.Should()
-                       .ContainSingle(invocation => invocation.Identifier.Equals("createMarkerForExistingLifePoint")
-                                                    && invocation.Arguments[0].As<Guid>().Equals(existingLocation.Id)
-                                                    && invocation.Arguments[1].As<double>().Equals(existingLocation.Latitude)
-                                                    && invocation.Arguments[2].As<double>().Equals(existingLocation.Longitude));
+                .ContainSingle(invocation => invocation.Identifier.Equals("createMarkerForExistingLifePoint")
+                    && invocation.Arguments[0].As<Guid>().Equals(existingLocation.Id)
+                    && invocation.Arguments[1].As<double>().Equals(existingLocation.Latitude)
+                    && invocation.Arguments[2].As<double>().Equals(existingLocation.Longitude));
         }
     }
 
-    private static void ShouldBeCenteredInDresden(BunitContext testContext, IRenderedComponent<Map> testee) =>
-        testContext.JSInterop.Invocations.Should()
-                   .ContainSingle(invocation => invocation.Identifier.Equals("initializeMap")
-                                                && invocation.Arguments[0].As<double>().Equals(51.0405849)
-                                                && invocation.Arguments[1].As<double>().Equals(13.7478431)
-                                                && invocation.Arguments[2].As<int>().Equals(20)
-                                                && invocation.Arguments[3].As<object>().Equals(GetDotNetObjectReference(testee)));
+    private static void ShouldBeCenteredInDresden(BunitContext testContext, IRenderedComponent<Map> testee)
+        => testContext.JSInterop.Invocations.Should()
+            .ContainSingle(invocation => invocation.Identifier.Equals("initializeMap")
+                && invocation.Arguments[0].As<double>().Equals(51.0405849)
+                && invocation.Arguments[1].As<double>().Equals(13.7478431)
+                && invocation.Arguments[2].As<int>().Equals(20)
+                && invocation.Arguments[3].As<object>().Equals(GetDotNetObjectReference(testee)));
 }

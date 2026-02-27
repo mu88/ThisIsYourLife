@@ -317,25 +317,25 @@
           "DTO": "[6.0.1, )",
           "Entities": "[6.0.1, )",
           "Logging": "[6.0.1, )",
-          "mu88.Shared": "[7.0.0, )"
+          "mu88.Shared": "[8.0.0, )"
         }
       },
       "dto": {
         "type": "Project",
         "dependencies": {
-          "mu88.Shared": "[7.0.0, )"
+          "mu88.Shared": "[8.0.0, )"
         }
       },
       "entities": {
         "type": "Project",
         "dependencies": {
-          "mu88.Shared": "[7.0.0, )"
+          "mu88.Shared": "[8.0.0, )"
         }
       },
       "logging": {
         "type": "Project",
         "dependencies": {
-          "mu88.Shared": "[7.0.0, )"
+          "mu88.Shared": "[8.0.0, )"
         }
       },
       "persistence": {
@@ -350,7 +350,7 @@
           "Microsoft.EntityFrameworkCore.Sqlite": "[10.0.2, )",
           "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": "[10.0.2, )",
           "SixLabors.ImageSharp": "[3.1.12, )",
-          "mu88.Shared": "[7.0.0, )"
+          "mu88.Shared": "[8.0.0, )"
         }
       },
       "Microsoft.EntityFrameworkCore": {

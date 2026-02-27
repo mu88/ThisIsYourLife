@@ -10,11 +10,11 @@ public static class TestLifePoint
         date ??= DateOnly.FromDateTime(DateTime.Now);
         var random = new Random();
         return new LifePoint(date.Value,
-                             $"Caption {random.Next()}",
-                             $"Description {random.Next()}",
-                             random.Next(-90, 90),
-                             random.Next(-180, 180),
-                             createdBy,
-                             imageId);
+            $"Caption {random.Next()}",
+            $"Description {random.Next()}",
+            random.Next(-90, 90),
+            random.Next(-180, 180),
+            createdBy,
+            imageId);
     }
 }

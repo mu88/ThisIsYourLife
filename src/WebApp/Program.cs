@@ -15,14 +15,13 @@ builder.Services.ConfigureOpenTelemetry("thisisyourlife", builder.Configuration)
 
 // Configure logging and configuration
 builder.Host.UseSerilog((context, services, configuration) => configuration
-                                                              .ReadFrom.Configuration(context.Configuration)
-                                                              .ReadFrom.Services(services)
-                                                              .Enrich.FromLogContext()
-                                                              .WriteTo.Console(
-                                                                  outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.FFFK} {Level:u3}] {Message:lj}{NewLine}{Exception}")
-                                                              .WriteTo.File(Path.Combine("/home", "app", "data", "logs", "ThisIsYourLife.log"),
-                                                                  rollingInterval: RollingInterval.Day,
-                                                                  retainedFileCountLimit: 14));
+    .ReadFrom.Configuration(context.Configuration)
+    .ReadFrom.Services(services)
+    .Enrich.FromLogContext()
+    .WriteTo.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.FFFK} {Level:u3}] {Message:lj}{NewLine}{Exception}")
+    .WriteTo.File(Path.Combine("/home", "app", "data", "logs", "ThisIsYourLife.log"),
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 14));
 builder.Configuration.AddJsonFile(Path.Combine("/home", "app", "data", "user.json"), true);
 
 // Add services to the container.
@@ -60,8 +59,8 @@ app.UseRequestLocalization(localizationOptions =>
 {
     var supportedCultures = new[] { "en", "de" };
     localizationOptions.SetDefaultCulture(supportedCultures[0])
-                       .AddSupportedCultures(supportedCultures)
-                       .AddSupportedUICultures(supportedCultures);
+        .AddSupportedCultures(supportedCultures)
+        .AddSupportedUICultures(supportedCultures);
 });
 
 app.MapBlazorHub();

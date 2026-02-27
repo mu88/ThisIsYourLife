@@ -14,8 +14,8 @@ internal class ImageService(ILogger<ImageService> logger, IFileSystem fileSystem
     private static readonly string ImageDirectory = Path.Combine(Storage.UserDirectory, "images");
 
     /// <inheritdoc />
-    public async Task<Guid> ProcessAndStoreImageAsync(Person owner, ImageToCreate newImage) =>
-        await logger.LogMethodStartAndEndAsync(async () =>
+    public async Task<Guid> ProcessAndStoreImageAsync(Person owner, ImageToCreate newImage)
+        => await logger.LogMethodStartAndEndAsync(async () =>
         {
             var imageId = Guid.NewGuid();
             var filePathForImage = GetFilePathForImage(owner, imageId);
@@ -46,8 +46,8 @@ internal class ImageService(ILogger<ImageService> logger, IFileSystem fileSystem
     public Stream GetImage(Guid ownerId, Guid imageId) => logger.LogMethodStartAndEnd(() => fileSystem.OpenRead(GetFilePathForImage(ownerId, imageId)));
 
     /// <inheritdoc />
-    public void DeleteImage(Guid ownerId, Guid imageId) =>
-        logger.LogMethodStartAndEnd(() =>
+    public void DeleteImage(Guid ownerId, Guid imageId)
+        => logger.LogMethodStartAndEnd(() =>
         {
             fileSystem.DeleteFile(GetFilePathForImage(ownerId, imageId));
             logger.ImageDeleted(ownerId, imageId);
@@ -63,7 +63,7 @@ internal class ImageService(ILogger<ImageService> logger, IFileSystem fileSystem
     private static DirectoryInfo GetParentDirectory(string filePathForImage)
     {
         var parentDirectory = Directory.GetParent(filePathForImage) ??
-                              throw new ArgumentNullException(nameof(filePathForImage), $"Could not resolve parent directory from {filePathForImage}");
+            throw new ArgumentNullException(nameof(filePathForImage), $"Could not resolve parent directory from {filePathForImage}");
         return parentDirectory;
     }
 

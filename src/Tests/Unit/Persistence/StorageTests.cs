@@ -77,8 +77,8 @@ public class StorageTests
         _fileSystem.DidNotReceive().CreateDirectory(Storage.DatabaseDirectory);
     }
 
-    private Storage CreateTestee() =>
-        new(new DbContextOptionsBuilder<Storage>().Options,
+    private Storage CreateTestee()
+        => new(new DbContextOptionsBuilder<Storage>().Options,
             Substitute.For<ILogger<Storage>>(),
             _fileSystem,
             _imageService);

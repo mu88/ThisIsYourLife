@@ -216,18 +216,18 @@ public class FilterLifePointsTests
         lifePointDetailModule.SetupVoid("enableSpinner").SetVoidResult();
         lifePointDetailModule.SetupVoid("disableSpinner").SetVoidResult();
         lifePointDetailModule.SetupVoid("createMarkerForExistingLifePoint", existingLocation.Id, existingLocation.Latitude, existingLocation.Longitude)
-                             .SetVoidResult();
+            .SetVoidResult();
 
         var testee = testContext.Render<FilterLifePoints>();
 
         return testee;
     }
 
-    private static async Task ChangeYearSelectElementAsync(IRenderedComponent<FilterLifePoints> testee, object? value) =>
-        await testee.Find("[id^=\"distinctYear\"]").ChangeAsync(new ChangeEventArgs { Value = value });
+    private static async Task ChangeYearSelectElementAsync(IRenderedComponent<FilterLifePoints> testee, object? value)
+        => await testee.Find("[id^=\"distinctYear\"]").ChangeAsync(new ChangeEventArgs { Value = value });
 
-    private static async Task ChangeCreatorSelectElementAsync(IRenderedComponent<FilterLifePoints> testee, object? value) =>
-        await testee.Find("[id^=\"distinctCreator\"]").ChangeAsync(new ChangeEventArgs { Value = value });
+    private static async Task ChangeCreatorSelectElementAsync(IRenderedComponent<FilterLifePoints> testee, object? value)
+        => await testee.Find("[id^=\"distinctCreator\"]").ChangeAsync(new ChangeEventArgs { Value = value });
 
     private static void DistinctCreatorsShouldBeDisplayed(IRenderedComponent<FilterLifePoints> testee)
     {
@@ -247,11 +247,11 @@ public class FilterLifePointsTests
         yearSelectElement.Children[2].As<IHtmlOptionElement>().Label.Should().Be("1954");
     }
 
-    private static void CreatorFilteringShouldBeDisabled(IRenderedComponent<FilterLifePoints> testee) =>
-        testee.Find("[id^=\"distinctCreator\"]").HasAttribute("disabled").Should().BeTrue();
+    private static void CreatorFilteringShouldBeDisabled(IRenderedComponent<FilterLifePoints> testee)
+        => testee.Find("[id^=\"distinctCreator\"]").HasAttribute("disabled").Should().BeTrue();
 
-    private static void YearFilteringShouldBeDisabled(IRenderedComponent<FilterLifePoints> testee) =>
-        testee.Find("[id^=\"distinctYear\"]").HasAttribute("disabled").Should().BeTrue();
+    private static void YearFilteringShouldBeDisabled(IRenderedComponent<FilterLifePoints> testee)
+        => testee.Find("[id^=\"distinctYear\"]").HasAttribute("disabled").Should().BeTrue();
 
     private static void MarkersShouldBeDisplayed(BunitContext testContext, int numberOfCalls = 1)
     {
@@ -259,8 +259,8 @@ public class FilterLifePointsTests
 
         var (latitude, longitude, id) = testContext.Services.GetRequiredService<ILifePointService>().GetAllLocations().First();
         testContext.JSInterop.VerifyInvoke("createMarkerForExistingLifePoint", numberOfCalls)
-                   .Should()
-                   .AllSatisfy(invocation => invocation.Arguments.Should().BeEquivalentTo(new object[] { id, latitude, longitude }));
+            .Should()
+            .AllSatisfy(invocation => invocation.Arguments.Should().BeEquivalentTo(new object[] { id, latitude, longitude }));
     }
 
     private static async Task FilterByYearAsync(IRenderedComponent<FilterLifePoints> testee, int year) => await ChangeYearSelectElementAsync(testee, year);
@@ -270,9 +270,9 @@ public class FilterLifePointsTests
     private static async Task FilterByCreatorAsync(IRenderedComponent<FilterLifePoints> testee, BunitContext testContext, string name)
     {
         var idForName = testContext.Services.GetRequiredService<ILifePointService>()
-                                   .GetDistinctCreators()
-                                   .Single(person => person.Name.Equals(name))
-                                   .Id;
+            .GetDistinctCreators()
+            .Single(person => person.Name.Equals(name))
+            .Id;
 
         await ChangeCreatorSelectElementAsync(testee, idForName);
     }

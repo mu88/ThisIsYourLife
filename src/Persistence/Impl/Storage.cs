@@ -44,20 +44,23 @@ internal class Storage : DbContext, IStorage
 
     /// <inheritdoc />
     public async Task<T?> FindAsync<T>(Guid id)
-        where T : class => await Set<T>().FindAsync(id);
+        where T : class
+        => await Set<T>().FindAsync(id);
 
     /// <inheritdoc />
     public T? Find<T>(Guid id)
-        where T : class =>
-        Set<T>().Find(id);
+        where T : class
+        => Set<T>().Find(id);
 
     /// <inheritdoc />
     public async Task<T> AddItemAsync<T>(T itemToAdd)
-        where T : class => (await Set<T>().AddAsync(itemToAdd)).Entity;
+        where T : class
+        => (await Set<T>().AddAsync(itemToAdd)).Entity;
 
     /// <inheritdoc />
     public void RemoveItem<T>(T itemToDelete)
-        where T : class => Set<T>().Remove(itemToDelete);
+        where T : class
+        => Set<T>().Remove(itemToDelete);
 
     /// <inheritdoc />
     public async Task SaveAsync() => await SaveChangesAsync();

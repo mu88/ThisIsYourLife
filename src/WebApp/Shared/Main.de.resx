@@ -1,78 +1,78 @@
 ﻿<root>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>1.3</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
-    </resheader>
-    <data name="On" xml:space="preserve">
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+      PublicKeyToken=b77a5c561934e089
+    </value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+      PublicKeyToken=b77a5c561934e089
+    </value>
+  </resheader>
+  <data name="On" xml:space="preserve">
         <value>Am</value>
     </data>
-    <data name="With" xml:space="preserve">
+  <data name="With" xml:space="preserve">
         <value>mit</value>
     </data>
-    <data name="Delete" xml:space="preserve">
+  <data name="Delete" xml:space="preserve">
         <value>Löschen</value>
     </data>
-    <data name="CreatedBy" xml:space="preserve">
+  <data name="CreatedBy" xml:space="preserve">
         <value>Erstellt von</value>
     </data>
-    <data name="CreatedIn" xml:space="preserve">
+  <data name="CreatedIn" xml:space="preserve">
         <value>Erstellt am</value>
     </data>
-    <data name="Caption" xml:space="preserve">
+  <data name="Caption" xml:space="preserve">
         <value>Titel</value>
     </data>
-    <data name="Date" xml:space="preserve">
+  <data name="Date" xml:space="preserve">
         <value>Datum</value>
     </data>
-    <data name="Description" xml:space="preserve">
+  <data name="Description" xml:space="preserve">
         <value>Beschreibung</value>
     </data>
-    <data name="Image" xml:space="preserve">
+  <data name="Image" xml:space="preserve">
         <value>Bild</value>
     </data>
-    <data name="Save" xml:space="preserve">
+  <data name="Save" xml:space="preserve">
         <value>Speichern</value>
     </data>
-    <data name="Saving" xml:space="preserve">
+  <data name="Saving" xml:space="preserve">
         <value>Speichere</value>
     </data>
-    <data name="UserHasNotBeenSet" xml:space="preserve">
+  <data name="UserHasNotBeenSet" xml:space="preserve">
         <value>Benutzer wurde nicht angegeben</value>
     </data>
-    <data name="PleaseEnterUsername" xml:space="preserve">
+  <data name="PleaseEnterUsername" xml:space="preserve">
         <value>Bitte gib deinen Name ein</value>
     </data>
-    <data name="Welcome" xml:space="preserve">
+  <data name="Welcome" xml:space="preserve">
         <value>Willkommen</value>
     </data>
-    <data name="RequiredError" xml:space="preserve">
+  <data name="RequiredError" xml:space="preserve">
         <value>Das Feld {0} muss ausgefüllt werden</value>
     </data>
-    <data name="LengthError" xml:space="preserve">
+  <data name="LengthError" xml:space="preserve">
         <value>Darf zwischen {2} und {1} Zeichen lang sein</value>
     </data>
-    <data name="GeneralError" xml:space="preserve">
+  <data name="GeneralError" xml:space="preserve">
         <value>Es ist ein Fehler aufgetreten. Die Applikation muss neu geladen werden. In der Log-Datei finden sich weitere Informationen.</value>
     </data>
-    <data name="Reload" xml:space="preserve">
+  <data name="Reload" xml:space="preserve">
         <value>Neu laden</value>
     </data>
-    <data name="ImageTooBig" xml:space="preserve">
+  <data name="ImageTooBig" xml:space="preserve">
         <value>Das Bild war zu groß, es sind maximal {0} MB möglich. Bitte erneut versuchen.</value>
     </data>
-    <data name="InputIsNoImage" xml:space="preserve">
+  <data name="InputIsNoImage" xml:space="preserve">
         <value>Bei der Datei handelt es sich nicht um ein Bild</value>
     </data>
 </root>

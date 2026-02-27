@@ -28,7 +28,7 @@ public class StorageTests
     [Test]
     public async Task FindEntity()
     {
-        Person person = TestPerson.Create("Dixie");
+        var person = TestPerson.Create("Dixie");
         var testee = TestStorage.Create();
         await testee.AddItemAsync(person);
 

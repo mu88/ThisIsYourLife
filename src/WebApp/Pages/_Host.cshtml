@@ -10,41 +10,41 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>This is your life</title>
-    <base href="~/"/>
-    <link rel="stylesheet" href="leaflet/leaflet.css"/>
-    <link rel="stylesheet" href="leaflet/MarkerCluster.css"/>
-    <link rel="stylesheet" href="leaflet/MarkerCluster.Default.css"/>
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css"/>
-    <link href="css/site.css" rel="stylesheet"/>
-    <link href="WebApp.styles.css" rel="stylesheet"/>
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
-</head>
-<body>
-<component type="typeof(App)" render-mode="ServerPrerendered"/>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>This is your life</title>
+        <base href="~/"/>
+        <link rel="stylesheet" href="leaflet/leaflet.css"/>
+        <link rel="stylesheet" href="leaflet/MarkerCluster.css"/>
+        <link rel="stylesheet" href="leaflet/MarkerCluster.Default.css"/>
+        <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css"/>
+        <link href="css/site.css" rel="stylesheet"/>
+        <link href="WebApp.styles.css" rel="stylesheet"/>
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
+    </head>
+    <body>
+        <component type="typeof(App)" render-mode="ServerPrerendered"/>
 
-<div id="blazor-error-ui">
-    <environment include="Staging,Production">
-        @_loc["GeneralError"]
-    </environment>
-    <environment include="Development">
-        @_loc["GeneralError"]
-    </environment>
-    <a href="" class="reload">@_loc["Reload"]</a>
-    <a class="dismiss">🗙</a>
-</div>
+        <div id="blazor-error-ui">
+            <environment include="Staging,Production">
+                @_loc["GeneralError"]
+            </environment>
+            <environment include="Development">
+                @_loc["GeneralError"]
+            </environment>
+            <a href="" class="reload">@_loc["Reload"]</a>
+            <a class="dismiss">🗙</a>
+        </div>
 
-<script src="_content/Microsoft.AspNetCore.Components.CustomElements/BlazorCustomElements.js"></script>
-<script src="_framework/blazor.server.js"></script>
+        <script src="_content/Microsoft.AspNetCore.Components.CustomElements/BlazorCustomElements.js"></script>
+        <script src="_framework/blazor.server.js"></script>
 
-  <script src="js/Shared.js"></script>
+        <script src="js/Shared.js"></script>
 
-  <script src="leaflet/leaflet.js"></script>
-<script src="leaflet/leaflet.markercluster.js"></script>
-<script src="spin/spin.min.js"></script>
-<script src="leaflet.spin/leaflet.spin.min.js"></script>
-</body>
+        <script src="leaflet/leaflet.js"></script>
+        <script src="leaflet/leaflet.markercluster.js"></script>
+        <script src="spin/spin.min.js"></script>
+        <script src="leaflet.spin/leaflet.spin.min.js"></script>
+    </body>
 </html>

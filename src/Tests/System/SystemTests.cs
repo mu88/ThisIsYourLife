@@ -7,6 +7,7 @@ using DotNet.Testcontainers.Containers;
 using DotNet.Testcontainers.Networks;
 using FluentAssertions;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace Tests.System;
 
@@ -36,7 +37,7 @@ public class SystemTests
         }
 
         // If the test passed, clean up the container and image. Otherwise, keep them for investigation.
-        if (TestContext.CurrentContext.Result.Outcome.Status == NUnit.Framework.Interfaces.TestStatus.Passed && _container is not null && _dockerClient is not null)
+        if (TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed && _container is not null && _dockerClient is not null)
         {
             await _container.StopAsync(_cancellationToken);
             await _container.DisposeAsync();
@@ -114,13 +115,13 @@ public class SystemTests
         return container;
     }
 
-    private static IContainer BuildAppContainer(INetwork network, string containerImageTag) =>
-        new ContainerBuilder($"webapp:{containerImageTag}-chiseled")
+    private static IContainer BuildAppContainer(INetwork network, string containerImageTag)
+        => new ContainerBuilder($"webapp:{containerImageTag}-chiseled")
             .WithNetwork(network)
             .WithPortBinding(8080, true)
             .WithWaitStrategy(Wait.ForUnixContainer()
-                                  .UntilMessageIsLogged("Content root path: /app",
-                                      strategy => strategy.WithTimeout(TimeSpan.FromSeconds(30)))) // as it's a chiseled container, waiting for the port does not work
+                .UntilMessageIsLogged("Content root path: /app",
+                    strategy => strategy.WithTimeout(TimeSpan.FromSeconds(30)))) // as it's a chiseled container, waiting for the port does not work
             .Build();
 
     private static Uri GetAppBaseAddress(IContainer container) => new($"http://{container.Hostname}:{container.GetMappedPublicPort(8080)}/thisIsYourLife");

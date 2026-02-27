@@ -25,10 +25,10 @@ public class LifePointServiceTests
 
         results.Should().HaveCount(2);
         results.Should()
-               .BeEquivalentTo(storage.LifePoints,
-                   options => options.Including(x => x.Id)
-                                     .Including(x => x.Latitude)
-                                     .Including(x => x.Longitude));
+            .BeEquivalentTo(storage.LifePoints,
+                options => options.Including(x => x.Id)
+                    .Including(x => x.Latitude)
+                    .Including(x => x.Longitude));
     }
 
     [Test]

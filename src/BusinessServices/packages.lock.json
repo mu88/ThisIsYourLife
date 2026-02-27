@@ -283,20 +283,20 @@
       "dto": {
         "type": "Project",
         "dependencies": {
-          "mu88.Shared": "[7.0.0, )"
+          "mu88.Shared": "[8.0.0, )"
         }
       },
       "entities": {
         "type": "Project",
         "dependencies": {
-          "mu88.Shared": "[7.0.0, )"
+          "mu88.Shared": "[8.0.0, )"
         }
       },
       "logging": {
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.2, )",
-          "mu88.Shared": "[7.0.0, )"
+          "mu88.Shared": "[8.0.0, )"
         }
       }
     }

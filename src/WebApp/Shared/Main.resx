@@ -1,87 +1,87 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <root>
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
-                id="root"
-                xmlns="">
-        <xsd:element name="root" msdata:IsDataSet="true">
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+              id="root"
+              xmlns="">
+    <xsd:element name="root" msdata:IsDataSet="true">
 
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>1.3</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
-    </resheader>
-    <data name="On" xml:space="preserve">
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+      PublicKeyToken=b77a5c561934e089
+    </value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+      PublicKeyToken=b77a5c561934e089
+    </value>
+  </resheader>
+  <data name="On" xml:space="preserve">
         <value>On</value>
     </data>
-    <data name="With" xml:space="preserve">
+  <data name="With" xml:space="preserve">
         <value>with</value>
     </data>
-    <data name="Delete" xml:space="preserve">
+  <data name="Delete" xml:space="preserve">
         <value>Delete</value>
     </data>
-    <data name="CreatedIn" xml:space="preserve">
+  <data name="CreatedIn" xml:space="preserve">
         <value>Created in</value>
     </data>
-    <data name="CreatedBy" xml:space="preserve">
+  <data name="CreatedBy" xml:space="preserve">
         <value>Created by</value>
     </data>
-    <data name="UserHasNotBeenSet" xml:space="preserve">
+  <data name="UserHasNotBeenSet" xml:space="preserve">
         <value>User has not been set</value>
     </data>
-    <data name="Image" xml:space="preserve">
+  <data name="Image" xml:space="preserve">
         <value>Image</value>
     </data>
-    <data name="Description" xml:space="preserve">
+  <data name="Description" xml:space="preserve">
         <value>Description</value>
     </data>
-    <data name="Caption" xml:space="preserve">
+  <data name="Caption" xml:space="preserve">
         <value>Caption</value>
     </data>
-    <data name="Date" xml:space="preserve">
+  <data name="Date" xml:space="preserve">
         <value>Date</value>
     </data>
-    <data name="Saving" xml:space="preserve">
+  <data name="Saving" xml:space="preserve">
         <value>Saving</value>
     </data>
-    <data name="Save" xml:space="preserve">
+  <data name="Save" xml:space="preserve">
         <value>Save</value>
     </data>
-    <data name="PleaseEnterUsername" xml:space="preserve">
+  <data name="PleaseEnterUsername" xml:space="preserve">
         <value>Please enter your username</value>
     </data>
-    <data name="Welcome" xml:space="preserve">
+  <data name="Welcome" xml:space="preserve">
         <value>Welcome</value>
     </data>
-    <data name="RequiredError" xml:space="preserve">
+  <data name="RequiredError" xml:space="preserve">
         <value>The field {0} is mandatory</value>
     </data>
-    <data name="LengthError" xml:space="preserve">
+  <data name="LengthError" xml:space="preserve">
         <value>Must be between {2} and {1} characters long</value>
     </data>
-    <data name="GeneralError" xml:space="preserve">
+  <data name="GeneralError" xml:space="preserve">
         <value>An error has occurred. This application has to be reloaded. Please see the log file for more information.</value>
     </data>
-    <data name="Reload" xml:space="preserve">
+  <data name="Reload" xml:space="preserve">
         <value>Reload</value>
     </data>
-    <data name="ImageTooBig" xml:space="preserve">
+  <data name="ImageTooBig" xml:space="preserve">
         <value>The image was too big, a maximum of {0} MB is allowed. Please try it again.</value>
     </data>
-    <data name="InputIsNoImage" xml:space="preserve">
+  <data name="InputIsNoImage" xml:space="preserve">
         <value>The provided file is not an image</value>
     </data>
 </root>

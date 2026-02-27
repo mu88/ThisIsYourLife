@@ -23,11 +23,11 @@ public class LifePointDetailTests
     [Test]
     public void CreatedLifePointDetail_ShouldBeRenderedProperly()
     {
-        ExistingLifePoint existingLifePoint = TestExistingLifePoint.Create();
-        Guid id = existingLifePoint.Id;
+        var existingLifePoint = TestExistingLifePoint.Create();
+        var id = existingLifePoint.Id;
         var lifePointServiceMock = Substitute.For<ILifePointService>();
         lifePointServiceMock.GetLifePointAsync(id).Returns(existingLifePoint);
-        BunitContext testContext = CreateBunitContext(lifePointServiceMock);
+        var testContext = CreateBunitContext(lifePointServiceMock);
 
         using var testee = CreateTestee(testContext, id);
 
@@ -37,11 +37,11 @@ public class LifePointDetailTests
     [Test]
     public async Task UpdatePopup()
     {
-        ExistingLifePoint existingLifePoint = TestExistingLifePoint.Create();
-        Guid id = existingLifePoint.Id;
+        var existingLifePoint = TestExistingLifePoint.Create();
+        var id = existingLifePoint.Id;
         var lifePointServiceMock = Substitute.For<ILifePointService>();
         lifePointServiceMock.GetLifePointAsync(id).Returns(existingLifePoint);
-        BunitContext testContext = CreateBunitContext(lifePointServiceMock, module => module.SetupVoid("updatePopup", _ => true).SetVoidResult());
+        var testContext = CreateBunitContext(lifePointServiceMock, module => module.SetupVoid("updatePopup", _ => true).SetVoidResult());
         using var testee = CreateTestee(testContext, id);
 
         await (Task)typeof(LifePointDetail)
@@ -55,11 +55,11 @@ public class LifePointDetailTests
     [Test]
     public async Task OnAfterRenderAsync_ShouldUpdatePopup()
     {
-        ExistingLifePoint existingLifePoint = TestExistingLifePoint.From(TestLifePointToCreate.Create());
-        Guid id = existingLifePoint.Id;
+        var existingLifePoint = TestExistingLifePoint.From(TestLifePointToCreate.Create());
+        var id = existingLifePoint.Id;
         var lifePointServiceMock = Substitute.For<ILifePointService>();
         lifePointServiceMock.GetLifePointAsync(id).Returns(existingLifePoint);
-        BunitContext testContext = CreateBunitContext(lifePointServiceMock, module => module.SetupVoid("updatePopup", _ => true).SetVoidResult());
+        var testContext = CreateBunitContext(lifePointServiceMock, module => module.SetupVoid("updatePopup", _ => true).SetVoidResult());
         using var testee = testContext.Render<LifePointDetailForTest>(parameters => parameters.Add(detail => detail.Id, id.ToString()));
 
         await testee.Instance.OnAfterRenderForTestAsync(false);
@@ -70,11 +70,11 @@ public class LifePointDetailTests
     [Test]
     public async Task OnAfterRenderAsync_ShouldNotUpdatePopup_WhenLifePointDetailModuleIsNull()
     {
-        ExistingLifePoint existingLifePoint = TestExistingLifePoint.From(TestLifePointToCreate.Create());
-        Guid id = existingLifePoint.Id;
+        var existingLifePoint = TestExistingLifePoint.From(TestLifePointToCreate.Create());
+        var id = existingLifePoint.Id;
         var lifePointServiceMock = Substitute.For<ILifePointService>();
         lifePointServiceMock.GetLifePointAsync(id).Returns(existingLifePoint);
-        BunitContext testContext = CreateBunitContext(lifePointServiceMock, module => module.SetupVoid("updatePopup", _ => true).SetVoidResult());
+        var testContext = CreateBunitContext(lifePointServiceMock, module => module.SetupVoid("updatePopup", _ => true).SetVoidResult());
         using var testee = testContext.Render<LifePointDetailForTest>(parameters => parameters.Add(detail => detail.Id, id.ToString()));
 
         testee.Instance.ResetLifePointDetailModule();
@@ -86,11 +86,11 @@ public class LifePointDetailTests
     [Test]
     public async Task DeleteExistingLifePoint()
     {
-        ExistingLifePoint existingLifePoint = TestExistingLifePoint.Create();
-        Guid id = existingLifePoint.Id;
+        var existingLifePoint = TestExistingLifePoint.Create();
+        var id = existingLifePoint.Id;
         var lifePointServiceMock = Substitute.For<ILifePointService>();
         lifePointServiceMock.GetLifePointAsync(id).Returns(existingLifePoint);
-        BunitContext testContext = CreateBunitContext(lifePointServiceMock);
+        var testContext = CreateBunitContext(lifePointServiceMock);
         using var testee = CreateTestee(testContext, id);
 
         ClickDelete(testee);
@@ -101,23 +101,22 @@ public class LifePointDetailTests
 
     private static void ClickDelete(IRenderedComponent<LifePointDetail> testee) => testee.Find("button").Click();
 
-    private static void MarkerShouldBeRemoved(BunitContext testContext, Guid id) =>
-        testContext.JSInterop.Invocations.Should()
+    private static void MarkerShouldBeRemoved(BunitContext testContext, Guid id)
+        => testContext.JSInterop.Invocations.Should()
             .ContainSingle(invocation => invocation.Identifier.Equals("removeMarkerOfLifePoint")
-                                         && Equals(id.ToString(), invocation.Arguments[0]));
+                && Equals(id.ToString(), invocation.Arguments[0]));
 
-    private static void PopupShouldBeUpdated(BunitContext testContext, string id) =>
-        testContext.JSInterop.Invocations.Should()
+    private static void PopupShouldBeUpdated(BunitContext testContext, string id)
+        => testContext.JSInterop.Invocations.Should()
             .ContainSingle(invocation => invocation.Identifier.Equals("updatePopup")
-                                         && Equals(id, invocation.Arguments[0]));
+                && Equals(id, invocation.Arguments[0]));
 
-    private static void PopupShouldNotBeUpdated(BunitContext testContext, string id) =>
-        testContext.JSInterop.Invocations.Should()
+    private static void PopupShouldNotBeUpdated(BunitContext testContext, string id)
+        => testContext.JSInterop.Invocations.Should()
             .NotContain(invocation => invocation.Identifier.Equals("updatePopup")
-                                      && Equals(id, invocation.Arguments[0]));
+                && Equals(id, invocation.Arguments[0]));
 
-    private static async Task LifePointShouldBeDeletedAsync(ILifePointService lifePointServiceMock, Guid id) =>
-        await lifePointServiceMock.Received(1).DeleteLifePointAsync(id);
+    private static async Task LifePointShouldBeDeletedAsync(ILifePointService lifePointServiceMock, Guid id) => await lifePointServiceMock.Received(1).DeleteLifePointAsync(id);
 
     [SuppressMessage("StyleCop.CSharp.SpacingRules", "SA1011:Closing square brackets should be spaced correctly", Justification = "Okay here")]
     private static void ShouldBeRenderedProperly<TComponent>(IRenderedComponent<TComponent> testee, ExistingLifePoint existingLifePoint)
@@ -133,13 +132,13 @@ public class LifePointDetailTests
         testee.Find("p").TextContent.Should().Be(existingLifePoint.Description);
     }
 
-    private static IRenderedComponent<LifePointDetail> CreateTestee(BunitContext testContext, Guid id) =>
-        testContext.Render<LifePointDetail>(parameters => parameters.Add(detail => detail.Id, id.ToString()));
+    private static IRenderedComponent<LifePointDetail> CreateTestee(BunitContext testContext, Guid id)
+        => testContext.Render<LifePointDetail>(parameters => parameters.Add(detail => detail.Id, id.ToString()));
 
     private static BunitContext CreateBunitContext(ILifePointService lifePointServiceMock, Action<BunitJSModuleInterop>? configureLifePointDetailModule = null)
     {
         var testContext = new BunitContext();
-        BunitJSModuleInterop lifePointDetailModule = testContext.JSInterop.SetupModule("./Shared/LifePointDetail.razor.js");
+        var lifePointDetailModule = testContext.JSInterop.SetupModule("./Shared/LifePointDetail.razor.js");
         configureLifePointDetailModule?.Invoke(lifePointDetailModule);
         testContext.Services.AddLocalization();
         testContext.Services.AddSingleton(lifePointServiceMock);

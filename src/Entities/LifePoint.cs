@@ -8,20 +8,21 @@ namespace Entities;
 [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Local", Justification = "EF Core uses them")]
 public class LifePoint
 {
-    [ExcludeFromCodeCoverage]
     // ReSharper disable once UnusedMember.Global - EF Core needs default constructor
+    [ExcludeFromCodeCoverage]
     public LifePoint()
     {
     }
 
     [SuppressMessage("Design", "MA0056:Do not call overridable members in constructor", Justification = "EF Core necessity")]
-    public LifePoint(DateOnly date,
-                     string caption,
-                     string? description,
-                     double latitude,
-                     double longitude,
-                     Person createdBy,
-                     Guid? imageId = null)
+    public LifePoint(
+        DateOnly date,
+        string caption,
+        string? description,
+        double latitude,
+        double longitude,
+        Person createdBy,
+        Guid? imageId = null)
     {
         Id = Guid.NewGuid();
         Date = date;

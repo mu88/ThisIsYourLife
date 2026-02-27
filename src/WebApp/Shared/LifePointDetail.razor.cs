@@ -17,8 +17,8 @@ public partial class LifePointDetail
     private protected IJSObjectReference LifePointDetailModule { get; set; } = null!; // is initialized on component construction
 
     /// <inheritdoc />
-    protected override async Task OnInitializedAsync() =>
-        await Logger.LogMethodStartAndEndAsync(async () =>
+    protected override async Task OnInitializedAsync()
+        => await Logger.LogMethodStartAndEndAsync(async () =>
         {
             _lifePoint = await LifePointService.GetLifePointAsync(Guid.Parse(Id));
             if (_lifePoint.ImageId != null)
@@ -44,18 +44,16 @@ public partial class LifePointDetail
 
     private Uri ConstructImageUri(Guid imageId) => new(new Uri(Navigator.BaseUri), $"api/images/{_lifePoint.CreatedBy.Id}/{imageId.ToString()}");
 
-    private async void OnDeleteClicked() =>
-        await Logger.LogMethodStartAndEndAsync(async () =>
+    private async void OnDeleteClicked()
+        => await Logger.LogMethodStartAndEndAsync(async () =>
         {
             await LifePointService.DeleteLifePointAsync(Guid.Parse(Id));
             await RemoveMarkerAsync();
         });
 
-    private async Task RemoveMarkerAsync()
-        => await LifePointDetailModule.InvokeVoidAsync("removeMarkerOfLifePoint", Id);
+    private async Task RemoveMarkerAsync() => await LifePointDetailModule.InvokeVoidAsync("removeMarkerOfLifePoint", Id);
 
-    private async Task LoadLifePointDetailModuleAsync() =>
-        LifePointDetailModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
+    private async Task LoadLifePointDetailModuleAsync() => LifePointDetailModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");
 
     /// <summary>Updates the underlying Leaflet popup so that size and position are correct and visible.</summary>
     /// <remarks>

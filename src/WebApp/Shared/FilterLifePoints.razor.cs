@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using DTO.Person;
 using Logging.Extensions;
 using Microsoft.AspNetCore.Components;
@@ -21,8 +22,8 @@ public partial class FilterLifePoints
 
     /// <inheritdoc />
     [SuppressMessage("Design", "MA0119:JSRuntime must not be used in OnInitialized or OnInitializedAsync", Justification = "It works, so I'm fine")]
-    protected override async Task OnInitializedAsync() =>
-        await Logger.LogMethodStartAndEndAsync(async () =>
+    protected override async Task OnInitializedAsync()
+        => await Logger.LogMethodStartAndEndAsync(async () =>
         {
             await base.OnInitializedAsync();
 
@@ -63,7 +64,7 @@ public partial class FilterLifePoints
 
     private async Task SelectedYearChangedAsync(ChangeEventArgs args)
     {
-        if (!int.TryParse(args.Value?.ToString(), out var year))
+        if (!int.TryParse(args.Value?.ToString(), CultureInfo.InvariantCulture, out var year))
         {
             return;
         }

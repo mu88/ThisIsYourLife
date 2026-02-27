@@ -14,12 +14,12 @@ public static class TestLifePointToCreate
         var longitude = 34.3;
         var createdBy = person?.Id ?? Guid.NewGuid();
         var lifePointToCreate = new LifePointToCreate(date,
-                                                      caption,
-                                                      description,
-                                                      latitude,
-                                                      longitude,
-                                                      createdBy,
-                                                      newImage);
+            caption,
+            description,
+            latitude,
+            longitude,
+            createdBy,
+            newImage);
         return lifePointToCreate;
     }
 }

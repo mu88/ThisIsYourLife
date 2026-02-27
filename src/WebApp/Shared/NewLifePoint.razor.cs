@@ -13,9 +13,9 @@ namespace WebApp.Shared;
 public partial class NewLifePoint
 {
     internal const long MaxAllowedFileSizeInBytes = MaxAllowedFileSizeInMegaBytes * 1024 * 1024;
+    internal const long MaxAllowedFileSizeInMegaBytes = 20;
     internal bool ImageTooBig;
     internal bool InputIsNoImage;
-    private const long MaxAllowedFileSizeInMegaBytes = 20;
     private readonly NewLifePointModel _newLifePoint = new();
     private IBrowserFile? _file;
     private bool _showModalSpinner;
@@ -112,14 +112,14 @@ public partial class NewLifePoint
         StateHasChanged();
     }
 
-    private async Task RemovePopupAsync() =>
-        await Logger.LogMethodStartAndEndAsync(async () => await NewLifePointModule.InvokeVoidAsync("removePopupForNewLifePoint"));
+    private async Task RemovePopupAsync() => await Logger.LogMethodStartAndEndAsync(async () => await NewLifePointModule.InvokeVoidAsync("removePopupForNewLifePoint"));
 
-    private async Task AddMarkerAsync(ExistingLifePoint existingLifePoint) => await Logger.LogMethodStartAndEndAsync(async () =>
-                                                                                  await NewLifePointModule.InvokeVoidAsync("addMarkerForCreatedLifePoint",
-                                                                                      existingLifePoint.Id,
-                                                                                      existingLifePoint.Latitude,
-                                                                                      existingLifePoint.Longitude));
+    private async Task AddMarkerAsync(ExistingLifePoint existingLifePoint)
+        => await Logger.LogMethodStartAndEndAsync(async () =>
+            await NewLifePointModule.InvokeVoidAsync("addMarkerForCreatedLifePoint",
+                existingLifePoint.Id,
+                existingLifePoint.Latitude,
+                existingLifePoint.Longitude));
 
     private async Task LoadNewLifePointModuleAsync() => NewLifePointModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/NewLifePoint.razor.js");
 

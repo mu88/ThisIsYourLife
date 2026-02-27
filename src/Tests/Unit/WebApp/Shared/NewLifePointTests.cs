@@ -1,4 +1,5 @@
-﻿using Bunit;
+﻿using System.Globalization;
+using Bunit;
 using BusinessServices.Services;
 using DTO.LifePoint;
 using FluentAssertions;
@@ -28,11 +29,11 @@ public class NewLifePointTests
         var lifePointToCreate = TestLifePointToCreate.Create();
         var lifePointServiceMock = Substitute.For<ILifePointService>();
         lifePointServiceMock.CreateLifePointAsync(Arg.Any<LifePointToCreate>())
-                            .Returns(async _ =>
-                            {
-                                await Task.Delay(500);
-                                return TestExistingLifePoint.From(lifePointToCreate);
-                            });
+            .Returns(async _ =>
+            {
+                await Task.Delay(500);
+                return TestExistingLifePoint.From(lifePointToCreate);
+            });
         await using var ctx = new BunitContext();
         using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate, lifePointServiceMock);
 
@@ -90,11 +91,11 @@ public class NewLifePointTests
         var lifePointToCreate = TestLifePointToCreate.Create();
         var lifePointServiceMock = Substitute.For<ILifePointService>();
         lifePointServiceMock.CreateLifePointAsync(Arg.Any<LifePointToCreate>())
-                            .Returns(async _ =>
-                            {
-                                await Task.Delay(500);
-                                return TestExistingLifePoint.From(lifePointToCreate);
-                            });
+            .Returns(async _ =>
+            {
+                await Task.Delay(500);
+                return TestExistingLifePoint.From(lifePointToCreate);
+            });
         await using var ctx = new BunitContext();
         using var testee = CreateTestee<NewLifePoint>(ctx, lifePointToCreate, lifePointServiceMock, userServiceMock);
 
@@ -156,10 +157,11 @@ public class NewLifePointTests
         await testee.InvokeAsync(() => inputComponent.OnChange.InvokeAsync(filesToUpload));
     }
 
-    private static IRenderedComponent<T> CreateTestee<T>(BunitContext testContext,
-                                                         LifePointToCreate lifePointToCreate,
-                                                         ILifePointService? lifePointServiceMock = null,
-                                                         IUserService? userServiceMock = null)
+    private static IRenderedComponent<T> CreateTestee<T>(
+        BunitContext testContext,
+        LifePointToCreate lifePointToCreate,
+        ILifePointService? lifePointServiceMock = null,
+        IUserService? userServiceMock = null)
         where T : NewLifePoint
     {
         var newLifePointDateServiceMock = Substitute.For<INewLifePointDateService>();
@@ -174,7 +176,7 @@ public class NewLifePointTests
         {
             lifePointServiceMock = Substitute.For<ILifePointService>();
             lifePointServiceMock.CreateLifePointAsync(Arg.Is<LifePointToCreate>(input => input == lifePointToCreate))
-                                .Returns(TestExistingLifePoint.From(lifePointToCreate));
+                .Returns(TestExistingLifePoint.From(lifePointToCreate));
         }
 
         testContext.Services.AddLocalization();
@@ -184,6 +186,7 @@ public class NewLifePointTests
         testContext.Services.AddSingleton(userServiceMock);
         testContext.Services.AddSingleton(newLifePointDateServiceMock);
 #pragma warning disable CS0618
+
         // Best practice according to: https://stackoverflow.com/questions/72077421/test-event-handler-of-inputfile-in-blazor-component-with-bunit
         testContext.Services.AddSingleton(Options.Create(new RemoteBrowserFileStreamOptions()));
 #pragma warning restore CS0618
@@ -195,28 +198,28 @@ public class NewLifePointTests
         testContext.JSInterop.SetupVoid(invocation => string.Equals(invocation.Identifier, "Blazor._internal.InputFile.init", StringComparison.Ordinal)).SetVoidResult();
 
         var testee = testContext.Render<T>(parameters => parameters
-                                                                  .Add(detail => detail.Latitude, lifePointToCreate.Latitude)
-                                                                  .Add(detail => detail.Longitude, lifePointToCreate.Longitude));
+            .Add(detail => detail.Latitude, lifePointToCreate.Latitude)
+            .Add(detail => detail.Longitude, lifePointToCreate.Longitude));
 
         return testee;
     }
 
-    private static void MarkerShouldBeAdded(BunitContext testContext) =>
-        testContext.JSInterop.Invocations.Should().ContainSingle(invocation => invocation.Identifier.Equals("addMarkerForCreatedLifePoint"));
+    private static void MarkerShouldBeAdded(BunitContext testContext)
+        => testContext.JSInterop.Invocations.Should().ContainSingle(invocation => invocation.Identifier.Equals("addMarkerForCreatedLifePoint"));
 
-    private static void PopupShouldBeRemoved(BunitContext testContext) =>
-        testContext.JSInterop.Invocations.Should().ContainSingle(invocation => invocation.Identifier.Equals("removePopupForNewLifePoint"));
+    private static void PopupShouldBeRemoved(BunitContext testContext)
+        => testContext.JSInterop.Invocations.Should().ContainSingle(invocation => invocation.Identifier.Equals("removePopupForNewLifePoint"));
 
-    private static void PopupShouldNotBeUpdated(BunitContext testContext) =>
-        testContext.JSInterop.Invocations.Should().NotContain(invocation => invocation.Identifier.Equals("updatePopup"));
+    private static void PopupShouldNotBeUpdated(BunitContext testContext)
+        => testContext.JSInterop.Invocations.Should().NotContain(invocation => invocation.Identifier.Equals("updatePopup"));
 
-    private static void ProposedDateShouldBeCorrect(LifePointToCreate lifePointToCreate, IRenderedComponent<NewLifePoint> testee) =>
-        testee.Services.GetRequiredService<INewLifePointDateService>().ProposedCreationDate.Should().Be(lifePointToCreate.Date);
+    private static void ProposedDateShouldBeCorrect(LifePointToCreate lifePointToCreate, IRenderedComponent<NewLifePoint> testee)
+        => testee.Services.GetRequiredService<INewLifePointDateService>().ProposedCreationDate.Should().Be(lifePointToCreate.Date);
 
     private static void EnterInput(IRenderedComponent<NewLifePoint> testee, LifePointToCreate lifePointToCreate)
     {
         testee.Find("[id^=\"input-caption\"]").Change(lifePointToCreate.Caption);
-        testee.Find("[id^=\"input-date\"]").Change(lifePointToCreate.Date.ToString("MM-dd-yyyy"));
+        testee.Find("[id^=\"input-date\"]").Change(lifePointToCreate.Date.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture));
         testee.Find("[id^=\"input-description\"]").Change(lifePointToCreate.Description);
     }
 

@@ -33,8 +33,8 @@ internal class UserService : IUserService
     public bool UserAlreadySet => Id != null;
 
     /// <inheritdoc />
-    public async Task SetUserAsync(string name) =>
-        await _logger.LogMethodStartAndEndAsync(async () =>
+    public async Task SetUserAsync(string name)
+        => await _logger.LogMethodStartAndEndAsync(async () =>
         {
             await SetNameAndIdAsync(name);
             PersistConfigInFile();

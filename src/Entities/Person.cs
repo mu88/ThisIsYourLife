@@ -8,8 +8,8 @@ namespace Entities;
 [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Local", Justification = "EF Core uses them")]
 public class Person
 {
-    [ExcludeFromCodeCoverage]
     // ReSharper disable once UnusedMember.Global - EF Core needs default constructor
+    [ExcludeFromCodeCoverage]
     public Person()
     {
     }

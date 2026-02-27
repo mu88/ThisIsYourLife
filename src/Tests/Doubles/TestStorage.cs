@@ -12,9 +12,9 @@ public static class TestStorage
     public static IStorage Create(IFileSystem? fileSystem = null, IImageService? imageService = null)
     {
         var storage = new Storage(new DbContextOptionsBuilder<Storage>().UseSqlite(CreateInMemoryDatabase()).Options,
-                                  Substitute.For<ILogger<Storage>>(),
-                                  fileSystem ?? Substitute.For<IFileSystem>(),
-                                  imageService ?? Substitute.For<IImageService>());
+            Substitute.For<ILogger<Storage>>(),
+            fileSystem ?? Substitute.For<IFileSystem>(),
+            imageService ?? Substitute.For<IImageService>());
         storage.Database.EnsureCreated();
 
         return storage;
