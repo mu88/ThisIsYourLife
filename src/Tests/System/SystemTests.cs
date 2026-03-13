@@ -137,7 +137,7 @@ public class SystemTests
         Console.WriteLine($"Stderr:{Environment.NewLine}{logValues.Stderr}");
         Console.WriteLine($"Stdout:{Environment.NewLine}{logValues.Stdout}");
         var logLines = logValues.Stdout.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-        var unexpectedWarnings = logLines.Where(line => line.Contains("warn:") && !line.Contains("LuckyPennySoftware.AutoMapper.License"));
+        var unexpectedWarnings = logLines.Where(line => line.Contains("warn:", StringComparison.Ordinal) && !line.Contains("LuckyPennySoftware.AutoMapper.License", StringComparison.Ordinal));
         unexpectedWarnings.Should().BeEmpty("there should be no unexpected warnings in the application logs");
     }
 

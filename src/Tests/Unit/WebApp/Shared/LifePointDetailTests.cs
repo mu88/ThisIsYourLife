@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 using Bunit;
 using BusinessServices.Services;
@@ -123,11 +124,11 @@ public class LifePointDetailTests
         where TComponent : IComponent
     {
         testee.Find("img").Attributes["src"].Should().NotBeNull();
-        testee.Find("img").Attributes["src"]!.Value.Should().Be($"http://localhost/api/images/{existingLifePoint.CreatedBy.Id}/{existingLifePoint.ImageId}");
+        testee.Find("img").Attributes["src"]!.Value.Should().Be($"http://localhost/api/images/{existingLifePoint.CreatedBy.Id.ToString()}/{existingLifePoint.ImageId?.ToString()}");
 
         testee.Find("h5").TextContent.Should().Be(existingLifePoint.Caption);
 
-        testee.Find("h6").TextContent.Should().Match($"On *{DateTime.Now.Month}*{DateTime.Now.Year} with {existingLifePoint.CreatedBy.Name}");
+        testee.Find("h6").TextContent.Should().Match($"On *{DateTime.Now.Month.ToString(CultureInfo.InvariantCulture)}*{DateTime.Now.Year.ToString(CultureInfo.InvariantCulture)} with {existingLifePoint.CreatedBy.Name}");
 
         testee.Find("p").TextContent.Should().Be(existingLifePoint.Description);
     }

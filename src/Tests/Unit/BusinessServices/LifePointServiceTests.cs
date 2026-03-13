@@ -140,16 +140,21 @@ public class LifePointServiceTests
     {
         var person = new Person("Bob");
         var lifePointToCreate = TestLifePointToCreate.Create(person);
-        _storage.FindAsync<Person>(lifePointToCreate.CreatedBy).Returns(person);
-        _storage.AddItemAsync(Arg.Any<LifePoint>()).Returns(MapToLifePoint(lifePointToCreate, person));
-        var testee = CreateTestee();
+
+        // Use a fresh storage mock to avoid cross-test contamination from shared _storage
+        var freshStorage = Substitute.For<IStorage>();
+        freshStorage.FindAsync<Person>(lifePointToCreate.CreatedBy).Returns(person);
+        freshStorage.AddItemAsync(Arg.Any<LifePoint>()).Returns(callInfo => callInfo.Arg<LifePoint>());
+        var testee = new LifePointService(Substitute.For<ILogger<LifePointService>>(), freshStorage, _mapper);
 
         var result = await testee.CreateLifePointAsync(lifePointToCreate);
 
         result.Id.Should().NotBeEmpty();
         result.Should().BeEquivalentTo(lifePointToCreate, options => options.Excluding(x => x.CreatedBy).Excluding(x => x.ImageToCreate));
         result.CreatedBy.Name.Should().Be(person.Name);
-        await _storage.Received(1).SaveAsync();
+        result.ImageId.Should().BeNull();
+        await freshStorage.Received(1).SaveAsync();
+        await freshStorage.DidNotReceive().StoreImageAsync(Arg.Any<Person>(), Arg.Any<ImageToCreate>());
     }
 
     [Test]

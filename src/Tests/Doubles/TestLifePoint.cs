@@ -1,4 +1,5 @@
-﻿using Entities;
+﻿using System.Globalization;
+using Entities;
 
 namespace Tests.Doubles;
 
@@ -10,8 +11,8 @@ public static class TestLifePoint
         date ??= DateOnly.FromDateTime(DateTime.Now);
         var random = new Random();
         return new LifePoint(date.Value,
-            $"Caption {random.Next()}",
-            $"Description {random.Next()}",
+            $"Caption {random.Next().ToString(CultureInfo.InvariantCulture)}",
+            $"Description {random.Next().ToString(CultureInfo.InvariantCulture)}",
             random.Next(-90, 90),
             random.Next(-180, 180),
             createdBy,

@@ -44,7 +44,7 @@ public class ImageServiceTests
         var person = TestPerson.Create("Dixie");
         var newImage = TestImageToCreate.Create();
         _fileSystem.CreateFile(Arg.Any<string>()).Returns(new MemoryStream());
-        _fileSystem.DirectoryExists(Arg.Any<string>()).Returns(true);
+        _fileSystem.DirectoryExists(Arg.Any<DirectoryInfo>()).Returns(true);
         var testee = CreateTestee();
 
         var result = await testee.ProcessAndStoreImageAsync(person, newImage);
@@ -60,7 +60,7 @@ public class ImageServiceTests
         var notAnImageStream = new MemoryStream(new byte[10]);
         var newImage = TestImageToCreate.Create(notAnImageStream);
         _fileSystem.CreateFile(Arg.Any<string>()).Returns(new MemoryStream());
-        _fileSystem.DirectoryExists(Arg.Any<string>()).Returns(true);
+        _fileSystem.DirectoryExists(Arg.Any<DirectoryInfo>()).Returns(true);
         var testee = CreateTestee();
 
         var testAction = async () => await testee.ProcessAndStoreImageAsync(person, newImage);
@@ -74,7 +74,7 @@ public class ImageServiceTests
         var person = TestPerson.Create("Dixie");
         var newImage = TestImageToCreate.Create();
         _fileSystem.CreateFile(Arg.Any<string>()).Returns(new MemoryStream());
-        _fileSystem.DirectoryExists(Arg.Any<string>()).Returns(false);
+        _fileSystem.DirectoryExists(Arg.Any<DirectoryInfo>()).Returns(false);
         var testee = CreateTestee();
 
         var result = await testee.ProcessAndStoreImageAsync(person, newImage);

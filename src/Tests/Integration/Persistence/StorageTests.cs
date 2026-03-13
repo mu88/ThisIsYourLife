@@ -39,4 +39,18 @@ public class StorageTests
 
         result.Should().Be(person);
     }
+
+    [Test]
+    [global::System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "MA0042:Do not use blocking calls in an async method", Justification = "Testing the synchronous Find method")]
+    [global::System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA1849:Call async methods when in an async method", Justification = "Testing the synchronous Find method")]
+    public async Task FindEntitySync()
+    {
+        var person = TestPerson.Create("Dixie");
+        var testee = TestStorage.Create();
+        await testee.AddItemAsync(person);
+
+        var result = testee.Find<Person>(person.Id);
+
+        result.Should().Be(person);
+    }
 }

@@ -12,8 +12,8 @@ public partial class FilterLifePoints
     private const int DefaultYear = -1;
     private static readonly Guid DefaultCreatorId = Guid.Empty;
     private IJSObjectReference _lifePointDetailModule = null!;
-    private IEnumerable<ExistingPerson> _distinctCreators = new List<ExistingPerson>();
-    private IEnumerable<int> _distinctYears = new List<int>();
+    private IEnumerable<ExistingPerson> _distinctCreators = Array.Empty<ExistingPerson>();
+    private IEnumerable<int> _distinctYears = Array.Empty<int>();
     private bool _showFilter;
     private bool _creatorFilterApplied;
     private bool _yearFilterApplied;
@@ -43,7 +43,7 @@ public partial class FilterLifePoints
             return;
         }
 
-        if (_selectedCreatorId == creatorId)
+        if (_selectedCreatorId.HasValue && _selectedCreatorId.Value == creatorId)
         {
             return;
         }

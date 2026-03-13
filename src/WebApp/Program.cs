@@ -84,7 +84,9 @@ static async Task CreateDbIfNotExistsAsync(IHost host)
     }
 }
 
+#pragma warning disable ASP0027
 [ExcludeFromCodeCoverage]
 [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1106:Code should not contain empty statements", Justification = "Necessary for code coverage")]
 [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "S1118", Justification = "Necessary for code coverage")]
 public partial class Program;
+#pragma warning restore ASP0027

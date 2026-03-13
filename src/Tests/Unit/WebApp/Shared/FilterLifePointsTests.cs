@@ -141,6 +141,20 @@ public class FilterLifePointsTests
     }
 
     [Test]
+    public async Task FilterByCreator_ShouldNotEarlyReturn_WhenSelectedCreatorIdIsNull()
+    {
+        await using var testContext = new BunitContext();
+        using var testee = CreateTestee(testContext);
+        ClickFilterButton(testee);
+        await FilterByCreatorAsync(testee, testContext, "Dixie");
+        await ResetCreatorFilterToDefaultAsync(testee); // _selectedCreatorId becomes null
+
+        await FilterByCreatorAsync(testee, testContext, "Dixie");
+
+        MarkersShouldBeDisplayed(testContext, 3);
+    }
+
+    [Test]
     public async Task FilterByYear_ShouldNotReloadMarkers_WhenSameYearHasBeenChosen()
     {
         await using var testContext = new BunitContext();
@@ -185,6 +199,19 @@ public class FilterLifePointsTests
         using var testee = CreateTestee(testContext);
         ClickFilterButton(testee); // enables filtering
         await FilterByYearAsync(testee, 1953);
+
+        ClickFilterButton(testee); // disables filtering
+
+        MarkersShouldBeDisplayed(testContext, 2);
+    }
+
+    [Test]
+    public async Task DisableFiltering_ShouldReloadAllMarkers_WhenCreatorFilterApplied()
+    {
+        await using var testContext = new BunitContext();
+        using var testee = CreateTestee(testContext);
+        ClickFilterButton(testee); // enables filtering
+        await FilterByCreatorAsync(testee, testContext, "Dixie");
 
         ClickFilterButton(testee); // disables filtering
 
@@ -271,7 +298,7 @@ public class FilterLifePointsTests
     {
         var idForName = testContext.Services.GetRequiredService<ILifePointService>()
             .GetDistinctCreators()
-            .Single(person => person.Name.Equals(name))
+            .Single(person => person.Name.Equals(name, StringComparison.Ordinal))
             .Id;
 
         await ChangeCreatorSelectElementAsync(testee, idForName);

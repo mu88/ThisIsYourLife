@@ -40,7 +40,7 @@ internal class ImageService(IOptions<StorageOptions> storageOptions, ILogger<Ima
             logger.ImageResizedAndSaved(imageId);
 
             logger.MethodFinished();
-            return imageId;
+            return imageId; // Code coverage false positive
         });
 
     /// <inheritdoc />
