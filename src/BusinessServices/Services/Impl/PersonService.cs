@@ -9,15 +9,16 @@ namespace BusinessServices.Services;
 public class PersonService(ILogger<PersonService> logger, IStorage storage, IMapper mapper) : IPersonService
 {
     public async Task<ExistingPerson> CreatePersonAsync(PersonToCreate personToCreate)
-        => await logger.LogMethodStartAndEndAsync(async () =>
-        {
-            var newPerson = mapper.Map<Person>(personToCreate);
-            var createdPerson = await storage.AddItemAsync(newPerson);
-            await storage.SaveAsync();
-            logger.NewPersonCreated(createdPerson.Id);
+    {
+        using var activity = Tracing.Source.StartActivity();
 
-            return mapper.Map<ExistingPerson>(createdPerson);
-        });
+        var newPerson = mapper.Map<Person>(personToCreate);
+        var createdPerson = await storage.AddItemAsync(newPerson);
+        await storage.SaveAsync();
+        logger.NewPersonCreated(createdPerson.Id);
+
+        return mapper.Map<ExistingPerson>(createdPerson);
+    }
 
     /// <inheritdoc />
     public bool PersonExists(Guid id) => storage.Find<Person>(id) != null;

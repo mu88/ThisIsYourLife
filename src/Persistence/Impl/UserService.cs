@@ -36,12 +36,12 @@ internal class UserService : IUserService
 
     /// <inheritdoc />
     public async Task SetUserAsync(string name)
-        => await _logger.LogMethodStartAndEndAsync(async () =>
-        {
-            await SetNameAndIdAsync(name);
-            PersistConfigInFile();
-            _logger.UserSet(name);
-        });
+    {
+        using var activity = Tracing.Source.StartActivity();
+        await SetNameAndIdAsync(name);
+        PersistConfigInFile();
+        _logger.UserSet(name);
+    }
 
     private void PersistConfigInFile()
     {

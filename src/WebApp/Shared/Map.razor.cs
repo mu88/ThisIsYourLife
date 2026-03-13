@@ -15,8 +15,10 @@ public sealed partial class Map : IDisposable
 
     [JSInvokable]
     public async Task OpenPopupForNewLifePointAsync(double latitude, double longitude)
-        => await Logger.LogMethodStartAndEndAsync(async () =>
-            await _newLifePointModule.InvokeVoidAsync("createPopupForNewLifePoint", _objRef, _leafletMap, latitude, longitude));
+    {
+        using var activity = Tracing.Source.StartActivity();
+        await _newLifePointModule.InvokeVoidAsync("createPopupForNewLifePoint", _objRef, _leafletMap, latitude, longitude);
+    }
 
     [JSInvokable]
     public async Task AddMarkerAsync(Guid id, double latitude, double longitude)
@@ -40,12 +42,10 @@ public sealed partial class Map : IDisposable
     {
         if (firstRender)
         {
-            await Logger.LogMethodStartAndEndAsync(async () =>
-            {
-                _objRef = RecreateReference();
-                await InitializeMapAsync(_objRef);
-                await AddMarkersForExistingLocationsAsync();
-            });
+            using var activity = Tracing.Source.StartActivity();
+            _objRef = RecreateReference();
+            await InitializeMapAsync(_objRef);
+            await AddMarkersForExistingLocationsAsync();
         }
     }
 
@@ -68,17 +68,18 @@ public sealed partial class Map : IDisposable
     }
 
     private async Task AddMarkersForExistingLocationsAsync()
-        => await Logger.LogMethodStartAndEndAsync(async () =>
+    {
+        using var activity = Tracing.Source.StartActivity();
+
+        await EnableSpinnerAsync();
+
+        foreach (var (latitude, longitude, id) in LifePointService.GetAllLocations())
         {
-            await EnableSpinnerAsync();
+            await AddMarkerAsync(id, latitude, longitude);
+        }
 
-            foreach (var (latitude, longitude, id) in LifePointService.GetAllLocations())
-            {
-                await AddMarkerAsync(id, latitude, longitude);
-            }
-
-            await DisableSpinnerAsync();
-        });
+        await DisableSpinnerAsync();
+    }
 
     private async Task EnableSpinnerAsync() => await _lifePointDetailModule.InvokeVoidAsync("enableSpinner");
 

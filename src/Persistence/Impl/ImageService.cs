@@ -16,43 +16,47 @@ internal class ImageService(IOptions<StorageOptions> storageOptions, ILogger<Ima
 
     /// <inheritdoc />
     public async Task<Guid> ProcessAndStoreImageAsync(Person owner, ImageToCreate newImage)
-        => await logger.LogMethodStartAndEndAsync(async () =>
+    {
+        using var activity = Tracing.Source.StartActivity();
+
+        var imageId = Guid.NewGuid();
+        var filePathForImage = GetFilePathForImage(owner, imageId);
+        EnsureImagePathExists(filePathForImage);
+
+        Image image;
+        try
         {
-            var imageId = Guid.NewGuid();
-            var filePathForImage = GetFilePathForImage(owner, imageId);
-            EnsureImagePathExists(filePathForImage);
+            image = await Image.LoadAsync(newImage.Stream);
+        }
+        catch (Exception)
+        {
+            throw new NoImageException();
+        }
 
-            Image image;
-            try
-            {
-                image = await Image.LoadAsync(newImage.Stream);
-            }
-            catch (Exception)
-            {
-                throw new NoImageException();
-            }
+        ResizeImage(image);
 
-            ResizeImage(image);
+        await using var fileStream = fileSystem.CreateFile(filePathForImage);
+        await image.SaveAsync(fileStream, new JpegEncoder());
+        image.Dispose();
+        logger.ImageResizedAndSaved(imageId);
 
-            await using var fileStream = fileSystem.CreateFile(filePathForImage);
-            await image.SaveAsync(fileStream, new JpegEncoder());
-            image.Dispose();
-            logger.ImageResizedAndSaved(imageId);
-
-            logger.MethodFinished();
-            return imageId; // Code coverage false positive
-        });
+        return imageId;
+    }
 
     /// <inheritdoc />
-    public Stream GetImage(Guid ownerId, Guid imageId) => logger.LogMethodStartAndEnd(() => fileSystem.OpenRead(GetFilePathForImage(ownerId, imageId)));
+    public Stream GetImage(Guid ownerId, Guid imageId)
+    {
+        using var activity = Tracing.Source.StartActivity();
+        return fileSystem.OpenRead(GetFilePathForImage(ownerId, imageId));
+    }
 
     /// <inheritdoc />
     public void DeleteImage(Guid ownerId, Guid imageId)
-        => logger.LogMethodStartAndEnd(() =>
-        {
-            fileSystem.DeleteFile(GetFilePathForImage(ownerId, imageId));
-            logger.ImageDeleted(ownerId, imageId);
-        });
+    {
+        using var activity = Tracing.Source.StartActivity();
+        fileSystem.DeleteFile(GetFilePathForImage(ownerId, imageId));
+        logger.ImageDeleted(ownerId, imageId);
+    }
 
     private static void ResizeImage(Image image) => image.Mutate(context => context.Resize(new ResizeOptions { Mode = ResizeMode.Max, Size = new Size(600) }));
 

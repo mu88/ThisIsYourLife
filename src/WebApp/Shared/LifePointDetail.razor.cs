@@ -18,18 +18,19 @@ public partial class LifePointDetail
 
     /// <inheritdoc />
     protected override async Task OnInitializedAsync()
-        => await Logger.LogMethodStartAndEndAsync(async () =>
+    {
+        using var activity = Tracing.Source.StartActivity();
+
+        _lifePoint = await LifePointService.GetLifePointAsync(Guid.Parse(Id));
+        if (_lifePoint.ImageId != null)
         {
-            _lifePoint = await LifePointService.GetLifePointAsync(Guid.Parse(Id));
-            if (_lifePoint.ImageId != null)
-            {
-                _imageUri = ConstructImageUri(_lifePoint.ImageId.Value);
-            }
+            _imageUri = ConstructImageUri(_lifePoint.ImageId.Value);
+        }
 
-            await LoadLifePointDetailModuleAsync();
+        await LoadLifePointDetailModuleAsync();
 
-            await base.OnInitializedAsync();
-        });
+        await base.OnInitializedAsync();
+    }
 
     /// <inheritdoc />
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -45,11 +46,11 @@ public partial class LifePointDetail
     private Uri ConstructImageUri(Guid imageId) => new(new Uri(Navigator.BaseUri), $"api/images/{_lifePoint.CreatedBy.Id}/{imageId.ToString()}");
 
     private async void OnDeleteClicked()
-        => await Logger.LogMethodStartAndEndAsync(async () =>
-        {
-            await LifePointService.DeleteLifePointAsync(Guid.Parse(Id));
-            await RemoveMarkerAsync();
-        });
+    {
+        using var activity = Tracing.Source.StartActivity();
+        await LifePointService.DeleteLifePointAsync(Guid.Parse(Id));
+        await RemoveMarkerAsync();
+    }
 
     private async Task RemoveMarkerAsync() => await LifePointDetailModule.InvokeVoidAsync("removeMarkerOfLifePoint", Id);
 

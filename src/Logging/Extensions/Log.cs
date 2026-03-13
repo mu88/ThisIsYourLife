@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 
 namespace Logging.Extensions;
@@ -7,12 +6,6 @@ namespace Logging.Extensions;
 [ExcludeFromCodeCoverage]
 public static partial class Log
 {
-    [LoggerMessage(EventId = 0, Level = LogLevel.Debug, Message = "Starting method `{methodName}`")]
-    public static partial void MethodStarted(this ILogger logger, [CallerMemberName] string methodName = "");
-
-    [LoggerMessage(EventId = 100, Level = LogLevel.Debug, Message = "Method `{methodName}` finished")]
-    public static partial void MethodFinished(this ILogger logger, [CallerMemberName] string methodName = "");
-
     [LoggerMessage(EventId = 1000, Level = LogLevel.Debug, Message = "Setting username to `{username}`")]
     public static partial void SettingUser(this ILogger logger, string username);
 
@@ -63,36 +56,4 @@ public static partial class Log
 
     [LoggerMessage(EventId = 2600, Level = LogLevel.Warning, Message = "There was a too big image'")]
     public static partial void ImageTooBig(this ILogger logger);
-
-    public static async Task LogMethodStartAndEndAsync(this ILogger logger, Func<Task> runAsync)
-    {
-        logger.MethodStarted();
-        await runAsync();
-        logger.MethodFinished();
-    }
-
-    public static async Task<TResult> LogMethodStartAndEndAsync<TResult>(this ILogger logger, Func<Task<TResult>> runAsync)
-    {
-        logger.MethodStarted();
-        var result = await runAsync();
-        logger.MethodFinished();
-
-        return result;
-    }
-
-    public static void LogMethodStartAndEnd(this ILogger logger, Action run)
-    {
-        logger.MethodStarted();
-        run();
-        logger.MethodFinished();
-    }
-
-    public static TResult LogMethodStartAndEnd<TResult>(this ILogger logger, Func<TResult> run)
-    {
-        logger.MethodStarted();
-        var result = run();
-        logger.MethodFinished();
-
-        return result;
-    }
 }

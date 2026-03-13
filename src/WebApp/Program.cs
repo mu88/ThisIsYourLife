@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using BusinessServices;
 using Microsoft.AspNetCore.Components.Web;
 using mu88.Shared.OpenTelemetry;
+using OpenTelemetry.Trace;
 using Persistence;
 using WebApp;
 using WebApp.Services;
@@ -12,6 +13,7 @@ using WebApp.Shared;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.ConfigureOpenTelemetry("thisisyourlife", builder.Configuration);
+builder.Services.AddOpenTelemetry().WithTracing(tracing => tracing.AddSource(Logging.Extensions.Tracing.Source.Name));
 
 // Configure logging and configuration
 builder.Logging.ClearProviders();
