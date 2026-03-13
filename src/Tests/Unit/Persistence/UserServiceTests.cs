@@ -21,7 +21,7 @@ public class UserServiceTests
         personServiceMock.CreatePersonAsync(Arg.Is<PersonToCreate>(create => create.Name == "Dixie")).Returns(existingPerson);
         var fileSystemMock = Substitute.For<IFileSystem>();
         var config = Options.Create(new UserConfig());
-        var testee = new UserService(config, Substitute.For<ILogger<UserService>>(), fileSystemMock, personServiceMock);
+        var testee = new UserService(config, Options.Create(new StorageOptions()), Substitute.For<ILogger<UserService>>(), fileSystemMock, personServiceMock);
 
         await testee.SetUserAsync("Dixie");
 
@@ -40,7 +40,7 @@ public class UserServiceTests
         personServiceMock.PersonExists(id).Returns(false);
         var config = Options.Create(new UserConfig { Id = id });
 
-        var testAction = () => new UserService(config, Substitute.For<ILogger<UserService>>(), Substitute.For<IFileSystem>(), personServiceMock);
+        var testAction = () => new UserService(config, Options.Create(new StorageOptions()), Substitute.For<ILogger<UserService>>(), Substitute.For<IFileSystem>(), personServiceMock);
 
         testAction.Should().Throw<ArgumentException>();
     }

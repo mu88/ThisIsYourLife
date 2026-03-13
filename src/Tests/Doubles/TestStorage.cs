@@ -2,6 +2,7 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 using Persistence;
 
@@ -9,12 +10,15 @@ namespace Tests.Doubles;
 
 public static class TestStorage
 {
+    public static readonly StorageOptions DefaultStorageOptions = new();
+
     public static IStorage Create(IFileSystem? fileSystem = null, IImageService? imageService = null)
     {
         var storage = new Storage(new DbContextOptionsBuilder<Storage>().UseSqlite(CreateInMemoryDatabase()).Options,
             Substitute.For<ILogger<Storage>>(),
             fileSystem ?? Substitute.For<IFileSystem>(),
-            imageService ?? Substitute.For<IImageService>());
+            imageService ?? Substitute.For<IImageService>(),
+            Options.Create(DefaultStorageOptions));
         storage.Database.EnsureCreated();
 
         return storage;

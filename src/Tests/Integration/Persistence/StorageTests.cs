@@ -14,9 +14,12 @@ public class StorageTests
     [Test]
     public async Task EnsureStorageExists_InitializesDb()
     {
+        var storageOptions = TestStorage.DefaultStorageOptions;
+        var dbDir = Path.Combine(storageOptions.BasePath, "db");
+        var dbPath = Path.Combine(dbDir, "ThisIsYourLife.db");
         var fileSystemMock = Substitute.For<IFileSystem>();
-        fileSystemMock.DirectoryExists(Storage.DatabaseDirectory).Returns(true);
-        fileSystemMock.FileExists(Storage.DatabasePath).Returns(false);
+        fileSystemMock.DirectoryExists(dbDir).Returns(true);
+        fileSystemMock.FileExists(dbPath).Returns(false);
         var testee = TestStorage.Create(fileSystemMock);
 
         await testee.EnsureStorageExistsAsync();

@@ -13,13 +13,15 @@ internal class UserService : IUserService
     private readonly IFileSystem _fileSystem;
     private readonly IPersonService _personService;
     private readonly UserConfig _configuration;
+    private readonly StorageOptions _storageOptions;
 
-    public UserService(IOptions<UserConfig> configuration, ILogger<UserService> logger, IFileSystem fileSystem, IPersonService personService)
+    public UserService(IOptions<UserConfig> configuration, IOptions<StorageOptions> storageOptions, ILogger<UserService> logger, IFileSystem fileSystem, IPersonService personService)
     {
         _logger = logger;
         _fileSystem = fileSystem;
         _personService = personService;
         _configuration = configuration.Value;
+        _storageOptions = storageOptions.Value;
 
         if (_configuration.Id != null && !_personService.PersonExists(_configuration.Id.Value))
         {
@@ -43,7 +45,7 @@ internal class UserService : IUserService
 
     private void PersistConfigInFile()
     {
-        var appSettingsPath = Path.Combine(Storage.UserDirectory, "user.json");
+        var appSettingsPath = Path.Combine(_storageOptions.BasePath, "user.json");
         _fileSystem.WriteAllText(appSettingsPath, JsonSerializer.Serialize(_configuration));
     }
 

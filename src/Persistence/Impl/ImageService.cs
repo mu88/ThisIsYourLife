@@ -3,15 +3,16 @@ using DTO.LifePoint;
 using Entities;
 using Logging.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Processing;
 
 namespace Persistence;
 
-internal class ImageService(ILogger<ImageService> logger, IFileSystem fileSystem) : IImageService
+internal class ImageService(IOptions<StorageOptions> storageOptions, ILogger<ImageService> logger, IFileSystem fileSystem) : IImageService
 {
-    private static readonly string ImageDirectory = Path.Combine(Storage.UserDirectory, "images");
+    private string ImageDirectory => Path.Combine(storageOptions.Value.BasePath, "images");
 
     /// <inheritdoc />
     public async Task<Guid> ProcessAndStoreImageAsync(Person owner, ImageToCreate newImage)
@@ -55,10 +56,6 @@ internal class ImageService(ILogger<ImageService> logger, IFileSystem fileSystem
 
     private static void ResizeImage(Image image) => image.Mutate(context => context.Resize(new ResizeOptions { Mode = ResizeMode.Max, Size = new Size(600) }));
 
-    private static string GetFilePathForImage(Person owner, Guid imageId) => GetFilePathForImage(owner.Id, imageId);
-
-    private static string GetFilePathForImage(Guid ownerId, Guid imageId) => Path.Combine(ImageDirectory, ownerId.ToString(), $"{imageId.ToString()}.jpg");
-
     [ExcludeFromCodeCoverage(Justification = "Found no way to tweak Directory.GetParent into returning null")]
     private static DirectoryInfo GetParentDirectory(string filePathForImage)
     {
@@ -66,6 +63,10 @@ internal class ImageService(ILogger<ImageService> logger, IFileSystem fileSystem
             throw new ArgumentNullException(nameof(filePathForImage), $"Could not resolve parent directory from {filePathForImage}");
         return parentDirectory;
     }
+
+    private string GetFilePathForImage(Person owner, Guid imageId) => GetFilePathForImage(owner.Id, imageId);
+
+    private string GetFilePathForImage(Guid ownerId, Guid imageId) => Path.Combine(ImageDirectory, ownerId.ToString(), $"{imageId.ToString()}.jpg");
 
     private void EnsureImagePathExists(string filePathForImage)
     {

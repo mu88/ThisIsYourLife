@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 using NUnit.Framework;
 using Persistence;
@@ -82,5 +83,5 @@ public class ImageServiceTests
         _fileSystem.Received(1).CreateDirectory(Arg.Is<string>(s => s.Contains(person.Id.ToString())));
     }
 
-    private ImageService CreateTestee() => new(Substitute.For<ILogger<ImageService>>(), _fileSystem);
+    private ImageService CreateTestee() => new(Options.Create(new StorageOptions()), Substitute.For<ILogger<ImageService>>(), _fileSystem);
 }

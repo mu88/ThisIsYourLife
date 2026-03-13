@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 using NUnit.Framework;
 using Persistence;
@@ -14,6 +15,10 @@ public class StorageTests
 {
     private readonly IFileSystem _fileSystem = Substitute.For<IFileSystem>();
     private readonly IImageService _imageService = Substitute.For<IImageService>();
+    private readonly StorageOptions _storageOptions = new();
+
+    private string ExpectedDatabaseDirectory => Path.Combine(_storageOptions.BasePath, "db");
+    private string ExpectedDatabasePath => Path.Combine(ExpectedDatabaseDirectory, "ThisIsYourLife.db");
 
     [Test]
     public void DeleteImage()
@@ -54,32 +59,33 @@ public class StorageTests
     [Test]
     public async Task EnsureStorageExists_CreatesDirectory_IfItDoesNotExist()
     {
-        _fileSystem.DirectoryExists(Storage.DatabaseDirectory).Returns(false);
-        _fileSystem.FileExists(Storage.DatabasePath).Returns(true); // That's really only a hack to avoid further EF Core code
+        _fileSystem.DirectoryExists(ExpectedDatabaseDirectory).Returns(false);
+        _fileSystem.FileExists(ExpectedDatabasePath).Returns(true); // That's really only a hack to avoid further EF Core code
         var testee = CreateTestee();
 
         var testAction = () => testee.EnsureStorageExistsAsync();
 
         await testAction.Should().NotThrowAsync();
-        _fileSystem.Received(1).CreateDirectory(Storage.DatabaseDirectory);
+        _fileSystem.Received(1).CreateDirectory(ExpectedDatabaseDirectory);
     }
 
     [Test]
     public async Task EnsureStorageExists_CreatesNothing_IfEverythingExists()
     {
-        _fileSystem.DirectoryExists(Storage.DatabaseDirectory).Returns(true);
-        _fileSystem.FileExists(Storage.DatabasePath).Returns(true);
+        _fileSystem.DirectoryExists(ExpectedDatabaseDirectory).Returns(true);
+        _fileSystem.FileExists(ExpectedDatabasePath).Returns(true);
         var testee = CreateTestee();
 
         var testAction = () => testee.EnsureStorageExistsAsync();
 
         await testAction.Should().NotThrowAsync();
-        _fileSystem.DidNotReceive().CreateDirectory(Storage.DatabaseDirectory);
+        _fileSystem.DidNotReceive().CreateDirectory(ExpectedDatabaseDirectory);
     }
 
     private Storage CreateTestee()
         => new(new DbContextOptionsBuilder<Storage>().Options,
             Substitute.For<ILogger<Storage>>(),
             _fileSystem,
-            _imageService);
+            _imageService,
+            Options.Create(_storageOptions));
 }

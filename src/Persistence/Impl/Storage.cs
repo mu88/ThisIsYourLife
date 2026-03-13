@@ -4,6 +4,7 @@ using Entities;
 using Logging.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 // ReSharper disable All - There are so many R# issues due to the usage of EF Core.
 
@@ -17,13 +18,15 @@ internal class Storage : DbContext, IStorage
     private readonly ILogger<Storage> _logger;
     private readonly IFileSystem _fileSystem;
     private readonly IImageService _imageService;
+    private readonly StorageOptions _storageOptions;
 
-    public Storage(DbContextOptions<Storage> options, ILogger<Storage> logger, IFileSystem fileSystem, IImageService imageService)
+    public Storage(DbContextOptions<Storage> options, ILogger<Storage> logger, IFileSystem fileSystem, IImageService imageService, IOptions<StorageOptions> storageOptions)
         : base(options)
     {
         _logger = logger;
         _fileSystem = fileSystem;
         _imageService = imageService;
+        _storageOptions = storageOptions.Value;
     }
 
     /// <inheritdoc />
@@ -36,11 +39,9 @@ internal class Storage : DbContext, IStorage
 
     public DbSet<Person> PersonsInStorage { get; set; }
 
-    internal static string DatabaseDirectory { get; } = Path.Combine(UserDirectory, "db");
+    internal string DatabaseDirectory => Path.Combine(_storageOptions.BasePath, "db");
 
-    internal static string DatabasePath => Path.Combine(DatabaseDirectory, "ThisIsYourLife.db");
-
-    internal static string UserDirectory => Path.Combine(Environment.GetEnvironmentVariable("HOME") ?? string.Empty, "data");
+    internal string DatabasePath => Path.Combine(DatabaseDirectory, "ThisIsYourLife.db");
 
     /// <inheritdoc />
     public async Task<T?> FindAsync<T>(Guid id)
