@@ -1,10 +1,39 @@
-﻿<Router AppAssembly="@typeof(Program).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
-    </Found>
-    <NotFound>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p>Sorry, there's nothing at this address.</p>
-        </LayoutView>
-    </NotFound>
-</Router>
+﻿@using Microsoft.Extensions.Localization
+@using WebApp.Shared
+@inject IStringLocalizer<Main> _loc
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>This is your life</title>
+        <base href="/thisIsYourLife/"/>
+        <link rel="stylesheet" href="@Assets["leaflet/leaflet.css"]"/>
+        <link rel="stylesheet" href="@Assets["leaflet/MarkerCluster.css"]"/>
+        <link rel="stylesheet" href="@Assets["leaflet/MarkerCluster.Default.css"]"/>
+        <link rel="stylesheet" href="@Assets["css/bootstrap/bootstrap.min.css"]"/>
+        <link href="@Assets["css/site.css"]" rel="stylesheet"/>
+        <link href="@Assets["WebApp.styles.css"]" rel="stylesheet"/>
+        <link rel="shortcut icon" type="image/x-icon" href="@Assets["favicon.ico"]"/>
+        <HeadOutlet @rendermode="InteractiveServer"/>
+    </head>
+    <body>
+        <Routes @rendermode="InteractiveServer"/>
+
+        <div id="blazor-error-ui">
+            @_loc["GeneralError"]
+            <a href="" class="reload">@_loc["Reload"]</a>
+            <a class="dismiss">🗙</a>
+        </div>
+
+        <script src="@Assets["_framework/blazor.web.js"]"></script>
+
+        <script src="@Assets["js/Shared.js"]"></script>
+
+        <script src="@Assets["leaflet/leaflet.js"]"></script>
+        <script src="@Assets["leaflet/leaflet.markercluster.js"]"></script>
+        <script src="@Assets["spin/spin.min.js"]"></script>
+        <script src="@Assets["leaflet.spin/leaflet.spin.min.js"]"></script>
+    </body>
+</html>

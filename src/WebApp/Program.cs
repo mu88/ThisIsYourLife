@@ -3,6 +3,7 @@ using BusinessServices;
 using Microsoft.AspNetCore.Components.Web;
 using mu88.Shared.OpenTelemetry;
 using Persistence;
+using WebApp;
 using WebApp.Services;
 using WebApp.Shared;
 
@@ -23,13 +24,14 @@ var storageOptions = builder.Configuration.GetSection(StorageOptions.SectionName
 builder.Configuration.AddJsonFile(Path.Combine(storageOptions.BasePath, "user.json"), true);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor(options =>
-{
-    options.RootComponents.RegisterCustomElement<LifePointDetail>("life-point-detail");
-    options.RootComponents.RegisterCustomElement<NewLifePoint>("new-life-point");
-    options.RootComponents.RegisterCustomElement<FilterLifePoints>("filter-life-points");
-});
+builder.Services.AddControllers();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents(options =>
+    {
+        options.RootComponents.RegisterCustomElement<LifePointDetail>("life-point-detail");
+        options.RootComponents.RegisterCustomElement<NewLifePoint>("new-life-point");
+        options.RootComponents.RegisterCustomElement<FilterLifePoints>("filter-life-points");
+    });
 
 builder.Services.AddHealthChecks();
 builder.Services.AddPersistence(builder.Configuration);
@@ -44,14 +46,15 @@ var app = builder.Build();
 await CreateDbIfNotExistsAsync(app);
 
 app.UsePathBase("/thisIsYourLife");
+app.UseRouting();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Error");
+    app.UseExceptionHandler("/Error", createScopeForErrors: true);
 }
 
-app.UseStaticFiles();
-app.UseRouting();
+app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+app.UseAntiforgery();
 
 app.UseRequestLocalization(localizationOptions =>
 {
@@ -61,8 +64,9 @@ app.UseRequestLocalization(localizationOptions =>
         .AddSupportedUICultures(supportedCultures);
 });
 
-app.MapBlazorHub();
-app.MapFallbackToPage("/_Host");
+app.MapStaticAssets();
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 app.MapControllers();
 app.MapHealthChecks("/healthz");
 
