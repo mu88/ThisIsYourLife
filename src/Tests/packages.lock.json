@@ -784,7 +784,7 @@
       "businessservices": {
         "type": "Project",
         "dependencies": {
-          "AutoMapper": "[16.0.0, )",
+          "AutoMapper": "[16.1.1, )",
           "DTO": "[6.0.1, )",
           "Entities": "[6.0.1, )",
           "Logging": "[6.0.1, )",
@@ -831,7 +831,7 @@
       "webapp": {
         "type": "Project",
         "dependencies": {
-          "AutoMapper": "[16.0.0, )",
+          "AutoMapper": "[16.1.1, )",
           "BusinessServices": "[6.0.1, )",
           "DTO": "[6.0.1, )",
           "Microsoft.AspNetCore.Components.CustomElements": "[10.0.3, )",
@@ -842,9 +842,9 @@
       },
       "AutoMapper": {
         "type": "CentralTransitive",
-        "requested": "[16.0.0, )",
-        "resolved": "16.0.0",
-        "contentHash": "JIhkKjEsUcIPPbCR7cGQlH3a2ySLW2Tof6CXcJb5WbaoUkniREpJOlC2ROkaM/nck2b5JjptLIUdHvbItGvLGQ==",
+        "requested": "[16.1.1, )",
+        "resolved": "16.1.1",
+        "contentHash": "VNEky8JA15ci+oIDRGHITOGOpV4dILsf8pnn24QhDl2urtqgJ2IXiS/V2EtGU17P/+f6OeFQPJETaZXV9QOIZg==",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "10.0.0",
           "Microsoft.Extensions.Options": "10.0.0",
