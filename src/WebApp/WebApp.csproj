@@ -15,7 +15,6 @@
     <ProjectReference Include="..\Persistence\Persistence.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AutoMapper" />
     <PackageReference Include="Microsoft.AspNetCore.Components.CustomElements" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
     <PackageReference Include="mu88.Shared" />

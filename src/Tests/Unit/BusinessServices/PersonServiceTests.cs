@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using BusinessServices;
+﻿using BusinessServices;
 using BusinessServices.Services;
 using Entities;
 using FluentAssertions;
@@ -15,13 +14,13 @@ namespace Tests.Unit.BusinessServices;
 public class PersonServiceTests
 {
     private readonly IStorage _storage = Substitute.For<IStorage>();
-    private readonly IMapper _mapper = TestMapper.Create();
 
     [Test]
     public async Task CreateNewPerson()
     {
         var personToCreate = TestPersonToCreate.Create("Bob");
-        _storage.AddItemAsync(Arg.Any<Person>()).Returns(_mapper.Map<Person>(personToCreate));
+        var expectedPerson = personToCreate.ToPerson();
+        _storage.AddItemAsync(Arg.Any<Person>()).Returns(expectedPerson);
         var testee = CreateTestee();
 
         var result = await testee.CreatePersonAsync(personToCreate);
@@ -55,5 +54,5 @@ public class PersonServiceTests
         result.Should().BeTrue();
     }
 
-    private PersonService CreateTestee() => new(Substitute.For<ILogger<PersonService>>(), _storage, _mapper);
+    private PersonService CreateTestee() => new(Substitute.For<ILogger<PersonService>>(), _storage);
 }

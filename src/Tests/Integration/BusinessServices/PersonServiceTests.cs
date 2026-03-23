@@ -16,7 +16,7 @@ public class PersonServiceTests
     {
         var storage = TestStorage.Create();
         var personToCreate = TestPersonToCreate.Create("Bob");
-        var testee = new PersonService(Substitute.For<ILogger<PersonService>>(), storage, TestMapper.Create());
+        var testee = new PersonService(Substitute.For<ILogger<PersonService>>(), storage);
 
         var result = await testee.CreatePersonAsync(personToCreate);
 

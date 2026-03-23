@@ -39,7 +39,6 @@ builder.Services.AddHealthChecks();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddBusinessServices();
 builder.Services.AddSingleton<INewLifePointDateService, NewLifePointDateService>();
-builder.Services.AddAutoMapper(config => config.AddProfile<AutoMapperProfile>());
 builder.Services.AddOptions<UserConfig>().Bind(builder.Configuration);
 builder.Services.AddLocalization();
 

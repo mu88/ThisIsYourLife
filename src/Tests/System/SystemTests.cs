@@ -136,9 +136,9 @@ public class SystemTests
         (string Stdout, string Stderr) logValues = await container.GetLogsAsync(ct: cancellationToken);
         Console.WriteLine($"Stderr:{Environment.NewLine}{logValues.Stderr}");
         Console.WriteLine($"Stdout:{Environment.NewLine}{logValues.Stdout}");
-        var logLines = logValues.Stdout.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-        var unexpectedWarnings = logLines.Where(line => line.Contains("warn:", StringComparison.Ordinal) && !line.Contains("LuckyPennySoftware.AutoMapper.License", StringComparison.Ordinal));
-        unexpectedWarnings.Should().BeEmpty("there should be no unexpected warnings in the application logs");
+        logValues.Stdout
+            .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+            .Should().NotContain(line => line.Contains("warn:", StringComparison.Ordinal));
     }
 
     [SuppressMessage("Design", "MA0076:Do not use implicit culture-sensitive ToString in interpolated strings", Justification = "Okay for me")]

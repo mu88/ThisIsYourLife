@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using BusinessServices;
+﻿using BusinessServices;
 using BusinessServices.Services;
 using DTO.LifePoint;
 using Entities;
@@ -16,7 +15,6 @@ namespace Tests.Unit.BusinessServices;
 public class LifePointServiceTests
 {
     private readonly IStorage _storage = Substitute.For<IStorage>();
-    private readonly IMapper _mapper = TestMapper.Create();
 
     [Test]
     public void GetAllLifePointLocations()
@@ -145,7 +143,7 @@ public class LifePointServiceTests
         var freshStorage = Substitute.For<IStorage>();
         freshStorage.FindAsync<Person>(lifePointToCreate.CreatedBy).Returns(person);
         freshStorage.AddItemAsync(Arg.Any<LifePoint>()).Returns(callInfo => callInfo.Arg<LifePoint>());
-        var testee = new LifePointService(Substitute.For<ILogger<LifePointService>>(), freshStorage, _mapper);
+        var testee = new LifePointService(Substitute.For<ILogger<LifePointService>>(), freshStorage);
 
         var result = await testee.CreateLifePointAsync(lifePointToCreate);
 
@@ -321,15 +319,8 @@ public class LifePointServiceTests
         results.Should().BeEmpty();
     }
 
-    private LifePoint MapToLifePoint(LifePointToCreate lifePointToCreate, Person person, Guid? imageId = null)
-    {
-        return _mapper.Map<LifePointToCreate, LifePoint>(lifePointToCreate,
-            options =>
-            {
-                options.Items[nameof(LifePoint.CreatedBy)] = person;
-                options.Items[nameof(LifePoint.ImageId)] = imageId;
-            });
-    }
+    private LifePoint MapToLifePoint(LifePointToCreate lifePointToCreate, Person person, Guid? imageId = null) =>
+        lifePointToCreate.ToLifePoint(person, imageId);
 
-    private LifePointService CreateTestee() => new(Substitute.For<ILogger<LifePointService>>(), _storage, _mapper);
+    private LifePointService CreateTestee() => new(Substitute.For<ILogger<LifePointService>>(), _storage);
 }

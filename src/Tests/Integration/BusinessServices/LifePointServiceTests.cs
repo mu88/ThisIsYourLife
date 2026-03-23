@@ -19,7 +19,7 @@ public class LifePointServiceTests
         await storage.AddItemAsync(TestLifePoint.Create());
         await storage.AddItemAsync(TestLifePoint.Create());
         await storage.SaveAsync();
-        var testee = new LifePointService(Substitute.For<ILogger<LifePointService>>(), storage, TestMapper.Create());
+        var testee = new LifePointService(Substitute.For<ILogger<LifePointService>>(), storage);
 
         var results = testee.GetAllLocations().ToList();
 
@@ -38,7 +38,7 @@ public class LifePointServiceTests
         var storage = TestStorage.Create();
         await storage.AddItemAsync(lifePoint);
         await storage.SaveAsync();
-        var testee = new LifePointService(Substitute.For<ILogger<LifePointService>>(), storage, TestMapper.Create());
+        var testee = new LifePointService(Substitute.For<ILogger<LifePointService>>(), storage);
 
         var result = await testee.GetLifePointAsync(lifePoint.Id);
 
@@ -52,7 +52,7 @@ public class LifePointServiceTests
         var storage = TestStorage.Create();
         var person = await storage.AddItemAsync(new Person("Bob"));
         var lifePointToCreate = TestLifePointToCreate.Create(person);
-        var testee = new LifePointService(Substitute.For<ILogger<LifePointService>>(), storage, TestMapper.Create());
+        var testee = new LifePointService(Substitute.For<ILogger<LifePointService>>(), storage);
 
         var result = await testee.CreateLifePointAsync(lifePointToCreate);
 
@@ -66,7 +66,7 @@ public class LifePointServiceTests
         var storage = TestStorage.Create();
         await storage.AddItemAsync(lifePoint);
         await storage.SaveAsync();
-        var testee = new LifePointService(Substitute.For<ILogger<LifePointService>>(), storage, TestMapper.Create());
+        var testee = new LifePointService(Substitute.For<ILogger<LifePointService>>(), storage);
 
         await testee.DeleteLifePointAsync(lifePoint.Id);
 

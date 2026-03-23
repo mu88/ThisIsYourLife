@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using AutoMapper;
 using DTO.LifePoint;
 using DTO.Location;
 using DTO.Person;
@@ -9,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BusinessServices.Services;
 
-internal class LifePointService(ILogger<LifePointService> logger, IStorage storage, IMapper mapper) : ILifePointService
+internal class LifePointService(ILogger<LifePointService> logger, IStorage storage) : ILifePointService
 {
     public IEnumerable<ExistingLocation> GetAllLocations(int? year = null, Guid? creatorId = null)
     {
@@ -38,12 +37,12 @@ internal class LifePointService(ILogger<LifePointService> logger, IStorage stora
             }
         }
 
-        return mapper.Map<IQueryable<LifePoint>, IEnumerable<ExistingLocation>>(searchExpression != null
+        return (searchExpression != null
             ? storage.LifePoints.Where(searchExpression)
-            : storage.LifePoints);
+            : storage.LifePoints).ToExistingLocations();
     }
 
-    public async Task<ExistingLifePoint> GetLifePointAsync(Guid id) => mapper.Map<LifePoint, ExistingLifePoint>(await GetLifePointInternalAsync(id));
+    public async Task<ExistingLifePoint> GetLifePointAsync(Guid id) => (await GetLifePointInternalAsync(id)).ToExistingLifePoint();
 
     public async Task<ExistingLifePoint> CreateLifePointAsync(LifePointToCreate lifePointToCreate)
     {
@@ -53,19 +52,14 @@ internal class LifePointService(ILogger<LifePointService> logger, IStorage stora
             throw new ArgumentNullException(nameof(lifePointToCreate), $"Could not find any existing Person with ID {lifePointToCreate.CreatedBy}");
 
         Guid? imageId = lifePointToCreate.ImageToCreate != null ? await storage.StoreImageAsync(existingPerson, lifePointToCreate.ImageToCreate) : null;
-        var newLifePoint = mapper.Map<LifePointToCreate, LifePoint>(lifePointToCreate,
-            options =>
-            {
-                options.Items[nameof(LifePoint.CreatedBy)] = existingPerson;
-                options.Items[nameof(LifePoint.ImageId)] = imageId;
-            });
+        var newLifePoint = lifePointToCreate.ToLifePoint(existingPerson, imageId);
         logger.NewLifePointExtracted();
 
         var createdLifePoint = await storage.AddItemAsync(newLifePoint);
         await storage.SaveAsync();
         logger.NewLifePointCreated(createdLifePoint.Id);
 
-        var existingLifePoint = mapper.Map<LifePoint, ExistingLifePoint>(createdLifePoint);
+        var existingLifePoint = createdLifePoint.ToExistingLifePoint();
         return existingLifePoint;
     }
 
@@ -97,7 +91,7 @@ internal class LifePointService(ILogger<LifePointService> logger, IStorage stora
         var distinctCreators = year != null
             ? storage.LifePoints.Where(point => point.Date.Year == year).Select(x => x.CreatedBy).Distinct().OrderBy(x => x.Name)
             : storage.LifePoints.Select(x => x.CreatedBy).Distinct().OrderBy(x => x.Name);
-        return mapper.Map<IQueryable<Person>, IEnumerable<ExistingPerson>>(distinctCreators);
+        return distinctCreators.ToExistingPersons();
     }
 
     private async Task<LifePoint> GetLifePointInternalAsync(Guid id)
