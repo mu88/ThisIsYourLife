@@ -7,10 +7,6 @@
   <ItemGroup>
     <PackageReference Include="bunit" />
     <PackageReference Include="CliWrap" />
-    <PackageReference Include="coverlet.msbuild">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="FluentAssertions" />
     <PackageReference Include="FluentAssertions.Web.v8" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -37,9 +33,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Remove="TestResults\**" />
-    <None Update="dotnet-coverage-settings.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage" />
