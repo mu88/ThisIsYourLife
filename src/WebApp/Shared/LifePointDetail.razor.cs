@@ -1,4 +1,5 @@
-﻿using DTO.LifePoint;
+﻿using System.Diagnostics.CodeAnalysis;
+using DTO.LifePoint;
 using Logging.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -45,6 +46,7 @@ public partial class LifePointDetail
 
     private Uri ConstructImageUri(Guid imageId) => new(new Uri(Navigator.BaseUri), $"api/images/{_lifePoint.CreatedBy.Id}/{imageId.ToString()}");
 
+    [ExcludeFromCodeCoverage(Justification = "async void event handlers cannot be reliably tested due to state machine compilation")]
     private async void OnDeleteClicked()
     {
         using var activity = Tracing.Source.StartActivity();

@@ -11,5 +11,12 @@
         <ModulePath>.*WebApp\.dll$</ModulePath>
       </Include>
     </ModulePaths>
+    <Sources>
+      <Exclude>
+        <Source>.*[\\/]App\.razor$</Source>
+        <Source>.*[\\/]Error\.razor$</Source>
+        <Source>.*[\\/]Routes\.razor$</Source>
+      </Exclude>
+    </Sources>
   </CodeCoverage>
 </Configuration>
