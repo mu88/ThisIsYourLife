@@ -10,14 +10,17 @@ namespace Persistence;
 [ExcludeFromCodeCoverage]
 public static class Startup
 {
-    public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
+    public static void AddPersistence(this IServiceCollection services, IConfigurationManager configuration)
     {
+        var storageOptions = configuration.GetSection(StorageOptions.SectionName).Get<StorageOptions>() ?? new StorageOptions();
+        configuration.AddJsonFile(Path.Combine(storageOptions.BasePath, "user.json"), optional: true);
+
         services.Configure<StorageOptions>(configuration.GetSection(StorageOptions.SectionName));
+        services.AddOptions<UserConfig>().Bind(configuration);
         services.AddDbContext<Storage>((sp, options) =>
         {
-            var storageOptions = sp.GetRequiredService<IOptions<StorageOptions>>().Value;
-            var dbPath = Path.Combine(storageOptions.BasePath, "db", "ThisIsYourLife.db");
-            options.UseLazyLoadingProxies().UseSqlite($"Data Source=\"{dbPath}\"");
+            var opts = sp.GetRequiredService<IOptions<StorageOptions>>().Value;
+            options.UseLazyLoadingProxies().UseSqlite($"Data Source=\"{opts.DatabasePath}\"");
         });
         services.AddScoped<IStorage>(provider => provider.GetRequiredService<Storage>());
         services.AddSingleton<IFileSystem, FileSystem>();

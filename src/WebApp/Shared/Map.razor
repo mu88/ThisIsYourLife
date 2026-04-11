@@ -1,7 +1,9 @@
 @using BusinessServices.Services
+@using Microsoft.Extensions.Options
 @using Persistence
 @inject IJSRuntime JsRuntime
 @inject ILifePointService LifePointService
+@inject IOptions<MapOptions> MapOptions
 @inject IPersonService PersonService
 @inject IUserService UserService
 @inject IStringLocalizer<Main> Loc

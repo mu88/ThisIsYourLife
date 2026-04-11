@@ -185,6 +185,7 @@ public class NewLifePointTests
         testContext.Services.AddSingleton(Substitute.For<ILogger<NewLifePoint>>());
         testContext.Services.AddSingleton(userServiceMock);
         testContext.Services.AddSingleton(newLifePointDateServiceMock);
+        testContext.Services.AddSingleton<TimeProvider>(TimeProvider.System);
 #pragma warning disable CS0618
 
         // Best practice according to: https://stackoverflow.com/questions/72077421/test-event-handler-of-inputfile-in-blazor-component-with-bunit

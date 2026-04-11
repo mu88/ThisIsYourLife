@@ -11,18 +11,18 @@ public class NewLifePointDateServiceTests
     [Test]
     public void NowShouldBeProposedDateAsDefault()
     {
-        var testee = new NewLifePointDateService();
+        var testee = new NewLifePointDateService(TimeProvider.System);
 
         var result = testee.ProposedCreationDate;
 
-        result.Should().Be(DateOnly.FromDateTime(DateTime.Now));
+        result.Should().Be(DateOnly.FromDateTime(TimeProvider.System.GetLocalNow().DateTime));
     }
 
     [Test]
     public void PreviouslySetDateShouldBeProposalForNextTime()
     {
         var proposal = new DateOnly(1953, 4, 12);
-        var testee = new NewLifePointDateService { ProposedCreationDate = proposal };
+        var testee = new NewLifePointDateService(TimeProvider.System) { ProposedCreationDate = proposal };
 
         var result = testee.ProposedCreationDate;
 

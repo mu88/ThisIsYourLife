@@ -9,7 +9,6 @@ namespace WebApp.Shared;
 
 public partial class FilterLifePoints
 {
-    private const int DefaultYear = -1;
     private static readonly Guid DefaultCreatorId = Guid.Empty;
     private IJSObjectReference _lifePointDetailModule = null!;
     private IEnumerable<ExistingPerson> _distinctCreators = Array.Empty<ExistingPerson>();
@@ -17,7 +16,7 @@ public partial class FilterLifePoints
     private bool _showFilter;
     private bool _creatorFilterApplied;
     private bool _yearFilterApplied;
-    private int? _selectedYear = DefaultYear;
+    private int? _selectedYear;
     private Guid? _selectedCreatorId = DefaultCreatorId;
 
     /// <inheritdoc />
@@ -65,7 +64,21 @@ public partial class FilterLifePoints
 
     private async Task SelectedYearChangedAsync(ChangeEventArgs args)
     {
-        if (!int.TryParse(args.Value?.ToString(), CultureInfo.InvariantCulture, out var year))
+        var valueStr = args.Value?.ToString();
+
+        if (string.IsNullOrEmpty(valueStr))
+        {
+            if (_yearFilterApplied)
+            {
+                _selectedYear = null;
+                _yearFilterApplied = false;
+                await DrawSubsetOfMarkersAsync();
+            }
+
+            return;
+        }
+
+        if (!int.TryParse(valueStr, CultureInfo.InvariantCulture, out var year))
         {
             return;
         }
@@ -75,16 +88,8 @@ public partial class FilterLifePoints
             return;
         }
 
-        if (year == DefaultYear)
-        {
-            _selectedYear = null;
-            _yearFilterApplied = false;
-        }
-        else
-        {
-            _selectedYear = year;
-            _yearFilterApplied = true;
-        }
+        _selectedYear = year;
+        _yearFilterApplied = true;
 
         await DrawSubsetOfMarkersAsync();
     }
@@ -95,10 +100,7 @@ public partial class FilterLifePoints
 
         await RemoveAllExistingMarkersAsync();
 
-        var yearToFilter = _selectedYear == DefaultYear ? null : _selectedYear;
-        var creatorIdToFilter = _selectedCreatorId == DefaultCreatorId ? null : _selectedCreatorId;
-
-        foreach (var (latitude, longitude, id) in LifePointService.GetAllLocations(yearToFilter, creatorIdToFilter))
+        foreach (var (latitude, longitude, id) in LifePointService.GetAllLocations(_selectedYear, _selectedCreatorId == DefaultCreatorId ? null : _selectedCreatorId))
         {
             await AddMarkerAsync(id, latitude, longitude);
         }
@@ -128,7 +130,7 @@ public partial class FilterLifePoints
                 await AddMarkerAsync(id, latitude, longitude);
             }
 
-            _selectedYear = DefaultYear;
+            _selectedYear = null;
             _selectedCreatorId = DefaultCreatorId;
             _yearFilterApplied = false;
             _creatorFilterApplied = false;

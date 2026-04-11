@@ -319,7 +319,7 @@ public class LifePointServiceTests
         results.Should().BeEmpty();
     }
 
-    private LifePoint MapToLifePoint(LifePointToCreate lifePointToCreate, Person person, Guid? imageId = null) =>
+    private static LifePoint MapToLifePoint(LifePointToCreate lifePointToCreate, Person person, Guid? imageId = null) =>
         lifePointToCreate.ToLifePoint(person, imageId);
 
     private LifePointService CreateTestee() => new(Substitute.For<ILogger<LifePointService>>(), _storage);

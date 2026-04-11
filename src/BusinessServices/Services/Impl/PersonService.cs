@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace BusinessServices.Services;
 
-public class PersonService(ILogger<PersonService> logger, IStorage storage) : IPersonService
+internal class PersonService(ILogger<PersonService> logger, IStorage storage) : IPersonService
 {
     public async Task<ExistingPerson> CreatePersonAsync(PersonToCreate personToCreate)
     {

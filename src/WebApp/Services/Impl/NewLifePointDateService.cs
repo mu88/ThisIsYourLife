@@ -1,7 +1,7 @@
 ﻿namespace WebApp.Services;
 
-internal class NewLifePointDateService : INewLifePointDateService
+internal class NewLifePointDateService(TimeProvider timeProvider) : INewLifePointDateService
 {
     /// <inheritdoc />
-    public DateOnly ProposedCreationDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+    public DateOnly ProposedCreationDate { get; set; } = DateOnly.FromDateTime(timeProvider.GetLocalNow().DateTime);
 }

@@ -18,7 +18,7 @@ public static partial class Log
     [LoggerMessage(EventId = 1300, Level = LogLevel.Information, Message = "Creating database `{databasePath}`")]
     public static partial void CreatingDatabase(this ILogger logger, string databasePath);
 
-    [LoggerMessage(EventId = 1400, Level = LogLevel.Information, Message = "Database `{databasePath}` created and migrations executed")]
+    [LoggerMessage(EventId = 1400, Level = LogLevel.Information, Message = "Database `{databasePath}` created")]
     public static partial void DatabaseCreated(this ILogger logger, string databasePath);
 
     [LoggerMessage(EventId = 1500, Level = LogLevel.Debug, Message = "Initializing database with seeded data")]
@@ -54,6 +54,6 @@ public static partial class Log
     [LoggerMessage(EventId = 2500, Level = LogLevel.Information, Message = "Created new Person with ID '{idOfCreatedPerson}'")]
     public static partial void NewPersonCreated(this ILogger logger, Guid idOfCreatedPerson);
 
-    [LoggerMessage(EventId = 2600, Level = LogLevel.Warning, Message = "There was a too big image'")]
+    [LoggerMessage(EventId = 2600, Level = LogLevel.Warning, Message = "There was a too big image")]
     public static partial void ImageTooBig(this ILogger logger);
 }

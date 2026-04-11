@@ -292,7 +292,7 @@ public class FilterLifePointsTests
 
     private static async Task FilterByYearAsync(IRenderedComponent<FilterLifePoints> testee, int year) => await ChangeYearSelectElementAsync(testee, year);
 
-    private static async Task ResetYearFilterToDefaultAsync(IRenderedComponent<FilterLifePoints> testee) => await ChangeYearSelectElementAsync(testee, -1);
+    private static async Task ResetYearFilterToDefaultAsync(IRenderedComponent<FilterLifePoints> testee) => await ChangeYearSelectElementAsync(testee, string.Empty);
 
     private static async Task FilterByCreatorAsync(IRenderedComponent<FilterLifePoints> testee, BunitContext testContext, string name)
     {

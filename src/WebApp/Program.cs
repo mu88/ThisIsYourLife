@@ -22,8 +22,6 @@ builder.Logging.AddSimpleConsole(options =>
     options.TimestampFormat = "yyyy-MM-dd HH:mm:ss.FFFK ";
     options.SingleLine = true;
 });
-var storageOptions = builder.Configuration.GetSection(StorageOptions.SectionName).Get<StorageOptions>() ?? new StorageOptions();
-builder.Configuration.AddJsonFile(Path.Combine(storageOptions.BasePath, "user.json"), true);
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -39,7 +37,8 @@ builder.Services.AddHealthChecks();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddBusinessServices();
 builder.Services.AddSingleton<INewLifePointDateService, NewLifePointDateService>();
-builder.Services.AddOptions<UserConfig>().Bind(builder.Configuration);
+builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
+builder.Services.Configure<MapOptions>(builder.Configuration.GetSection(MapOptions.SectionName));
 builder.Services.AddLocalization();
 
 var app = builder.Build();

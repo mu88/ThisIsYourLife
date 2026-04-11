@@ -1,6 +1,6 @@
 ﻿namespace Persistence;
 
-public class UserConfig
+internal class UserConfig
 {
     public string? Name { get; set; }
 

@@ -13,5 +13,5 @@ public class NewLifePointModel
     public string Description { get; set; } = string.Empty;
 
     [Required(ErrorMessageResourceName = "RequiredError", ErrorMessageResourceType = typeof(Main))]
-    public DateOnly Date { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+    public DateOnly Date { get; set; } = DateOnly.MinValue;
 }

@@ -39,9 +39,9 @@ internal class Storage : DbContext, IStorage
 
     public DbSet<Person> PersonsInStorage { get; set; }
 
-    internal string DatabaseDirectory => Path.Combine(_storageOptions.BasePath, "db");
+    internal string DatabaseDirectory => _storageOptions.DatabaseDirectory;
 
-    internal string DatabasePath => Path.Combine(DatabaseDirectory, "ThisIsYourLife.db");
+    internal string DatabasePath => _storageOptions.DatabasePath;
 
     /// <inheritdoc />
     public async Task<T?> FindAsync<T>(Guid id)
@@ -103,7 +103,7 @@ internal class Storage : DbContext, IStorage
         modelBuilder.Entity<LifePoint>().HasKey(nameof(LifePoint.Id));
         modelBuilder.Entity<LifePoint>().Navigation(point => point.CreatedBy).AutoInclude();
         modelBuilder.Entity<Person>().ToTable(nameof(Person));
-        modelBuilder.Entity<Person>().HasKey(nameof(LifePoint.Id));
+        modelBuilder.Entity<Person>().HasKey(nameof(Person.Id));
     }
 
     private async Task SeedData()

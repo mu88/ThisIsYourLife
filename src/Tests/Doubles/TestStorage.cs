@@ -10,7 +10,7 @@ namespace Tests.Doubles;
 
 public static class TestStorage
 {
-    public static readonly StorageOptions DefaultStorageOptions = new();
+    internal static readonly StorageOptions DefaultStorageOptions = new();
 
     public static IStorage Create(IFileSystem? fileSystem = null, IImageService? imageService = null)
     {

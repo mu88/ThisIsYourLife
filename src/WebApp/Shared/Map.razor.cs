@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Logging.Extensions;
+using Microsoft.Extensions.Options;
 using Microsoft.JSInterop;
 
 namespace WebApp.Shared;
@@ -59,7 +60,8 @@ public sealed partial class Map : IDisposable
     private async Task InitializeMapAsync(DotNetObjectReference<Map> dotNetObjectReference)
     {
         _mapModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/Map.razor.js");
-        _leafletMap = await _mapModule.InvokeAsync<IJSObjectReference>("initializeMap", 51.0405849, 13.7478431, 20, dotNetObjectReference);
+        var options = MapOptions.Value;
+        _leafletMap = await _mapModule.InvokeAsync<IJSObjectReference>("initializeMap", options.InitialLatitude, options.InitialLongitude, options.InitialZoom, dotNetObjectReference);
 
         _newLifePointModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/NewLifePoint.razor.js");
         _lifePointDetailModule = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./Shared/LifePointDetail.razor.js");

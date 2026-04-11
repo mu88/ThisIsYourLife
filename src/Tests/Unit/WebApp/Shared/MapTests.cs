@@ -5,10 +5,12 @@ using DTO.Location;
 using FluentAssertions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 using NUnit.Framework;
 using Persistence;
 using Tests.Doubles;
+using WebApp;
 using WebApp.Shared;
 using BunitContext = Bunit.BunitContext;
 
@@ -79,6 +81,7 @@ public class MapTests
         testContext.Services.AddSingleton(Substitute.For<ILogger<Map>>());
         testContext.Services.AddSingleton(Substitute.For<IUserService>());
         testContext.Services.AddSingleton(Substitute.For<IPersonService>());
+        testContext.Services.AddSingleton(Options.Create(new MapOptions()));
         var lifePointServiceMock = Substitute.For<ILifePointService>();
         lifePointServiceMock.GetAllLocations().Returns(existingLocations);
         testContext.Services.AddSingleton(lifePointServiceMock);
