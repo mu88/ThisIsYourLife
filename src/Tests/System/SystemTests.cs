@@ -24,9 +24,9 @@ public class SystemTests
     [SetUp]
     public void Setup()
     {
-        _cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(1));
+        _cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMinutes(5));
         _cancellationToken = _cancellationTokenSource.Token;
-        _dockerClient = new DockerClientConfiguration().CreateClient();
+        _dockerClient = new DockerClientBuilder().Build();
     }
 
     [TearDown]

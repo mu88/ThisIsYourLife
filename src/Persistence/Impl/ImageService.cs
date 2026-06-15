@@ -4,9 +4,7 @@ using Entities;
 using Logging.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Processing;
+using SkiaSharp;
 
 namespace Persistence;
 
@@ -23,21 +21,13 @@ internal class ImageService(IOptions<StorageOptions> storageOptions, ILogger<Ima
         var filePathForImage = GetFilePathForImage(owner, imageId);
         EnsureImagePathExists(filePathForImage);
 
-        Image image;
-        try
-        {
-            image = await Image.LoadAsync(newImage.Stream);
-        }
-        catch (Exception)
-        {
-            throw new NoImageException();
-        }
-
-        ResizeImage(image);
-
+        using var image = SKBitmap.Decode(newImage.Stream) ?? throw new NoImageException();
+        using var resizedImage = ResizeImage(image);
+        using var skImage = SKImage.FromBitmap(resizedImage);
+        using var encodedData = skImage.Encode(SKEncodedImageFormat.Jpeg, 90);
         await using var fileStream = fileSystem.CreateFile(filePathForImage);
-        await image.SaveAsync(fileStream, new JpegEncoder());
-        image.Dispose();
+        var encodedBytes = encodedData.ToArray();
+        await fileStream.WriteAsync(encodedBytes, 0, encodedBytes.Length);
         logger.ImageResizedAndSaved(imageId);
 
         return imageId;
@@ -58,7 +48,22 @@ internal class ImageService(IOptions<StorageOptions> storageOptions, ILogger<Ima
         logger.ImageDeleted(ownerId, imageId);
     }
 
-    private static void ResizeImage(Image image) => image.Mutate(context => context.Resize(new ResizeOptions { Mode = ResizeMode.Max, Size = new Size(600) }));
+    private static SKBitmap ResizeImage(SKBitmap source)
+    {
+        const int maxSizeInPixels = 600;
+
+        if (source.Width <= maxSizeInPixels && source.Height <= maxSizeInPixels)
+        {
+            return source.Copy();
+        }
+
+        var resizeFactor = maxSizeInPixels / (float)Math.Max(source.Width, source.Height);
+        var targetWidth = Math.Max(1, (int)Math.Round(source.Width * resizeFactor));
+        var targetHeight = Math.Max(1, (int)Math.Round(source.Height * resizeFactor));
+        var targetInfo = new SKImageInfo(targetWidth, targetHeight, source.ColorType, source.AlphaType);
+
+        return source.Resize(targetInfo, SKSamplingOptions.Default) ?? source.Copy();
+    }
 
     [ExcludeFromCodeCoverage(Justification = "Found no way to tweak Directory.GetParent into returning null")]
     private static DirectoryInfo GetParentDirectory(string filePathForImage)

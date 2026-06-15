@@ -19,6 +19,7 @@
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+    <PackageReference Include="SkiaSharp" />
     <PackageReference Include="Testcontainers" />
   </ItemGroup>
   <ItemGroup>
