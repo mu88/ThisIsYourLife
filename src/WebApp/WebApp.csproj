@@ -17,6 +17,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.CustomElements" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" />
+    <PackageReference Include="SQLitePCLRaw.core" />
     <PackageReference Include="mu88.Shared" />
   </ItemGroup>
   <ItemGroup>
