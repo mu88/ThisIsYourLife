@@ -7,12 +7,26 @@ on:
       - '**'
 
 jobs:
+  temporary_security_pin_guard:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+
+      - name: Enforce temporary package pins
+        uses: mu88/common/.github/actions/check-temporary-package-pins@10f96e34f55796997ce898228c5a4d41b5d3db5e
+        with:
+          solution-path: ThisIsYourLife.slnx
+
   shared_ci_cd:
     permissions:
       attestations: write
       contents: read
       id-token: write
       packages: write
+
+    needs: temporary_security_pin_guard
 
     uses: mu88/common/.github/workflows/ci-cd.yml@44f3ad2b75ce56edcbfee4cbcfd6ac0bf356fd0a
     with:
