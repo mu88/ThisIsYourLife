@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Enforce temporary package pins
         uses: mu88/common/.github/actions/check-temporary-package-pins@10f96e34f55796997ce898228c5a4d41b5d3db5e
@@ -52,7 +52,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Set up .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v6
         with:
           cache: true
           cache-dependency-path: '**/packages.lock.json'
