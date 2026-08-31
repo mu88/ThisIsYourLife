@@ -70,7 +70,7 @@ jobs:
       - name: Create ZIP for release
         run: |
           cd ${{ runner.temp }}/Release/
-          zip -r ThisIsYourLife.${{ needs.shared_ci_cd.outputs.version }}.zip *
+          zip -r ThisIsYourLife.${{ needs.shared_ci_cd.outputs.version }}.zip ./*
 
       - name: Generate SBOM and attest build provenance and SBOM
         uses: mu88/common/.github/actions/attest-provenance-sbom@44f3ad2b75ce56edcbfee4cbcfd6ac0bf356fd0a
