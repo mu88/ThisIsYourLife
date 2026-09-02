@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Enforce temporary package pins
         uses: mu88/common/.github/actions/check-temporary-package-pins@10f96e34f55796997ce898228c5a4d41b5d3db5e
@@ -49,10 +49,10 @@ jobs:
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Set up .NET
-        uses: actions/setup-dotnet@v6
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
         with:
           cache: true
           cache-dependency-path: '**/packages.lock.json'
@@ -81,7 +81,7 @@ jobs:
           subject-path: ${{ runner.temp }}/Release/ThisIsYourLife*.zip
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3
         if: ${{ needs.shared_ci_cd.outputs.is_release == 'true' }}
         with:
           body: ${{ needs.shared_ci_cd.outputs.release_notes }}
