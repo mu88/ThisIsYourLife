@@ -355,3 +355,10 @@ MigrationBackup/
 
 # Local debugging data
 data/
+
+# LibMan-managed client-side libraries (restored via `libman restore` in CI)
+src/WebApp/wwwroot/leaflet/
+src/WebApp/wwwroot/leaflet.spin/
+src/WebApp/wwwroot/spin/
+src/WebApp/wwwroot/css/bootstrap/
+src/WebApp/wwwroot/css/open-iconic/

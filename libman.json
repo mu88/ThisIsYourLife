@@ -1,0 +1,85 @@
+{
+  "version": "3.0",
+  "defaultProvider": "jsdelivr",
+  "libraries": [
+    {
+      "provider": "jsdelivr",
+      "library": "leaflet@1.8.0",
+      "destination": "src/WebApp/wwwroot/leaflet",
+      "fileMappings": [
+        {
+          "root": "dist",
+          "destination": "src/WebApp/wwwroot/leaflet",
+          "files": [
+            "leaflet.js",
+            "leaflet.css",
+            "images/**"
+          ]
+        }
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "leaflet.markercluster@1.5.0",
+      "destination": "src/WebApp/wwwroot/leaflet",
+      "fileMappings": [
+        {
+          "root": "dist",
+          "destination": "src/WebApp/wwwroot/leaflet",
+          "files": [
+            "leaflet.markercluster.js",
+            "MarkerCluster.css",
+            "MarkerCluster.Default.css"
+          ]
+        }
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "leaflet-spin@1.1.2",
+      "destination": "src/WebApp/wwwroot/leaflet.spin",
+      "files": [
+        "leaflet.spin.min.js"
+      ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "spin.js@1.2.5",
+      "destination": "src/WebApp/wwwroot/spin",
+      "files": [
+        "spin.min.js"
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "bootstrap@4.3.1",
+      "destination": "src/WebApp/wwwroot/css/bootstrap",
+      "fileMappings": [
+        {
+          "root": "dist/css",
+          "destination": "src/WebApp/wwwroot/css/bootstrap",
+          "files": [
+            "bootstrap.min.css",
+            "bootstrap.min.css.map"
+          ]
+        }
+      ]
+    },
+    {
+      "provider": "jsdelivr",
+      "library": "open-iconic@1.1.1",
+      "destination": "src/WebApp/wwwroot/css/open-iconic",
+      "files": [
+        "font/css/open-iconic-bootstrap.min.css",
+        "font/fonts/open-iconic.eot",
+        "font/fonts/open-iconic.otf",
+        "font/fonts/open-iconic.svg",
+        "font/fonts/open-iconic.ttf",
+        "font/fonts/open-iconic.woff",
+        "FONT-LICENSE",
+        "ICON-LICENSE",
+        "README.md"
+      ]
+    }
+  ]
+}
