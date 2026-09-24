@@ -18,20 +18,20 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Enforce temporary package pins
-        uses: mu88/common/.github/actions/check-temporary-package-pins@4e3d5313798009ef14a20532bb590147101941e8 # main
+        uses: mu88/common/.github/actions/check-temporary-package-pins@1f11d1740794acc87451af8a923b700b5beb49d8 # main
         with:
           solution-path: ThisIsYourLife.slnx
 
   shared_ci_cd:
     permissions:
       attestations: write
-      contents: read
+      contents: write # Needed for dependency submission (SBOM upload)
       id-token: write
       packages: write
 
     needs: temporary_security_pin_guard
 
-    uses: mu88/common/.github/workflows/ci-cd.yml@4e3d5313798009ef14a20532bb590147101941e8 # main
+    uses: mu88/common/.github/workflows/ci-cd.yml@1f11d1740794acc87451af8a923b700b5beb49d8 # main
     with:
       docker-attest-provenance-and-sbom: true
       docker-publish-project: src/WebApp/WebApp.csproj
@@ -76,7 +76,7 @@ jobs:
           zip -r ThisIsYourLife.${{ needs.shared_ci_cd.outputs.version }}.zip ./*
 
       - name: Generate SBOM and attest build provenance and SBOM
-        uses: mu88/common/.github/actions/attest-provenance-sbom@4e3d5313798009ef14a20532bb590147101941e8 # main
+        uses: mu88/common/.github/actions/attest-provenance-sbom@1f11d1740794acc87451af8a923b700b5beb49d8 # main
         with:
           is-release: ${{ needs.shared_ci_cd.outputs.is_release }}
           sbom-file: sbom.json
