@@ -4,7 +4,7 @@
   "libraries": [
     {
       "provider": "jsdelivr",
-      "library": "leaflet@1.8.0",
+      "library": "leaflet@1.9.4",
       "destination": "src/WebApp/wwwroot/leaflet",
       "fileMappings": [
         {
@@ -20,7 +20,7 @@
     },
     {
       "provider": "jsdelivr",
-      "library": "leaflet.markercluster@1.5.0",
+      "library": "leaflet.markercluster@1.5.3",
       "destination": "src/WebApp/wwwroot/leaflet",
       "fileMappings": [
         {
@@ -44,7 +44,7 @@
     },
     {
       "provider": "cdnjs",
-      "library": "spin.js@1.2.5",
+      "library": "spin.js@4.1.2",
       "destination": "src/WebApp/wwwroot/spin",
       "files": [
         "spin.min.js"
@@ -52,7 +52,7 @@
     },
     {
       "provider": "jsdelivr",
-      "library": "bootstrap@4.3.1",
+      "library": "bootstrap@5.3.8",
       "destination": "src/WebApp/wwwroot/css/bootstrap",
       "fileMappings": [
         {

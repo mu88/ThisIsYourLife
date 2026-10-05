@@ -210,13 +210,13 @@
       },
       "SkiaSharp.NativeAssets.macOS": {
         "type": "Transitive",
-        "resolved": "4.151.2",
-        "contentHash": "hDGy20k1DJZuKcdbHjwaOfsPeQYY9ty8wJeG1qzJWidPUzrwwvVtTLpDdTiP1M89UWbEYyWAhZo9qOaoYae6iQ=="
+        "resolved": "4.152.1",
+        "contentHash": "gKaE2zNHsPLjlA88ZClRNmtZlHNGEa/W4iPy5GpP1TtUELIXzrSr2udCbl1GWYFuCdA36IycBk5YhUuK1xi9UA=="
       },
       "SkiaSharp.NativeAssets.Win32": {
         "type": "Transitive",
-        "resolved": "4.151.2",
-        "contentHash": "sTUHSfWXVYThf/lTG81n8y1gMnr0TiN/2zrApwd0jbGfbsEt9g4+GPsj6UVjjgNLXCI9l5CyzxQ6Zh4fP9ZoVQ=="
+        "resolved": "4.152.1",
+        "contentHash": "MLDP6XT8CHLHF6gZlpW06iswGNBlL/JB2+SKuSLz0Y0k1zzsfofNyUY6J6FC32A4/F67E9S8MwovRBL+ELw0lw=="
       },
       "SQLite": {
         "type": "Transitive",
@@ -284,8 +284,8 @@
           "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore": "[10.0.12, )",
           "SQLitePCLRaw.bundle_e_sqlite3": "[3.0.5, )",
           "SQLitePCLRaw.core": "[3.0.5, )",
-          "SkiaSharp": "[4.151.2, )",
-          "SkiaSharp.NativeAssets.Linux": "[4.151.2, )",
+          "SkiaSharp": "[4.152.1, )",
+          "SkiaSharp.NativeAssets.Linux": "[4.152.1, )",
           "mu88.Shared": "[8.4.0, )"
         }
       },
@@ -329,31 +329,31 @@
       },
       "SkiaSharp": {
         "type": "CentralTransitive",
-        "requested": "[4.151.2, )",
-        "resolved": "4.151.2",
-        "contentHash": "zqcEy5E17Tqoh2tEvb4uC2G3ulli5YdsljzZuf93pCc/9gQDMx9VrUInxiqkLMGt+MjQi8hNrf1Uxmq25yyU3A==",
+        "requested": "[4.152.1, )",
+        "resolved": "4.152.1",
+        "contentHash": "p3rj8SVoa+2Tmx1EITE4jIwCDPcYjwXdZ3c9yM6l9wNn6572hwxzrth6WOBK0iGnAoTGoJBZuZpy8wYjbov6sw==",
         "dependencies": {
-          "SkiaSharp.NativeAssets.Win32": "4.151.2",
-          "SkiaSharp.NativeAssets.macOS": "4.151.2"
+          "SkiaSharp.NativeAssets.Win32": "4.152.1",
+          "SkiaSharp.NativeAssets.macOS": "4.152.1"
         }
       },
       "SkiaSharp.NativeAssets.Linux": {
         "type": "CentralTransitive",
-        "requested": "[4.151.2, )",
-        "resolved": "4.151.2",
-        "contentHash": "TSeXS5j73N9+avlMn72Q8DC+EGi2LW7Gh7INHTkTo4bVpkEQu32D7tTWvP5LhZ+Fto9Ld6lih7UMwm+V3AQyCQ=="
+        "requested": "[4.152.1, )",
+        "resolved": "4.152.1",
+        "contentHash": "1bB3eedb+4ZcyWigUzxXCE7LrNOlmyAs1crGCnX8UEHKl0nHOmzDt3E0d53IIgiguS88RKeCPy1ArDXK5FoDCw=="
       }
     },
     "net10.0/linux-arm64": {
       "SkiaSharp.NativeAssets.macOS": {
         "type": "Transitive",
-        "resolved": "4.151.2",
-        "contentHash": "hDGy20k1DJZuKcdbHjwaOfsPeQYY9ty8wJeG1qzJWidPUzrwwvVtTLpDdTiP1M89UWbEYyWAhZo9qOaoYae6iQ=="
+        "resolved": "4.152.1",
+        "contentHash": "gKaE2zNHsPLjlA88ZClRNmtZlHNGEa/W4iPy5GpP1TtUELIXzrSr2udCbl1GWYFuCdA36IycBk5YhUuK1xi9UA=="
       },
       "SkiaSharp.NativeAssets.Win32": {
         "type": "Transitive",
-        "resolved": "4.151.2",
-        "contentHash": "sTUHSfWXVYThf/lTG81n8y1gMnr0TiN/2zrApwd0jbGfbsEt9g4+GPsj6UVjjgNLXCI9l5CyzxQ6Zh4fP9ZoVQ=="
+        "resolved": "4.152.1",
+        "contentHash": "MLDP6XT8CHLHF6gZlpW06iswGNBlL/JB2+SKuSLz0Y0k1zzsfofNyUY6J6FC32A4/F67E9S8MwovRBL+ELw0lw=="
       },
       "SQLite": {
         "type": "Transitive",
@@ -362,21 +362,21 @@
       },
       "SkiaSharp.NativeAssets.Linux": {
         "type": "CentralTransitive",
-        "requested": "[4.151.2, )",
-        "resolved": "4.151.2",
-        "contentHash": "TSeXS5j73N9+avlMn72Q8DC+EGi2LW7Gh7INHTkTo4bVpkEQu32D7tTWvP5LhZ+Fto9Ld6lih7UMwm+V3AQyCQ=="
+        "requested": "[4.152.1, )",
+        "resolved": "4.152.1",
+        "contentHash": "1bB3eedb+4ZcyWigUzxXCE7LrNOlmyAs1crGCnX8UEHKl0nHOmzDt3E0d53IIgiguS88RKeCPy1ArDXK5FoDCw=="
       }
     },
     "net10.0/linux-x64": {
       "SkiaSharp.NativeAssets.macOS": {
         "type": "Transitive",
-        "resolved": "4.151.2",
-        "contentHash": "hDGy20k1DJZuKcdbHjwaOfsPeQYY9ty8wJeG1qzJWidPUzrwwvVtTLpDdTiP1M89UWbEYyWAhZo9qOaoYae6iQ=="
+        "resolved": "4.152.1",
+        "contentHash": "gKaE2zNHsPLjlA88ZClRNmtZlHNGEa/W4iPy5GpP1TtUELIXzrSr2udCbl1GWYFuCdA36IycBk5YhUuK1xi9UA=="
       },
       "SkiaSharp.NativeAssets.Win32": {
         "type": "Transitive",
-        "resolved": "4.151.2",
-        "contentHash": "sTUHSfWXVYThf/lTG81n8y1gMnr0TiN/2zrApwd0jbGfbsEt9g4+GPsj6UVjjgNLXCI9l5CyzxQ6Zh4fP9ZoVQ=="
+        "resolved": "4.152.1",
+        "contentHash": "MLDP6XT8CHLHF6gZlpW06iswGNBlL/JB2+SKuSLz0Y0k1zzsfofNyUY6J6FC32A4/F67E9S8MwovRBL+ELw0lw=="
       },
       "SQLite": {
         "type": "Transitive",
@@ -385,21 +385,21 @@
       },
       "SkiaSharp.NativeAssets.Linux": {
         "type": "CentralTransitive",
-        "requested": "[4.151.2, )",
-        "resolved": "4.151.2",
-        "contentHash": "TSeXS5j73N9+avlMn72Q8DC+EGi2LW7Gh7INHTkTo4bVpkEQu32D7tTWvP5LhZ+Fto9Ld6lih7UMwm+V3AQyCQ=="
+        "requested": "[4.152.1, )",
+        "resolved": "4.152.1",
+        "contentHash": "1bB3eedb+4ZcyWigUzxXCE7LrNOlmyAs1crGCnX8UEHKl0nHOmzDt3E0d53IIgiguS88RKeCPy1ArDXK5FoDCw=="
       }
     },
     "net10.0/win-x64": {
       "SkiaSharp.NativeAssets.macOS": {
         "type": "Transitive",
-        "resolved": "4.151.2",
-        "contentHash": "hDGy20k1DJZuKcdbHjwaOfsPeQYY9ty8wJeG1qzJWidPUzrwwvVtTLpDdTiP1M89UWbEYyWAhZo9qOaoYae6iQ=="
+        "resolved": "4.152.1",
+        "contentHash": "gKaE2zNHsPLjlA88ZClRNmtZlHNGEa/W4iPy5GpP1TtUELIXzrSr2udCbl1GWYFuCdA36IycBk5YhUuK1xi9UA=="
       },
       "SkiaSharp.NativeAssets.Win32": {
         "type": "Transitive",
-        "resolved": "4.151.2",
-        "contentHash": "sTUHSfWXVYThf/lTG81n8y1gMnr0TiN/2zrApwd0jbGfbsEt9g4+GPsj6UVjjgNLXCI9l5CyzxQ6Zh4fP9ZoVQ=="
+        "resolved": "4.152.1",
+        "contentHash": "MLDP6XT8CHLHF6gZlpW06iswGNBlL/JB2+SKuSLz0Y0k1zzsfofNyUY6J6FC32A4/F67E9S8MwovRBL+ELw0lw=="
       },
       "SQLite": {
         "type": "Transitive",
@@ -408,9 +408,9 @@
       },
       "SkiaSharp.NativeAssets.Linux": {
         "type": "CentralTransitive",
-        "requested": "[4.151.2, )",
-        "resolved": "4.151.2",
-        "contentHash": "TSeXS5j73N9+avlMn72Q8DC+EGi2LW7Gh7INHTkTo4bVpkEQu32D7tTWvP5LhZ+Fto9Ld6lih7UMwm+V3AQyCQ=="
+        "requested": "[4.152.1, )",
+        "resolved": "4.152.1",
+        "contentHash": "1bB3eedb+4ZcyWigUzxXCE7LrNOlmyAs1crGCnX8UEHKl0nHOmzDt3E0d53IIgiguS88RKeCPy1ArDXK5FoDCw=="
       }
     }
   }
