@@ -27,7 +27,7 @@ internal class ImageService(IOptions<StorageOptions> storageOptions, ILogger<Ima
         using var encodedData = skImage.Encode(SKEncodedImageFormat.Jpeg, 90);
         await using var fileStream = fileSystem.CreateFile(filePathForImage);
         var encodedBytes = encodedData.ToArray();
-        await fileStream.WriteAsync(encodedBytes, 0, encodedBytes.Length);
+        await fileStream.WriteAsync(encodedBytes);
         logger.ImageResizedAndSaved(imageId);
 
         return imageId;
@@ -58,8 +58,8 @@ internal class ImageService(IOptions<StorageOptions> storageOptions, ILogger<Ima
         }
 
         var resizeFactor = maxSizeInPixels / (float)Math.Max(source.Width, source.Height);
-        var targetWidth = Math.Max(1, (int)Math.Round(source.Width * resizeFactor));
-        var targetHeight = Math.Max(1, (int)Math.Round(source.Height * resizeFactor));
+        var targetWidth = Math.Max(1, (int)Math.Round(source.Width * resizeFactor, MidpointRounding.ToEven));
+        var targetHeight = Math.Max(1, (int)Math.Round(source.Height * resizeFactor, MidpointRounding.ToEven));
         var targetInfo = new SKImageInfo(targetWidth, targetHeight, source.ColorType, source.AlphaType);
 
         return source.Resize(targetInfo, SKSamplingOptions.Default) ?? source.Copy();

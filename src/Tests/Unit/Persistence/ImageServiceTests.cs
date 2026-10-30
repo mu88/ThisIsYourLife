@@ -163,6 +163,28 @@ public class ImageServiceTests
         actualRatio.Should().BeApproximately(expectedRatio, 0.01f);
     }
 
+    [Test]
+    public async Task ProcessAndStoreImage_SmallImage_IsNotResized()
+    {
+        // Arrange
+        var person = TestPerson.Create("Dixie");
+        var newImage = TestImageToCreate.CreateWithSize(400, 300);
+        var outputStream = new MemoryStream();
+        _fileSystem.CreateFile(Arg.Any<string>()).Returns(new NonDisposingStream(outputStream));
+        _fileSystem.DirectoryExists(Arg.Any<DirectoryInfo>()).Returns(true);
+        var testee = CreateTestee();
+
+        // Act
+        await testee.ProcessAndStoreImageAsync(person, newImage);
+
+        // Assert
+        outputStream.Position = 0;
+        using var decodedBitmap = SKBitmap.Decode(outputStream);
+        decodedBitmap.Should().NotBeNull();
+        decodedBitmap!.Width.Should().Be(400);
+        decodedBitmap.Height.Should().Be(300);
+    }
+
     private ImageService CreateTestee() => new(Options.Create(new StorageOptions()), Substitute.For<ILogger<ImageService>>(), _fileSystem);
 
     private sealed class NonDisposingStream(Stream innerStream) : Stream
@@ -193,6 +215,9 @@ public class ImageServiceTests
 
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
             innerStream.WriteAsync(buffer, offset, count, cancellationToken);
+
+        public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default) =>
+            innerStream.WriteAsync(buffer, cancellationToken);
 
         protected override void Dispose(bool disposing)
         {
