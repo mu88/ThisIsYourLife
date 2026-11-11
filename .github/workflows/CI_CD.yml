@@ -23,7 +23,7 @@ jobs:
           global-json-file: global.json
 
       - name: Enforce temporary package pins
-        uses: mu88/common/.github/actions/check-temporary-package-pins@e8e6e1d1c5933c244777edbc232332c2042864d8 # temporary security guard fix
+        uses: mu88/common/.github/actions/check-temporary-package-pins@00eb0e02c31aec4f64631021af6c2066e5b986b3 # temporary security guard fix
         with:
           solution-path: ThisIsYourLife.slnx
 
