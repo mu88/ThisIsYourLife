@@ -10,6 +10,8 @@
     <PackageVersion Include="FluentAssertions" Version="8.11.0" />
     <PackageVersion Include="FluentAssertions.Web.v8" Version="3.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.CustomElements" Version="10.0.12" />
+    <!-- TEMP-PIN: GHSA-6527-9fp8-r4x6 -->
+    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="2.3.14" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.12" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Proxies" Version="10.0.12" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.12" />
