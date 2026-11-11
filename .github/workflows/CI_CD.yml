@@ -17,8 +17,13 @@ jobs:
       - name: Check out code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
+      - name: Set up .NET for temporary package pin guard
+        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          global-json-file: global.json
+
       - name: Enforce temporary package pins
-        uses: mu88/common/.github/actions/check-temporary-package-pins@9a7d93ff9e26cb13a4a184bed7b87a77f4a7f191 # main
+        uses: mu88/common/.github/actions/check-temporary-package-pins@624fe0c54929ae7a65bf886a76f39d5d50a67413 # main
         with:
           solution-path: ThisIsYourLife.slnx
 
