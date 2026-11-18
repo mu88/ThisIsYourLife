@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/ai-centralize-pin-guard # temporary branch test
 
 jobs:
   mutation-testing:
@@ -24,7 +25,6 @@ jobs:
           global-json-file: global.json
 
       - name: Restore tools
-        working-directory: src/BusinessServices
         run: dotnet tool restore
 
       - name: Run mutation testing
