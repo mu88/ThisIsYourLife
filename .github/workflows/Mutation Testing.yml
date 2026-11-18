@@ -24,6 +24,7 @@ jobs:
           global-json-file: global.json
 
       - name: Restore tools
+        working-directory: src/BusinessServices
         run: dotnet tool restore
 
       - name: Run mutation testing
