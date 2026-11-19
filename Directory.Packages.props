@@ -31,10 +31,4 @@
     <PackageVersion Include="SkiaSharp.NativeAssets.Linux" Version="4.154.0" />
     <PackageVersion Include="Testcontainers" Version="4.16.0" />
   </ItemGroup>
-  <ItemGroup>
-    <!-- TEMP-PIN: GHSA-2m69-gcr7-jv3q -->
-    <PackageVersion Include="SQLitePCLRaw.bundle_e_sqlite3" Version="3.0.5" />
-    <!-- TEMP-PIN: GHSA-2m69-gcr7-jv3q -->
-    <PackageVersion Include="SQLitePCLRaw.core" Version="3.0.5" />
-  </ItemGroup>
 </Project>
