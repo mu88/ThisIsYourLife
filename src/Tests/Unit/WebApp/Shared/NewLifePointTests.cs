@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
@@ -186,12 +185,6 @@ public class NewLifePointTests
         testContext.Services.AddSingleton(userServiceMock);
         testContext.Services.AddSingleton(newLifePointDateServiceMock);
         testContext.Services.AddSingleton<TimeProvider>(TimeProvider.System);
-#pragma warning disable CS0618
-
-        // Best practice according to: https://stackoverflow.com/questions/72077421/test-event-handler-of-inputfile-in-blazor-component-with-bunit
-        testContext.Services.AddSingleton(Options.Create(new RemoteBrowserFileStreamOptions()));
-#pragma warning restore CS0618
-
         var newLifePointModuleInterop = testContext.JSInterop.SetupModule("./Shared/NewLifePoint.razor.js");
         newLifePointModuleInterop.SetupVoid("addMarkerForCreatedLifePoint", Guid.Empty, lifePointToCreate.Latitude, lifePointToCreate.Longitude).SetVoidResult();
         newLifePointModuleInterop.SetupVoid("removePopupForNewLifePoint").SetVoidResult();

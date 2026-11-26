@@ -50,6 +50,11 @@ public sealed partial class Map : IDisposable
         }
     }
 
+    private static void OnUserDialogClose()
+    {
+        // The EventCallback schedules a render of the parent component.
+    }
+
     [ExcludeFromCodeCoverage]
     private DotNetObjectReference<Map> RecreateReference()
     {
@@ -86,7 +91,4 @@ public sealed partial class Map : IDisposable
     private async Task EnableSpinnerAsync() => await _lifePointDetailModule.InvokeVoidAsync("enableSpinner");
 
     private async Task DisableSpinnerAsync() => await _lifePointDetailModule.InvokeVoidAsync("disableSpinner");
-
-    [ExcludeFromCodeCoverage]
-    private void OnUserDialogClose() => StateHasChanged();
 }

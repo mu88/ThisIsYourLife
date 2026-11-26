@@ -3,9 +3,11 @@ using Bunit;
 using BusinessServices.Services;
 using DTO.Location;
 using FluentAssertions;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.JSInterop;
 using NSubstitute;
 using NUnit.Framework;
 using Persistence;
@@ -60,6 +62,60 @@ public class MapTests
         await testee.Instance.OpenPopupForNewLifePointAsync(latitude, longitude);
 
         MarkerForNewLifePointShouldBeAdded(latitude, longitude, testContext, testee);
+    }
+
+    [Test]
+    public async Task SubmittingUserDialog_ShouldRemoveDialogFromMap()
+    {
+        // Arrange
+        var userIsSet = false;
+        await using var testContext = CreateBunitContext([],
+            configureMapModule: mapModule => mapModule.SetupModule("initializeMap", _ => true),
+            configureLifePointDetailModule: module =>
+            {
+                module.SetupVoid("initialize", _ => true).SetVoidResult();
+                module.SetupVoid("enableSpinner").SetVoidResult();
+                module.SetupVoid("disableSpinner").SetVoidResult();
+            });
+        var userService = testContext.Services.GetRequiredService<IUserService>();
+        userService.UserAlreadySet.Returns(_ => userIsSet);
+        userService.SetUserAsync("Dixie").Returns(_ =>
+        {
+            userIsSet = true;
+            return Task.CompletedTask;
+        });
+        using var testee = CreateTestee(testContext);
+        testee.FindAll("#myModal").Should().ContainSingle();
+        await testee.Find("input").ChangeAsync(new ChangeEventArgs { Value = "Dixie" });
+
+        // Act
+        await testee.Find("form").SubmitAsync();
+
+        // Assert
+        await userService.Received(1).SetUserAsync("Dixie");
+        testee.FindAll("#myModal").Should().BeEmpty();
+    }
+
+    [Test]
+    public async Task OpenPopupForNewLifePointAsync_WhenInteropFails_PropagatesException()
+    {
+        // Arrange
+        await using var testContext = CreateBunitContext([],
+            configureMapModule: mapModule => mapModule.SetupModule("initializeMap", _ => true),
+            configureLifePointDetailModule: module =>
+            {
+                module.SetupVoid("initialize", _ => true).SetVoidResult();
+                module.SetupVoid("enableSpinner").SetVoidResult();
+                module.SetupVoid("disableSpinner").SetVoidResult();
+            },
+            configureNewLifePointModule: module => module.SetupVoid("createPopupForNewLifePoint", _ => true).SetException(new JSException("Interop failed")));
+        using var testee = CreateTestee(testContext);
+
+        // Act
+        var act = async () => await testee.Instance.OpenPopupForNewLifePointAsync(1, 2);
+
+        // Assert
+        await act.Should().ThrowAsync<JSException>().WithMessage("Interop failed");
     }
 
     private static IRenderedComponent<Map> CreateTestee(BunitContext testContext) => testContext.Render<Map>();
